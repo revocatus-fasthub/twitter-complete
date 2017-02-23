@@ -1,6 +1,5 @@
 package tz.co.fasthub.ona.domain;
 
-import com.sun.javafx.beans.IDProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,27 +14,25 @@ public class Talent {
     @Id
     @GeneratedValue
     private Long talent_id;
-    private String talent_name;
-    private String talent_email;
-    private String talent_phoneNumber;
+    private String name;
+    private String email;
+    private String phoneNumber;
 
-    private Talent(){
+    private Talent(){}
 
-    }
-
-    public Talent(String talent_name, String talent_email, String talent_phoneNumber) {
-        this.talent_name = talent_name;
-        this.talent_email = talent_email;
-        this.talent_phoneNumber = talent_phoneNumber;
+    public Talent(String name, String email, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
     public String toString() {
         return "Talent{" +
                 "talent_id=" + talent_id +
-                ", talent_name='" + talent_name + '\'' +
-                ", talent_email='" + talent_email + '\'' +
-                ", talent_phoneNumber='" + talent_phoneNumber + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 
@@ -47,27 +44,27 @@ public class Talent {
         this.talent_id = talent_id;
     }
 
-    public String getTalent_name() {
-        return talent_name;
+    public String getName() {
+        return name;
     }
 
-    public void setTalent_name(String talent_name) {
-        this.talent_name = talent_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTalent_email() {
-        return talent_email;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTalent_email(String talent_email) {
-        this.talent_email = talent_email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getTalent_phoneNumber() {
-        return talent_phoneNumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTalent_phoneNumber(String talent_phoneNumber) {
-        this.talent_phoneNumber = talent_phoneNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

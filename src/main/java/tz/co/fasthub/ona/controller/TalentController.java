@@ -1,8 +1,10 @@
 package tz.co.fasthub.ona.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +18,8 @@ import tz.co.fasthub.ona.service.TalentService;
 /**
  * Created by root on 2/23/17.
  */
+@Controller
+@ComponentScan
 public class TalentController {
 
     @Autowired
