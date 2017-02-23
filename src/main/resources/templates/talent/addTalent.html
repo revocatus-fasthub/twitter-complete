@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>REGISTER TALENT</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+</head>
+<body>
+<center>
+    <h2>register here</h2>
+</center>
+
+<form modelAttribute="addTalentForm" action="/talent/addTalent" method="post">
+    <div align="center">
+        <p>
+            Name: <input type="text" name="name" />
+        </p>
+        <p>
+            Email: <input type="email"  name="email"/>
+        </p>
+
+        <p>
+            Phone Number: <input type="tel" name="phoneNumber" />
+        </p>
+        <p>
+            <input type="submit" id="addTalent" value="Submit" />
+            <a href="index.html">Cancel</a>
+        </p>
+    </div>
+</form>
+
+</body>
+</html>
