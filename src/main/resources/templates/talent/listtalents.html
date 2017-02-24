@@ -15,9 +15,10 @@
         <thead>
         <tr>
             <th>Talent Id</th>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Email</th>
-            <th>Phone Number</th>
+
         </tr>
         </thead>
         <tbody>
@@ -27,8 +28,6 @@
             <td th:text="${talent.fname}"/>
             <td th:text="${talent.lname}"/>
             <td th:text="${talent.email}"/>
-            <td th:text="${talent.password}"/>
-            <td th:text="${talent.Cpassword}"/>
             <td>
                 <form th:method="delete" th:action="@{'/talent/'+${talent.talent_id}}">
                     <input type="submit" value="Delete"/>
