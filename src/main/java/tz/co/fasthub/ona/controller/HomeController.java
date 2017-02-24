@@ -17,4 +17,25 @@ public class HomeController {
     @RequestMapping("/talent/addTalent")
     public String addTalent() {
         return "talent/addTalent";
-    }}
+    }
+
+
+    @RequestMapping("/twitter/connected")
+    public String connected(){
+        return "twitter/connected";
+    }
+
+    @RequestMapping("/twitter/profile")
+    public String profile(){
+        return "twitter/profile";
+    }
+
+    @RequestMapping("/talent/viewTweets")
+    public String viewTweets() {
+        return "talent/viewTweets";
+    }
+
+
+}
+
+

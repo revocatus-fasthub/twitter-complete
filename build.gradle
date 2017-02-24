@@ -37,7 +37,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-jersey')
 	//compile('org.springframework.boot:spring-boot-starter-security')
 	//compile('org.springframework.boot:spring-boot-starter-social-facebook')
-	//compile('org.springframework.boot:spring-boot-starter-social-twitter')
+	compile('org.springframework.boot:spring-boot-starter-social-twitter')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.hibernate:hibernate-core')
