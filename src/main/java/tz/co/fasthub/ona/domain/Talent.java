@@ -14,25 +14,31 @@ public class Talent {
     @Id
     @GeneratedValue
     private Long talent_id;
-    private String name;
+    private String fname;
+    private String lname;
     private String email;
-    private String phoneNumber;
+    private String password;
+    private String Cpassword;
 
     private Talent(){}
 
-    public Talent(String name, String email, String phoneNumber) {
-        this.name = name;
+    public Talent(String fname, String lname, String email, String password, String cpassword) {
+        this.fname = fname;
+        this.lname = lname;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.password = password;
+        Cpassword = cpassword;
     }
 
     @Override
     public String toString() {
         return "Talent{" +
                 "talent_id=" + talent_id +
-                ", name='" + name + '\'' +
+                ", fname='" + fname + '\'' +
+                ", lname='" + lname + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", Cpassword='" + Cpassword + '\'' +
                 '}';
     }
 
@@ -44,12 +50,20 @@ public class Talent {
         this.talent_id = talent_id;
     }
 
-    public String getName() {
-        return name;
+    public String getFname() {
+        return fname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    public String getLname() {
+        return lname;
+    }
+
+    public void setLname(String lname) {
+        this.lname = lname;
     }
 
     public String getEmail() {
@@ -60,11 +74,19 @@ public class Talent {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCpassword() {
+        return Cpassword;
+    }
+
+    public void setCpassword(String cpassword) {
+        Cpassword = cpassword;
     }
 }

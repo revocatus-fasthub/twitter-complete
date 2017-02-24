@@ -24,9 +24,11 @@
         <tr th:each="talent : ${page.content}">
 
             <td th:text="${talent.talent_id}"/>
-            <td th:text="${talent.name}"/>
+            <td th:text="${talent.fname}"/>
+            <td th:text="${talent.lname}"/>
             <td th:text="${talent.email}"/>
-            <td th:text="${talent.phoneNumber}"/>
+            <td th:text="${talent.password}"/>
+            <td th:text="${talent.Cpassword}"/>
             <td>
                 <form th:method="delete" th:action="@{'/talent/'+${talent.talent_id}}">
                     <input type="submit" value="Delete"/>

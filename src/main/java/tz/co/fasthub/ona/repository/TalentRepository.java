@@ -9,6 +9,6 @@ import tz.co.fasthub.ona.domain.Talent;
  */
 public interface TalentRepository extends JpaRepository<Talent,Long> {
 
-     Talent findByPhoneNumber(String phoneNumber);
+     Talent findByFname(String fname);
      Talent findByEmail(String email);
 }

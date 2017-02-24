@@ -13,14 +13,19 @@
 <form modelAttribute="addTalentForm" action="/talent/addTalent" method="post">
     <div align="center">
         <p>
-            Name: <input type="text" name="name" />
+            First Name: <input type="text" name="first name" />
+        </p>
+        <p>
+            Last Name: <input type="text" name="last name" />
         </p>
         <p>
             Email: <input type="email"  name="email"/>
         </p>
-
         <p>
-            Phone Number: <input type="tel" name="phoneNumber" />
+            Password: <input type="password" name="password" />
+        </p>
+        <p>
+            Confirm Password: <input type="password" name="confirm password" />
         </p>
         <p>
             <input type="submit" id="addTalent" value="Submit" />

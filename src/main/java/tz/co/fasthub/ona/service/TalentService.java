@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import tz.co.fasthub.ona.domain.Talent;
 
 public interface TalentService {
-     Talent getTalentByPhoneNumber(String name);
+     Talent getTalentByFname(String lname);
      void deleteTalentById(Long id);
      Talent createTalent(Talent talent);
      Page<Talent> findTalentPage(Pageable pageable);

@@ -24,8 +24,8 @@ public class TalentServiceImpl implements TalentService {
 
 
     @Override
-    public Talent getTalentByPhoneNumber(String phoneNumber) {
-        return talentRepository.findByPhoneNumber(phoneNumber);
+    public Talent getTalentByFname(String fname) {
+        return talentRepository.findByFname(fname);
     }
 
     @Override
