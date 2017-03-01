@@ -34,7 +34,7 @@ public class FacebookController {
 			
 			PostData postData = new PostData(facebook.userOperations().getUserProfile().getId());
 			
-			postData.message("Vegetables are good for you.");
+			postData.message("this is facebook!!!g");
 
 			facebook.feedOperations().post(postData);
 		
