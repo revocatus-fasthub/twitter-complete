@@ -36,8 +36,6 @@ public class TwitterController {
 
     Twitter twitter;
 
-
-
     @RequestMapping("/twitter/viewTweets")
     public String tw(HttpServletRequest request, Model model) {
         OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
