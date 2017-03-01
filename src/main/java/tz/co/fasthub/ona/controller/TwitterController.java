@@ -36,12 +36,16 @@ public class TwitterController {
 
     Twitter twitter;
 
+
+
     @RequestMapping("/twitter/viewTweets")
     public String tw(HttpServletRequest request, Model model) {
         OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
         if(token == null) {
 
             log.error("twitter is null");
+            log.error(".. meaning twitter is not working");
+
             return "redirect:/twitter/connected";
         }
 
