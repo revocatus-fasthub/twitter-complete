@@ -30,11 +30,16 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
+        twitter.directMessageOperations().sendDirectMessage("devFastHub", "You going to the Dolphins game?");
+       // twitter.timelineOperations().updateStatus("good evening from FastHub");
+        return "hello";
 
-        model.addAttribute(twitter.userOperations().getUserProfile());
+       /* model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
         model.addAttribute("friends", friends);
+
         return "hello";
+         */
     }
 
 }

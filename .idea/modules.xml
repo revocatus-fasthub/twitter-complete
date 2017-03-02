@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/complete-tw.iml" filepath="$PROJECT_DIR$/.idea/modules/complete-tw.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/complete-tw_main.iml" filepath="$PROJECT_DIR$/.idea/modules/complete-tw_main.iml" group="complete-tw" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/complete-tw_test.iml" filepath="$PROJECT_DIR$/.idea/modules/complete-tw_test.iml" group="complete-tw" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/twitter-complete.iml" filepath="$PROJECT_DIR$/.idea/modules/twitter-complete.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/twitter-complete_main.iml" filepath="$PROJECT_DIR$/.idea/modules/twitter-complete_main.iml" group="twitter-complete" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/twitter-complete_test.iml" filepath="$PROJECT_DIR$/.idea/modules/twitter-complete_test.iml" group="twitter-complete" />
     </modules>
   </component>
 </project>
