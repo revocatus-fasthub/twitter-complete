@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/twitter")
 public class TwitterController {
 
     private Twitter twitter;
@@ -33,9 +33,9 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
-        twitter.timelineOperations().updateStatus("I'm tweeting from Mbeya!");
-        return "/twitter/success";
-       // return "/connect/twitterConnected";
+        //twitter.timelineOperations().updateStatus("I'm tweeting from Mbeya!");
+        //return "/twitter/success";
+       return "/connect/twitterConnected";
     }
 
 
@@ -63,6 +63,29 @@ public class TwitterController {
         return "/twitter/viewFriendList";
     }
 
+    @RequestMapping(value = "/followers", method = RequestMethod.GET)
+    public String followers(Model model) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/followersList";
+        }
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
+        model.addAttribute("followers", followers);
+        return "/twitter/followersList";
+    }
+
+
+    @RequestMapping(value = "/directmessage", method = RequestMethod.GET)
+    public String directMsg(Model model) {
+        //if (
+                connectionRepository.findPrimaryConnection(Twitter.class);// == null) {
+       //     return "redirect:/sendDirectMessage";
+
+       // model.addAttribute(twitter.userOperations().getUserProfile());
+        twitter.directMessageOperations().sendDirectMessage("Revocatus Robert", "You going to the Dolphins game?");
+   //     model.addAttribute("followers", followers);
+        return "/twitter/success";
+    }
 
 
 /*
