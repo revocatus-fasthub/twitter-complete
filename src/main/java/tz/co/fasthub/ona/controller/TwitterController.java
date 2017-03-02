@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Controller
-@RequestMapping("/twitter")
+@RequestMapping("/")
 public class TwitterController {
 
     private Twitter twitter;
@@ -31,10 +31,11 @@ public class TwitterController {
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-          //  return "/connect/twitter";
             return "redirect:/connect/twitter";
         }
-        return "/connect/twitterConnected";
+        twitter.timelineOperations().updateStatus("I'm tweeting from Mbeya!");
+        return "/twitter/success";
+       // return "/connect/twitterConnected";
     }
 
 
@@ -62,19 +63,37 @@ public class TwitterController {
         return "/twitter/viewFriendList";
     }
 
+
+
+/*
+
+    @RequestMapping(value = "/post", method=RequestMethod.GET)
+    public String helloTwitter(Model model) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/post";
+        }
+        twitter.timelineOperations().updateStatus("I'm tweeting from Mbeya!");
+        return "/twitter/success";
+    }
+
+
     @RequestMapping(value = "/postTweet", method = RequestMethod.GET)
-    public String postTweet() {
+    public String postTweet(Model model) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/success";
         }
-        //  model.addAttribute(twitter.userOperations().getUserProfile());
-        twitter.timelineOperations().updateStatus(
-                new TweetData("Spring Social is bae!")
-        );
+        StatusDetails statusDetails = new StatusDetails();
+        log.error("error");
+
+        twitter.timelineOperations().updateStatus("I'm tweeting from Dar!", statusDetails);
+
+        //model.addAttribute(twitter.timelineOperations().updateStatus("Spring Social is bae!"));
         log.info("sent!");
         //model.addAttribute("friends", friends);
         return "/twitter/success";
     }
 
+
+ */
 
 }
