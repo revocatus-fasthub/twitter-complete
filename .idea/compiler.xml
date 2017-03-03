@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="complete-tw_main" target="1.8" />
       <module name="complete-tw_test" target="1.8" />
+      <module name="twitter-complete_main" target="1.8" />
+      <module name="twitter-complete_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
