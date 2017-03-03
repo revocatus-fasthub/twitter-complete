@@ -44,8 +44,5 @@ public class TalentController {
 
             return "redirect:/talents";
         }
-
-
     }
-
 }

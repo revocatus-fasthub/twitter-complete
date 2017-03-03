@@ -150,13 +150,3 @@ public class TwitterController {
         }
 
    */
-
-       /*
-         model.addAttribute(twitter.userOperations().getUserProfile());
-        DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage("devFastHub","hi dev");
-        model.addAttribute("directMessage",directMessage);
-       // model.addAttribute(twitter.userOperations().getUserProfile());
-         */
-        //twitter.directMessageOperations().sendDirectMessage(, "You going to the Dolphins game?");
-   //     model.addAttribute("followers", followers);
-     //   return "/twitter/sendDirectMessage";
