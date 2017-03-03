@@ -45,6 +45,11 @@ public class HomeController {
     public String showMessages() {
         return "/twitter/success";
     }
+
+    @RequestMapping("/twitter/postTweet")
+    public String tweet(){
+        return "/twitter/postTweet";
+    }
 }
 
 

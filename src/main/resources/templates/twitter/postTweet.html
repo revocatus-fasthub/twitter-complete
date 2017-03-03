@@ -7,21 +7,31 @@
 </head>
 <body>
 
-<h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
-
-<h4>These are your FOLLOWERS:</h4>
-
-<ul>
-    <li th:each="tweet:${tweets}" th:text="${tweets}">Tweet</li>
-</ul>
+<center>
+    <h3>POST TO TWITTER:</h3>
+    <form action="#" th:action="@{/twitter/postTweet}" th:object="${greeting}" method="post">
+      <!--  <p>Recipient's Screen Name: <input type="text" th:field="*{twitterScreenName}" /></p>
+       -->
+        <p>Message: <input type="text" name="message"/></p>
+        <p><input type="submit" id="postTweet" value="Post" /></p>
+    </form>
+</center>
 
 <!--
 
-<h3>POST TO TWITTER:</h3>
-    <form action="postTweet" method="post">
-        <textarea id="postTweet" name="postTweet"> Write Tweet here</textarea>
-        <button id="sendTweet">Post</button>
+  <h3>POST TO TWITTER:</h3>
+    <form action="postTweet" method="post" modelAttribute="tweet">
+        Recipient's Screen Name: <input type="text" name="twitterScreenName"/>
+        <p><textarea id="message" name="message"> Type Tweet here</textarea></p>
+        <p><button id="sendTweet" type="button">Post</button></p>
     </form>
+
+
+
+<h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
+
+<h4>You tweeted:</h4>
+    th:each="tweet:${tweets}" th:text="${tweets}">Tweet
 -->
 </body>
 </html>

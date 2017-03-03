@@ -7,7 +7,7 @@ public class PayLoad {
     String twitterScreenName;
     String message;
 
-    private PayLoad(){}
+    public PayLoad(){}
 
     public PayLoad(String twitterScreenName, String message) {
         this.twitterScreenName = twitterScreenName;

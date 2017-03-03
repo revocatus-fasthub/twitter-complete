@@ -34,7 +34,7 @@ public class TwitterController {
 
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
 
-    String URL ="https://api.twitter.com/1.1/";
+    String URL ="https://api.twitter.com";
 
     @Inject
     public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
@@ -96,12 +96,14 @@ public class TwitterController {
             return "redirect:/sendDirectMessage";
         }
         model.addAttribute(twitter.userOperations().getUserProfile());
-        DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage("devFastHub","it's nemy");
+        DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage("devFastHub","this must work");
         model.addAttribute("directMessage",directMessage);
 
         return "/twitter/success";
     }
 
+    //POSTING DIRECTLY TO USER ACCOUNT
+/*
     @RequestMapping(value = "/tweet", method = RequestMethod.GET)
     public String postTweet(Model model, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
@@ -114,6 +116,30 @@ public class TwitterController {
 
         return "/twitter/success";
     }
+ */
+
+
+    //POSTING USING A FORM
+    @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
+    public String tweet(@ModelAttribute("tweet") Model model, PayLoad payLoad, BindingResult bindingResult, RedirectAttributes redirectAttributes ){
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("flash.message", "Message was Not Created  => error details: " + bindingResult.getFieldError().toString());
+            return "redirect:/twitter/postTweet";
+        }else {
+            model.addAttribute(twitter.userOperations().getUserProfile());
+           // payLoad.setMessage(request.getParameter("message"));
+           // String newTweet = payLoad.getMessage();
+          Tweet tweets = twitter.timelineOperations().updateStatus(payLoad.getMessage());
+          model.addAttribute("tweets",tweets);
+
+        }
+        redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + payLoad);
+
+        return "redirect:/twitter/success";
+    }
+
+
+
 
 }//main class
 
