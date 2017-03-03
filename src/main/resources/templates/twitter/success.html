@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns:th="http://www.thmyeleaf.org" lang="en">
 <head>
-    <title>SUCCESS</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+    <meta charset="UTF-8" />
+    <title>All Messages</title>
+    <link rel="stylesheet" href="/main.css"/>
 </head>
 <body>
-<h1>
-    SUCCESS
-</h1>
+
+<h3 th:if="${#vars['flash.messages']}" th:text="${#vars['flash.messages']}" class="flash"></h3>
+<h1>SUCCESS</h1>
 </body>
 </html>

@@ -10,7 +10,7 @@ import tz.co.fasthub.ona.service.TalentService;
 
 /**
  * Created by root on 2/10/17.
- */
+ */ 
 @Service
 public class TalentServiceImpl implements TalentService {
 
