@@ -117,84 +117,24 @@ public class TwitterController {
 
 
     //POSTING USING A FORM
-    /*
-    @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
-    public String tweet(@ModelAttribute("tweet") Model model, Payload payLoad, BindingResult bindingResult, RedirectAttributes redirectAttributes ){
-     //   if (bindingResult.hasErrors()) {
-        //    redirectAttributes.addFlashAttribute("flash.message", "Message was Not Created  => error details: " + bindingResult.getFieldError().toString());
-       //     return "redirect:/twitter/postTweet";
-       // }else {
-            model.addAttribute(twitter.userOperations().getUserProfile());
-           // payLoad.setMessage(request.getParameter("message"));
-           // String newTweet = payLoad.getMessage();
-          Tweet tweets = twitter.timelineOperations().updateStatus(payLoad.getMessage());
-          model.addAttribute("tweets",tweets);
-
-      //  }
-    //    redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + payLoad);
-
-        return "redirect:/twitter/success";
-    }
-
-*/
-
-    @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
-    public String tweet(@ModelAttribute("tweet") Model model, Payload payload) throws Exception {
+    @RequestMapping(value = "/postTweet", method = RequestMethod.POST)
+    public String tweet(@ModelAttribute(value = "tweet") Model model, Payload payload, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
       log.info("connecting ... payload: "+payload);
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             log.error("no connection");
             return "redirect:/twitter/renderPostTweet/form";
+        }else if(bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("flash.message", "MEssage was Not sent  => error details: " + bindingResult.getFieldError().toString());
+            return "redirect:/twitter/renderPostTweet/form";
         }
 
-       // String msg = payload.getMessage("message");
-
-       // model.addAttribute(twitter.userOperations().getUserProfile());
-        //log.error("no connection 2");
-
-        // payload.setMessage(msg);
-
+        model.addAttribute(twitter.userOperations().getUserProfile());
         twitterService.postTweet(payload);
         Tweet tweets = twitter.timelineOperations().updateStatus(payload.getMessage("message"));
-        log.error("no connection 3");
         model.addAttribute("tweets",tweets);
-        return "redirect:/twitter/success";
+        return "redirect:/twitter/successTweet";
 
     }
 
 
-
 }//main class
-
-  /*
-    @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
-    public String directMsg(@ModelAttribute("sendMessage") Payload payLoad, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-                return "redirect:/sendDirectMessage";
-        }
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("flash.message", "NO message entered  => error details: " + bindingResult.getFieldError().toString());
-            return "redirect:/messages";
-        }else {
-            try {
-
-                HttpHeaders headers = new HttpHeaders();
-               // RestTemplate restTemplate = new RestTemplate();
-
-                headers.setContentType(MediaType.APPLICATION_JSON);
-
-                // Payload payLoads = new Payload(payLoad.getTwitterScreenName(),payLoad.getMessage());
-                DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage(payLoad.getTwitterScreenName(),payLoad.getMessage());
-                HttpEntity<Payload> entity = new HttpEntity<Payload>((MultiValueMap<String, String>) directMessage);
-                //Payload responsePayload = restTemplate.postForEntity(URL,entity,Payload.class);
-
-
-            }catch (Exception e){
-                log.error("Sending Failed",e);
-            }
-            redirectAttributes.addFlashAttribute("flash.message", "Message was successfully sent => Message: " + payLoad);
-
-            return "redirect:/messages";
-        }
-
-   */
