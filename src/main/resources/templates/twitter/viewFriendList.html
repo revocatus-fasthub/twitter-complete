@@ -7,8 +7,12 @@
 
 <h4>These are your friends:</h4>
 
-<ul>
+<ol>
     <li th:each="friend:${friends}" th:text="${friend.name}">Friend</li>
-</ul>
+</ol>
+<p><a href="/connect/twitterConnected" th:href="@{/twitter/viewTweets}">View Tweets</a>
+    <a href="/connect/twitterConnected" th:href="@{/twitter/followers}">View Followers</a></p>
+<p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Menu</a>
+</p>
 </body>
 </html>

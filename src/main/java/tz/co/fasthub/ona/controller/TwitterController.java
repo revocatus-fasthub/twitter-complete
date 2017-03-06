@@ -2,24 +2,18 @@ package tz.co.fasthub.ona.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import tz.co.fasthub.ona.domain.PayLoad;
+import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.service.TwitterService;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -32,9 +26,12 @@ public class TwitterController {
 
     private ConnectionRepository connectionRepository;
 
+    @Autowired
+    TwitterService twitterService;
+
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
 
-    String URL ="https://api.twitter.com";
+    //String URL ="https://api.twitter.com";
 
     @Inject
     public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
@@ -120,24 +117,49 @@ public class TwitterController {
 
 
     //POSTING USING A FORM
+    /*
     @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
-    public String tweet(@ModelAttribute("tweet") Model model, PayLoad payLoad, BindingResult bindingResult, RedirectAttributes redirectAttributes ){
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("flash.message", "Message was Not Created  => error details: " + bindingResult.getFieldError().toString());
-            return "redirect:/twitter/postTweet";
-        }else {
+    public String tweet(@ModelAttribute("tweet") Model model, Payload payLoad, BindingResult bindingResult, RedirectAttributes redirectAttributes ){
+     //   if (bindingResult.hasErrors()) {
+        //    redirectAttributes.addFlashAttribute("flash.message", "Message was Not Created  => error details: " + bindingResult.getFieldError().toString());
+       //     return "redirect:/twitter/postTweet";
+       // }else {
             model.addAttribute(twitter.userOperations().getUserProfile());
            // payLoad.setMessage(request.getParameter("message"));
            // String newTweet = payLoad.getMessage();
           Tweet tweets = twitter.timelineOperations().updateStatus(payLoad.getMessage());
           model.addAttribute("tweets",tweets);
 
-        }
-        redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + payLoad);
+      //  }
+    //    redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + payLoad);
 
         return "redirect:/twitter/success";
     }
 
+*/
+
+    @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
+    public String tweet(@ModelAttribute("tweet") Model model, Payload payload) throws Exception {
+      log.info("connecting ... payload: "+payload);
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            log.error("no connection");
+            return "redirect:/twitter/renderPostTweet/form";
+        }
+
+       // String msg = payload.getMessage("message");
+
+       // model.addAttribute(twitter.userOperations().getUserProfile());
+        //log.error("no connection 2");
+
+        // payload.setMessage(msg);
+
+        twitterService.postTweet(payload);
+        Tweet tweets = twitter.timelineOperations().updateStatus(payload.getMessage("message"));
+        log.error("no connection 3");
+        model.addAttribute("tweets",tweets);
+        return "redirect:/twitter/success";
+
+    }
 
 
 
@@ -145,7 +167,7 @@ public class TwitterController {
 
   /*
     @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
-    public String directMsg(@ModelAttribute("sendMessage") PayLoad payLoad, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String directMsg(@ModelAttribute("sendMessage") Payload payLoad, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
                 return "redirect:/sendDirectMessage";
         }
@@ -161,10 +183,10 @@ public class TwitterController {
 
                 headers.setContentType(MediaType.APPLICATION_JSON);
 
-                // PayLoad payLoads = new PayLoad(payLoad.getTwitterScreenName(),payLoad.getMessage());
+                // Payload payLoads = new Payload(payLoad.getTwitterScreenName(),payLoad.getMessage());
                 DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage(payLoad.getTwitterScreenName(),payLoad.getMessage());
-                HttpEntity<PayLoad> entity = new HttpEntity<PayLoad>((MultiValueMap<String, String>) directMessage);
-                //PayLoad responsePayload = restTemplate.postForEntity(URL,entity,PayLoad.class);
+                HttpEntity<Payload> entity = new HttpEntity<Payload>((MultiValueMap<String, String>) directMessage);
+                //Payload responsePayload = restTemplate.postForEntity(URL,entity,Payload.class);
 
 
             }catch (Exception e){

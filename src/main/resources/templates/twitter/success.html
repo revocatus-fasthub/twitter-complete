@@ -10,11 +10,17 @@
 <h3 th:if="${#vars['flash.messages']}" th:text="${#vars['flash.messages']}" class="flash"></h3>
 <h1>SUCCESS</h1>
 
+
+<!--
+
 <h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
 
 <h4>You tweeted:</h4>
-th:each="tweet:${tweets}" th:text="${tweets}">Tweet
 
+<span th:text="${tweets}">Hello html</span>
+
+th:each="tweet:${tweets}" th:text="${tweets}">Tweet
+-->
 
 </body>
 </html>

@@ -7,8 +7,13 @@
 
 <h4>These are your FOLLOWERS:</h4>
 
-<ul>
+<ol>
     <li th:each="follower:${followers}" th:text="${follower.name}">Follower</li>
-</ul>
+</ol>
+<p>
+    <a href="/connect/twitterConnected" th:href="@{/twitter/postTweet}">Post a Tweet</a>
+</p>
+<p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Menu</a>
+</p>
 </body>
 </html>

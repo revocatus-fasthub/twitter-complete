@@ -9,12 +9,15 @@
 
 <center>
     <h3>POST TO TWITTER:</h3>
-    <form action="#" th:action="@{/twitter/postTweet}" th:object="${greeting}" method="post">
-      <!--  <p>Recipient's Screen Name: <input type="text" th:field="*{twitterScreenName}" /></p>
-       -->
+    <form modelAttribute="tweet" action="/twitter/postTweet" method="post">
         <p>Message: <input type="text" name="message"/></p>
         <p><input type="submit" id="postTweet" value="Post" /></p>
+        <p>
+            <a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Cancel</a>
+        </p>
     </form>
+
+
 </center>
 
 <!--
