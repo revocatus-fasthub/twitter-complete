@@ -3,6 +3,8 @@ package tz.co.fasthub.ona.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.*;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.service.TwitterService;
 
 import javax.inject.Inject;
@@ -37,6 +40,14 @@ public class TwitterController {
     public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
         this.twitter = twitter;
         this.connectionRepository = connectionRepository;
+    }
+
+
+    @RequestMapping(value = "/listTweets")
+    public String showUsers(Model model, Pageable pageable) {
+        final Page<Payload> page = twitterService.findPayloadPage(pageable);
+        model.addAttribute("page", page);
+        return "/twitter/listTweets";
     }
 
     @RequestMapping(method=RequestMethod.GET)
@@ -118,21 +129,23 @@ public class TwitterController {
 
     //POSTING USING A FORM
     @RequestMapping(value = "/postTweet", method = RequestMethod.POST)
-    public String tweet(@ModelAttribute(value = "tweet") Model model, Payload payload, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
+    public String tweet(@ModelAttribute(value = "tweet") Payload payload, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
       log.info("connecting ... payload: "+payload);
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            log.error("no connection");
+            log.error("no connection to twitter");
             return "redirect:/twitter/renderPostTweet/form";
         }else if(bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash.message", "MEssage was Not sent  => error details: " + bindingResult.getFieldError().toString());
             return "redirect:/twitter/renderPostTweet/form";
         }
 
-        model.addAttribute(twitter.userOperations().getUserProfile());
+        //model.addAttribute(twitter.userOperations().getUserProfile());
         twitterService.postTweet(payload);
         Tweet tweets = twitter.timelineOperations().updateStatus(payload.getMessage("message"));
-        model.addAttribute("tweets",tweets);
-        return "redirect:/twitter/successTweet";
+        //model.addAttribute("tweets",tweets);
+        redirectAttributes.addFlashAttribute("flash.message","Tweet successfully posted => Tweet: "+payload.getMessage("message"));
+        log.info("Tweet posted successfully");
+        return "redirect:/twitter/listTweets";
 
     }
 

@@ -40,8 +40,8 @@ public class TalentController {
             return  "redirect:/talents";
         }else {
             talentService.createTalent(talent);
-            redirectAttributes.addFlashAttribute("flash.message","Talent was successfully created => Talent: "+talent);
 
+            redirectAttributes.addFlashAttribute("flash.message","Talent was successfully created => Talent: "+talent);
             return "redirect:/talents";
         }
     }

@@ -35,11 +35,11 @@ public class HomeController {
         return "talent/viewTweets";
     }
 
-
     @RequestMapping("/twitter/success")
     public String success() {
         return "twitter/success";
     }
+
 
     @RequestMapping(value = "/messages")
     public String showMessages() {

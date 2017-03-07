@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/main.css"/>
+
+    <title>LIST TWEETS POSTED</title>
+</head>
+
+<body>
+
+<p><h2 th:if="${#vars['flash.messages']}" th:text="${#vars['flash.messages']}" class="flash"></h2></p>
+
+<!--
+<h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
+
+<h4>You tweeted:</h4>
+
+th:each="tweet:${tweets}" th:text="${tweets}">Tweet
+ -->
+
+<div>
+    <h3 th:text="${page.number+1}+' of '+${page.totalPages}"/>
+    <table>
+        <thead>
+        <tr>
+            <th>Tweet Id</th>
+            <th>Tweet</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="payload : ${page.content}">
+
+            <td th:text="${payload.payload_id}"/>
+            <td th:text="${payload.message}"/>
+            <td>
+                <form th:method="delete" th:action="@{'/payload/'+${payload.payload_id}}">
+                    <input type="submit" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>
+        <a href="/connect/twitterConnected" th:href="@{/connect/twitter}">OK</a>
+    </p>
+
+</div>
+</body>
+</html>
