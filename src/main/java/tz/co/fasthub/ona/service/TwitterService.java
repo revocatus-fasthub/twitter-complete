@@ -5,6 +5,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.Talent;
 
@@ -16,11 +17,14 @@ import java.util.List;
  */
 public interface TwitterService {
 
-    Payload postTweet(Payload payload);
+    Payload savePayload(Payload payload);
+
     Page<Payload> findPayloadPage(Pageable pageable);
+
     List<Payload> listAllTweets();
 
-   // Resource findOneImage(String filename);
-    //void createImage(MultipartFile file) throws IOException;
-  //  void deleteImage(String filename) throws IOException;
+     Resource findOneImage(String filename);
+    void updatePayload (Payload payload);
+    Image createImage(MultipartFile file) throws IOException;
+    //  void deleteImage(String filename) throws IOException;
 }

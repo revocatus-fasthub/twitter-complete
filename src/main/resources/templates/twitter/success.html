@@ -20,7 +20,7 @@
             <th>Message</th>
         </tr>
         <tr th:each="payload : ${page.content}">
-            <td th:text="${payload.payload_id}"></td>
+            <td th:text="${payload.id}"></td>
             <td th:text="${payload.message}"></td>
             <td>
                 <form th:method="delete" th:action="@{'/images/' + ${image.name}}">
