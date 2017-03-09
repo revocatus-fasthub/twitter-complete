@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>TWITTER POST</title>
     <meta charset="utf-8" />
@@ -7,11 +7,14 @@
 </head>
 <body>
 
+
 <center>
     <h3>POST TO TWITTER:</h3>
-    <form modelAttribute="tweet" action="/twitter/postTweet" method="post">
+    <form modelAttribute="tweet" action="/twitter/postTweet" enctype="multipart/form-data" method="post">
         <p>Message: <input type="text" name="message"/></p>
+        <p>choose your file:   <input type="file" name="file" /></p>
         <p><input type="submit" id="postTweet" value="Post" /></p>
+
         <p>
             <a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Cancel</a>
         </p>

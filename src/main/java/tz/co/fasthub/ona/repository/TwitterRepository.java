@@ -8,4 +8,5 @@ import tz.co.fasthub.ona.domain.Payload;
  */
 public interface TwitterRepository extends JpaRepository<Payload,Long> {
 
+   // Payload findById(Long payload_id);
 }

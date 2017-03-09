@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thmyeleaf.org" lang="en">
+<html xmlns:th="http://www.thmyeleaf.org" lang="en" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thmyeleaf.org ">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>All Messages</title>
     <link rel="stylesheet" href="/main.css"/>
 </head>
 <body>
 
-<h3 th:if="${#vars['flash.messages']}" th:text="${#vars['flash.messages']}" class="flash"></h3>
-<h1>SUCCESS</h1>
+<h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}"></h3>
+
+
+<div>
+    <h3 th:text="${page.number + 1} + ' of ' + ${page.totalPages}"></h3>
+    <h4 th:text="${page.size} + ' item(s) per page'"></h4>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Message</th>
+        </tr>
+        <tr th:each="payload : ${page.content}">
+            <td th:text="${payload.payload_id}"></td>
+            <td th:text="${payload.message}"></td>
+            <td>
+                <form th:method="delete" th:action="@{'/images/' + ${image.name}}">
+                    <input type="submit" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
 
 
 <!--
