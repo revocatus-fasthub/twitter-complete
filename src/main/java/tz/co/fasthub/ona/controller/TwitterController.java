@@ -138,7 +138,7 @@ public class TwitterController {
 
 */
 
-    @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
+    @RequestMapping(value = "/postTweet", method = RequestMethod.POST)
     public String tweet(@ModelAttribute("tweet") Model model, Payload payload) throws Exception {
       log.info("connecting ... payload: "+payload);
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {

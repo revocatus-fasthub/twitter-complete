@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns:th="http://www.thmyeleaf.org">
 <head>
     <title>TWITTER POST</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+    <meta charset="utf-8"/>
 </head>
 <body>
 
 <center>
     <h3>POST TO TWITTER:</h3>
-    <form modelAttribute="tweet" action="/twitter/postTweet" method="post">
+    <form method="post" modelAttribute="tweet" action="/twitter/postTweet" enctype="multipart/form-data">
         <p>Message: <input type="text" name="message"/></p>
-        <p><input type="submit" id="postTweet" value="Post" /></p>
+        <p><input type="submit" id="postTweet" value="Post Tweet"/></p>
         <p>
             <a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Cancel</a>
         </p>
