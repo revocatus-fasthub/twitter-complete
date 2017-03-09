@@ -1,5 +1,7 @@
 package tz.co.fasthub.ona.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,18 +17,21 @@ public class Payload {
     private Long payload_id;
     //String twitterScreenName;
     private String message;
+    //private MultipartFile file;
 
     private Payload(){}
 
-    public Payload(String message) {
+    public Payload(String message, MultipartFile file) {
         this.message = message;
+  //      this.file = file;
     }
 
     @Override
     public String toString() {
         return "Payload{" +
-                "payload_id='" + payload_id + '\'' +
+                "payload_id=" + payload_id +
                 ", message='" + message + '\'' +
+    //            ", file='" + file + '\'' +
                 '}';
     }
 
@@ -45,4 +50,8 @@ public class Payload {
     public void setMessage(String message) {
         this.message = message;
     }
-}
+
+    /*
+
+     */
+  }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thmyeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>All Tweets</title>
+    <link rel="stylesheet" href="/main.css"/>
+</head>
+<body>
+<h3 th:if="${#vars['flash.messages']}" th:text="${#vars['flash.messages']}" class="flash"></h3>
+
+
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tweet</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="payload : ${tweetpage}">
+
+            <td th:text="${payload.payload_id}"></td>
+            <td th:text="${payload.message}"></td>
+            <td>
+                <form th:method="delete" th:action="@{'/talent/'+${talent.talent_id}}">
+                    <input type="submit" value="Delete"/>
+
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>
+        <a href="/index" th:href="@{/index}">Ok</a>
+    </p>
+
+</div>
+</body>
+</html>
