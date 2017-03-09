@@ -18,15 +18,12 @@
         <tr>
             <th>Id</th>
             <th>Message</th>
+            <th>Image Uploaded</th>
         </tr>
         <tr th:each="payload : ${page.content}">
             <td th:text="${payload.id}"></td>
             <td th:text="${payload.message}"></td>
-            <td>
-                <form th:method="delete" th:action="@{'/images/' + ${image.name}}">
-                    <input type="submit" value="Delete"/>
-                </form>
-            </td>
+
         </tr>
     </table>
 </div>

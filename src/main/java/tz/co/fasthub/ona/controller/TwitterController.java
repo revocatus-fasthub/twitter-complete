@@ -50,7 +50,7 @@ public class TwitterController {
         this.connectionRepository = connectionRepository;
     }
 
-    @RequestMapping(value = "/next")
+    @RequestMapping(value = "/posted")
     public String index(Model model, Pageable pageable) throws IOException {
         final Page<Payload> page = twitterService.findPayloadPage(pageable);
         model.addAttribute("page", page);
@@ -207,7 +207,7 @@ public class TwitterController {
                     redirectAttributes.addFlashAttribute("flash.message", "Failed to upload" + file.getOriginalFilename() + "=>" + e);
                 }
             }
-        return "redirect:/twitter/next";
+        return "redirect:/twitter/posted";
     }
 
 }//main class
