@@ -2,91 +2,199 @@ package tz.co.fasthub.ona.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.oauth1.AuthorizedRequestToken;
-import org.springframework.social.oauth1.OAuth1Operations;
-import org.springframework.social.oauth1.OAuth1Parameters;
-import org.springframework.social.oauth1.OAuthToken;
-import org.springframework.social.twitter.api.Tweet;
-import org.springframework.social.twitter.api.Twitter;
-import org.springframework.social.twitter.connect.TwitterConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.service.TwitterService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.inject.Inject;
 import java.util.List;
 
-/**
- * Created by root on 2/24/17.
- */
-
 @Controller
+@RequestMapping("/twitter")
 public class TwitterController {
 
-    private static final String API_KEY = "SD0V7gUiCvpAxo5crYoZJ5xAr";
-    private static final String API_SECRET = "SJke2RFXOyuUMIi4iOubEWJIE3MOGxNDaNvIEvtwsg2AnSpoPi";
-    private static final String CALLBACK_URL = "http://127.0.0.1:8080/twitter/connected";
-    private static final String REQUEST_TOKEN_NAME = "requestToken";
-    private static final String TOKEN_NAME = "twitterToken";
+    private Twitter twitter;
+
+    private ConnectionRepository connectionRepository;
+
+    @Autowired
+    TwitterService twitterService;
 
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
 
-    Twitter twitter;
+    //String URL ="https://api.twitter.com";
 
-    @RequestMapping("/twitter/viewTweets")
-    public String tw(HttpServletRequest request, Model model) {
-        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
-        if(token == null) {
+    @Inject
+    public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
+        this.twitter = twitter;
+        this.connectionRepository = connectionRepository;
+    }
 
-            log.error("twitter is null");
-            log.error(".. meaning twitter is not working");
-
-            return "redirect:/twitter/connected";
+    @RequestMapping(method=RequestMethod.GET)
+    public String twitterConnection(Model model) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/connect/twitter";
         }
+       // twitter.directMessageOperations().sendDirectMessage("devFastHub", "You going to the Dolphins game?");
+        //twitter.timelineOperations().updateStatus("I'm tweeting from Mbeya!");
+       // return "/twitter/success";
+       return "/connect/twitterConnected";
+    }
 
-        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
-        Connection<Twitter> connection = connectionFactory.createConnection(token);
-        Twitter twitter = connection.getApi();
-        if( ! twitter.isAuthorized()) {
-            log.error("twitter is not authorized");
 
-            return "redirect:/twitter/connected";
+    @RequestMapping(value = "/viewTweets",method = RequestMethod.GET)
+    public String viewTweets(Model model){
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/viewTweets";
         }
-
+        model.addAttribute(twitter.userOperations().getUserProfile());
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
-        model.addAttribute("tweets", tweets);
+        model.addAttribute("tweets",tweets);
 
-        log.error("you can view tweets");
+        return "/twitter/viewTweets";
 
-        return "redirect:/twitter/viewTweets";
     }
 
-    @RequestMapping("/twitter/connect")
-    public void connect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
-        OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
-
-        OAuthToken requestToken = oauthOperations.fetchRequestToken(CALLBACK_URL, null);
-        request.getSession().setAttribute(REQUEST_TOKEN_NAME, requestToken);
-        String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
-
-        response.sendRedirect(authorizeUrl);
+    @RequestMapping(value = "/friends", method = RequestMethod.GET)
+    public String friendList(Model model) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/viewFriendList";
+        }
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
+        model.addAttribute("friends", friends);
+        return "/twitter/viewFriendList";
     }
 
-    @RequestMapping("/callback")
-    public String callback(String oauth_token, String oauth_verifier, HttpServletRequest request) {
-        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
-
-        OAuthToken requestToken = (OAuthToken) request.getSession().getAttribute(REQUEST_TOKEN_NAME);
-        OAuth1Operations oAuthOperations = connectionFactory.getOAuthOperations();
-        OAuthToken token = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
-
-        request.getSession().setAttribute(TOKEN_NAME, token);
-
-        return "redirect:/twitter/connected";
+    @RequestMapping(value = "/followers", method = RequestMethod.GET)
+    public String followers(Model model) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/followersList";
+        }
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
+        model.addAttribute("followers", followers);
+        return "/twitter/followersList";
     }
 
-}
+
+    @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
+    public String directMsg(Model model) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/sendDirectMessage";
+        }
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage("devFastHub","this must work");
+        model.addAttribute("directMessage",directMessage);
+
+        return "/twitter/success";
+    }
+
+    //POSTING DIRECTLY TO USER ACCOUNT
+/*
+    @RequestMapping(value = "/tweet", method = RequestMethod.GET)
+    public String postTweet(Model model, RedirectAttributes redirectAttributes) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/postTweet";
+        }
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        Tweet tweets = twitter.timelineOperations().updateStatus("i'm using spring social!");
+        model.addAttribute("tweets",tweets);
+        redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + tweets);
+
+        return "/twitter/success";
+    }
+ */
+
+
+    //POSTING USING A FORM
+    /*
+    @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
+    public String tweet(@ModelAttribute("tweet") Model model, Payload payLoad, BindingResult bindingResult, RedirectAttributes redirectAttributes ){
+     //   if (bindingResult.hasErrors()) {
+        //    redirectAttributes.addFlashAttribute("flash.message", "Message was Not Created  => error details: " + bindingResult.getFieldError().toString());
+       //     return "redirect:/twitter/postTweet";
+       // }else {
+            model.addAttribute(twitter.userOperations().getUserProfile());
+           // payLoad.setMessage(request.getParameter("message"));
+           // String newTweet = payLoad.getMessage();
+          Tweet tweets = twitter.timelineOperations().updateStatus(payLoad.getMessage());
+          model.addAttribute("tweets",tweets);
+
+      //  }
+    //    redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + payLoad);
+
+        return "redirect:/twitter/success";
+    }
+
+*/
+
+    @RequestMapping(value = "/twitter/postTweet", method = RequestMethod.POST)
+    public String tweet(@ModelAttribute("tweet") Model model, Payload payload) throws Exception {
+      log.info("connecting ... payload: "+payload);
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            log.error("no connection");
+            return "redirect:/twitter/renderPostTweet/form";
+        }
+
+       // String msg = payload.getMessage("message");
+
+       // model.addAttribute(twitter.userOperations().getUserProfile());
+        //log.error("no connection 2");
+
+        // payload.setMessage(msg);
+
+        twitterService.postTweet(payload);
+        Tweet tweets = twitter.timelineOperations().updateStatus(payload.getMessage("message"));
+        log.error("no connection 3");
+        model.addAttribute("tweets",tweets);
+        return "redirect:/twitter/success";
+
+    }
+
+
+
+}//main class
+
+  /*
+    @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
+    public String directMsg(@ModelAttribute("sendMessage") Payload payLoad, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+                return "redirect:/sendDirectMessage";
+        }
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("flash.message", "NO message entered  => error details: " + bindingResult.getFieldError().toString());
+            return "redirect:/messages";
+        }else {
+            try {
+
+                HttpHeaders headers = new HttpHeaders();
+               // RestTemplate restTemplate = new RestTemplate();
+
+                headers.setContentType(MediaType.APPLICATION_JSON);
+
+                // Payload payLoads = new Payload(payLoad.getTwitterScreenName(),payLoad.getMessage());
+                DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage(payLoad.getTwitterScreenName(),payLoad.getMessage());
+                HttpEntity<Payload> entity = new HttpEntity<Payload>((MultiValueMap<String, String>) directMessage);
+                //Payload responsePayload = restTemplate.postForEntity(URL,entity,Payload.class);
+
+
+            }catch (Exception e){
+                log.error("Sending Failed",e);
+            }
+            redirectAttributes.addFlashAttribute("flash.message", "Message was successfully sent => Message: " + payLoad);
+
+            return "redirect:/messages";
+        }
+
+   */

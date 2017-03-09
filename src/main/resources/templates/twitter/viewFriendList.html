@@ -1,0 +1,18 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Hello Twitter</title>
+</head>
+<body>
+<h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
+
+<h4>These are your friends:</h4>
+
+<ol>
+    <li th:each="friend:${friends}" th:text="${friend.name}">Friend</li>
+</ol>
+<p><a href="/connect/twitterConnected" th:href="@{/twitter/viewTweets}">View Tweets</a>
+    <a href="/connect/twitterConnected" th:href="@{/twitter/followers}">View Followers</a></p>
+<p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Menu</a>
+</p>
+</body>
+</html>

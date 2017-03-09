@@ -36,6 +36,20 @@ public class HomeController {
     }
 
 
+    @RequestMapping("/twitter/success")
+    public String success() {
+        return "twitter/success";
+    }
+
+    @RequestMapping(value = "/messages")
+    public String showMessages() {
+        return "/twitter/success";
+    }
+
+    @RequestMapping("/twitter/renderPostTweet/form")
+    public String tweet(){
+        return "/twitter/postTweet";
+    }
 }
 
 

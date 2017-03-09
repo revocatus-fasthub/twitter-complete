@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>SEND DIRECT MESSAGE</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+</head>
+<body>
+
+<!-- <form action="/twitter/sendDirectMessage" method="post" modelAttribute="sendMessage" >
+    Recipient's username: <input type="text" name="recipientScreenName"/>
+    Text Message: <input type="text" name="directmessage"/>
+    <input type="submit" name="submitMessage" value="Send Direct Message"/>
+</form>
+-->
+<h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
+
+<h4>Message:</h4>
+
+<ul>
+    <li th:each="directMessage:${directMessage}" th:text="${directMessage}">DirectMessage</li>
+</ul>
+
+</body>
+</html>
