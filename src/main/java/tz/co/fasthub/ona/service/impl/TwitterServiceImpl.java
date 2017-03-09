@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.repository.ImageRepository;
 import tz.co.fasthub.ona.repository.TwitterRepository;
 import tz.co.fasthub.ona.service.TwitterService;
 
@@ -27,15 +29,17 @@ public class TwitterServiceImpl implements TwitterService {
     private final ResourceLoader resourceLoader;
 
     private final TwitterRepository twitterRepository;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public TwitterServiceImpl(ResourceLoader resourceLoader, TwitterRepository twitterRepository) {
+    public TwitterServiceImpl(ResourceLoader resourceLoader, TwitterRepository twitterRepository, ImageRepository imageRepo) {
         this.resourceLoader = resourceLoader;
         this.twitterRepository = twitterRepository;
+        imageRepository = imageRepo;
     }
 
     @Override
-    public Payload postTweet(Payload payload) {
+    public Payload savePayload(Payload payload) {
             return twitterRepository.save(payload);
         }
 
@@ -49,17 +53,25 @@ public class TwitterServiceImpl implements TwitterService {
         return twitterRepository.findAll();
     }
 
-   /*
+
     public Resource findOneImage(String filename) {
         return resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename);
     }
 
-    public void createImage(MultipartFile file) throws IOException {
+    @Override
+    public void updatePayload(Payload payload) {
+        twitterRepository.save(payload);
+    }
+
+    public Image createImage(MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
             Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
-            twitterRepository.save(new Payload(file.getOriginalFilename()));
+            return imageRepository.save(new Image(file.getOriginalFilename()));
+
+        }else {
+            return null;
         }
     }
-    */
+
 }

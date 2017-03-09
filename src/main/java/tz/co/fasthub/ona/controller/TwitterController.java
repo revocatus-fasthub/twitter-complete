@@ -4,29 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.service.TwitterService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -143,9 +136,9 @@ public class TwitterController {
     //POSTING TWEET DIRECTLY TO USER ACCOUNT
 /*
     @RequestMapping(value = "/tweet", method = RequestMethod.GET)
-    public String postTweet(Model model, RedirectAttributes redirectAttributes) {
+    public String savePayload(Model model, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/postTweet";
+            return "redirect:/savePayload";
         }
         model.addAttribute(twitter.userOperations().getUserProfile());
         Tweet tweets = twitter.timelineOperations().updateStatus("i'm using spring social!");
@@ -159,7 +152,7 @@ public class TwitterController {
 
     //POSTING TWEET USING A FORM
 /*
-    @RequestMapping(value = "/postTweet", method = RequestMethod.POST)
+    @RequestMapping(value = "/savePayload", method = RequestMethod.POST)
     public String tweet(@ModelAttribute(value = "tweet") Payload payload, BindingResult bindingResult,
                         RedirectAttributes redirectAttributes) throws Exception {
       log.info("connecting ... payload: "+payload);
@@ -172,7 +165,7 @@ public class TwitterController {
             return "redirect:/twitter/renderPostTweet/form";
         }
 
-        twitterService.postTweet(payload);
+        twitterService.savePayload(payload);
 
         Tweet tweets = twitter.timelineOperations().updateStatus(payload.getMessage("message"));
         redirectAttributes.addFlashAttribute("flash.message","Tweet successfully posted => Tweet: "+payload.getMessage("message"));
@@ -192,26 +185,26 @@ public class TwitterController {
             return "redirect:/twitter/renderPostTweet/form";
         }else {
                 try {
-                    byte[] bytes = file.getBytes();
-                    Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-
-                    //   twitterService.createImage(file);
-                    Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
-                    log.error("error in creating image");
-                    log.info("imebeba file");
-
+                       Image image =twitterService.createImage(file);
 
                     //saving the tweet to DB
-                    twitterService.postTweet(payload);
+                    Payload createdPayload =twitterService.savePayload(payload);
+
+                    createdPayload.setImage(image);
+
+                    twitterService.savePayload(createdPayload);
+
+                    TweetData tweetData = new TweetData(createdPayload.getMessage());
+                    tweetData.withMedia(twitterService.findOneImage(image.getName()));
 
 
-                    Tweet tweet = twitter.timelineOperations().updateStatus(payload.getMessage("message"), (Resource)path);
+                    Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
                     log.info("tweet sent");
                     log.error("not sent");
                     redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded");
 
                 } catch (IOException e) {
-                    redirectAttributes.addFlashAttribute("flash.message", "Failed to upload" + file.getOriginalFilename() + "=>" + e.getMessage());
+                    redirectAttributes.addFlashAttribute("flash.message", "Failed to upload" + file.getOriginalFilename() + "=>" + e);
                 }
             }
         return "redirect:/twitter/next";

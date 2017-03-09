@@ -1,10 +1,6 @@
 package tz.co.fasthub.ona.domain;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by root on 3/3/17.
@@ -14,44 +10,47 @@ public class Payload {
 
     @Id
     @GeneratedValue
-    private Long payload_id;
-    //String twitterScreenName;
+    private Long id;
     private String message;
-    //private MultipartFile file;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     private Payload(){}
 
-    public Payload(String message, MultipartFile file) {
+    public Payload(String message) {
         this.message = message;
-  //      this.file = file;
     }
 
     @Override
     public String toString() {
         return "Payload{" +
-                "payload_id=" + payload_id +
+                "id=" + id +
                 ", message='" + message + '\'' +
-    //            ", file='" + file + '\'' +
                 '}';
     }
 
-    public Long getpayload_id() {
-        return payload_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setpayload_id(Long payload_id) {
-        this.payload_id = payload_id;
+    private void setId(Long payload_id) {
+        this.id = payload_id;
     }
 
-    public String getMessage(String message) {
-        return this.message;
+    public String getMessage() {
+        return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
     }
 
-    /*
+    public Image getImage() {
+        return image;
+    }
 
-     */
-  }
+    public void setImage(Image image) {
+        this.image = image;
+    }
+}
