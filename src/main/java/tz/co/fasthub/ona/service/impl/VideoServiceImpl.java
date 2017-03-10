@@ -3,8 +3,11 @@ package tz.co.fasthub.ona.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Video;
 import tz.co.fasthub.ona.repository.VideoRepository;
 import tz.co.fasthub.ona.service.VideoService;
@@ -34,6 +37,11 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
+    public Page<Video> findVideoPage(Pageable pageable) {
+        return videoRepository.findAll(pageable);
+    }
+
+    @Override
     public Resource findOneVideo(String filename){
         return resourceLoader.getResource("file:"+ UPLOAD_ROOT + "/" +filename);
     }
@@ -48,6 +56,13 @@ public class VideoServiceImpl implements VideoService {
         }else {
             return null;
         }
+    }
+
+    @Override
+    public void deleteImage(String filename) throws IOException {
+        final Video byName = videoRepository.findByName(filename);
+        videoRepository.delete(byName);
+        Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
     }
 
 }

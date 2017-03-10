@@ -59,7 +59,7 @@ public class TwitterController {
         this.connectionRepository = connectionRepository;
     }
 
-    @RequestMapping(value = "/next")
+    @RequestMapping(value = "/messages")
     public String index(Model model, Pageable pageable) throws IOException {
         final Page<Payload> page = twitterService.findPayloadPage(pageable);
         model.addAttribute("page", page);
@@ -69,18 +69,36 @@ public class TwitterController {
         if (page.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/success";
+        return "/twitter/listMessages";
     }
 
-   /*
-    @RequestMapping(value = "/listTweets")
-    public String showUsers(Model model) {
-   //     final Page<Payload> tweetpage = twitterService.findPayloadPage(pageable);
-        model.addAttribute("tweetpage", twitterService.listAllTweets());
-        return "/twitter/listTweets";
+    @RequestMapping(value = "/images")
+    public String listImages(Model model, Pageable pageable){
+        final  Page<Image> imagePage = imageService.findImagePage(pageable);
+        model.addAttribute("imagePage", imagePage);
+        if (imagePage.hasPrevious()) {
+            model.addAttribute("prev", pageable.previousOrFirst());
+        }
+        if (imagePage.hasNext()) {
+            model.addAttribute("next", pageable.next());
+        }
+        return "/twitter/listImage";
     }
 
-    */
+
+    @RequestMapping(value = "/videos")
+    public String listVideos(Model model, Pageable pageable){
+        final  Page<Video> videoPage = videoService.findVideoPage(pageable);
+        model.addAttribute("videoPage", videoPage);
+        if (videoPage.hasPrevious()) {
+            model.addAttribute("prev", pageable.previousOrFirst());
+        }
+        if (videoPage.hasNext()) {
+            model.addAttribute("next", pageable.next());
+        }
+        return "/twitter/listVideos";
+    }
+
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
@@ -164,7 +182,7 @@ public class TwitterController {
 
 
                     //Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
-                    Twitter tweet = twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json",tweetData, MediaUploadResponse.class)
+                //    Twitter tweet = twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json",tweetData, MediaUploadResponse.class)
 
                     log.info("tweet sent");
 
@@ -174,7 +192,29 @@ public class TwitterController {
                     redirectAttributes.addFlashAttribute("flash.message", "Failed to upload" + file.getOriginalFilename() + "=>" + e);
                 }
             }
-        return "redirect:/twitter/next";
+        return "redirect:/twitter/messages";
+    }
+
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
+    public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
+        try {
+            imageService.deleteImage(filename);
+            redirectAttributes.addFlashAttribute("flash.message", "Image Successfully deleted " + filename + "from the server");
+        } catch (IOException|RuntimeException e) {
+            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image" + filename + " => " + e.getMessage());
+        }
+        return "redirect:/twitter/images";
+    }
+
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
+    public String deleteVideo(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
+        try {
+            videoService.deleteImage(filename);
+            redirectAttributes.addFlashAttribute("flash.message", "Video Successfully deleted " + filename + "from the server");
+        } catch (IOException|RuntimeException e) {
+            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Video" + filename + " => " + e.getMessage());
+        }
+        return "redirect:/twitter/videos";
     }
 
 }
