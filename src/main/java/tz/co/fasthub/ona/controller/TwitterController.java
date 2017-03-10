@@ -15,9 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
-import tz.co.fasthub.ona.repository.ImageRepository;
+import tz.co.fasthub.ona.domain.Video;
 import tz.co.fasthub.ona.service.ImageService;
 import tz.co.fasthub.ona.service.TwitterService;
+import tz.co.fasthub.ona.service.VideoService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -38,10 +39,14 @@ public class TwitterController {
     @Autowired
     ImageService imageService;
 
+    @Autowired
+    VideoService videoService;
+
     //Save the uploaded file to this folder
     private static String UPLOAD_ROOT = "upload-dir";
 
-    private static final String BASE_PATH = "/images";
+    //private static final String BASE_PATH = "/images";
+    private static final String BASE_PATH = "/videos";
     private static final String FILENAME = "{filename:.+}";
 
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
@@ -125,19 +130,6 @@ public class TwitterController {
     }
 
 
-    @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
-    public String directMsg(Model model) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/sendDirectMessage";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage("devFastHub","this must work");
-        model.addAttribute("directMessage",directMessage);
-
-        return "/twitter/success";
-    }
-
-
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweet",method = RequestMethod.POST)
     public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes, HttpServletRequest request) {
@@ -154,20 +146,25 @@ public class TwitterController {
 
         }else {
                 try {
-                       Image image = imageService.createImage(file);
+                    //Image image = imageService.createImage(file);
+                    Video video = videoService.createVideo(file);
 
                     //saving the tweet to DB
                     Payload createdPayload =twitterService.savePayload(payload);
 
-                    createdPayload.setImage(image);
+                    //createdPayload.setImage(image);
+                    createdPayload.setVideo(video);
 
                     twitterService.savePayload(createdPayload);
 
                     TweetData tweetData = new TweetData(createdPayload.getMessage());
-                    tweetData.withMedia(imageService.findOneImage(image.getName()));
+                    //tweetData.withMedia(imageService.findOneImage(image.getName()));
+                    tweetData.withMedia(videoService.findOneVideo(video.getName()));
 
 
-                    Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+
+                    //Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+                    Twitter tweet = twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json",tweetData, MediaUploadResponse.class)
 
                     log.info("tweet sent");
 

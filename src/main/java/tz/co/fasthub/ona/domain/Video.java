@@ -6,11 +6,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 /**
- * Created by daniel on 3/9/17.
+ * Created by root on 3/10/17.
  */
 
 @Entity
-public class Image {
+public class Video {
 
     @Id
     @GeneratedValue
@@ -20,14 +20,12 @@ public class Image {
 
     private String path;
 
-    @OneToOne(mappedBy = "image")
+    @OneToOne(mappedBy = "video")
     private Payload payload;
 
+    private Video(){}
 
-    private Image() {
-    }
-
-    public Image(String name) {
+    public Video(String name) {
         this.name = name;
     }
 
