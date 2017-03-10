@@ -172,6 +172,7 @@ public class TwitterController {
 
                     Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
 
+
                     log.info("tweet sent");
 
                     redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded");
