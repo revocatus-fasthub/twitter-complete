@@ -24,18 +24,15 @@ import java.util.List;
 @Service
 public class TwitterServiceImpl implements TwitterService {
 
-    private static String UPLOAD_ROOT = "upload-dir";
-
-    private final ResourceLoader resourceLoader;
 
     private final TwitterRepository twitterRepository;
+
     private final ImageRepository imageRepository;
 
     @Autowired
-    public TwitterServiceImpl(ResourceLoader resourceLoader, TwitterRepository twitterRepository, ImageRepository imageRepo) {
-        this.resourceLoader = resourceLoader;
+    public TwitterServiceImpl(TwitterRepository twitterRepository, ImageRepository imageRepository) {
         this.twitterRepository = twitterRepository;
-        imageRepository = imageRepo;
+        this.imageRepository=imageRepository;
     }
 
     @Override
@@ -53,25 +50,8 @@ public class TwitterServiceImpl implements TwitterService {
         return twitterRepository.findAll();
     }
 
-
-    public Resource findOneImage(String filename) {
-        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename);
-    }
-
     @Override
     public void updatePayload(Payload payload) {
-        twitterRepository.save(payload);
+        imageRepository.save(payload);
     }
-
-    public Image createImage(MultipartFile file) throws IOException {
-
-        if (!file.isEmpty()) {
-            Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
-            return imageRepository.save(new Image(file.getOriginalFilename()));
-
-        }else {
-            return null;
-        }
-    }
-
 }

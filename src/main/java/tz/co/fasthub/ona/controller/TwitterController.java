@@ -185,18 +185,17 @@ public class TwitterController {
             return "redirect:/twitter/renderPostTweet/form";
         }else {
                 try {
-                       Image image =twitterService.createImage(file);
+                    Image image =twitterService.createImage(file);
 
-                    //saving the tweet to DB
+                    //saving the message tweet to DB
                     Payload createdPayload =twitterService.savePayload(payload);
 
                     createdPayload.setImage(image);
-
+                    //update payload image+message
                     twitterService.savePayload(createdPayload);
 
                     TweetData tweetData = new TweetData(createdPayload.getMessage());
                     tweetData.withMedia(twitterService.findOneImage(image.getName()));
-
 
                     Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
                     log.info("tweet sent");

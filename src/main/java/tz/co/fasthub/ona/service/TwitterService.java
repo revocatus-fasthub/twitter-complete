@@ -23,8 +23,6 @@ public interface TwitterService {
 
     List<Payload> listAllTweets();
 
-     Resource findOneImage(String filename);
     void updatePayload (Payload payload);
-    Image createImage(MultipartFile file) throws IOException;
-    //  void deleteImage(String filename) throws IOException;
+
 }
