@@ -15,10 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.service.ImageService;
 import tz.co.fasthub.ona.service.TwitterService;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,9 +33,11 @@ public class TwitterController {
     @Autowired
     TwitterService twitterService;
 
+    @Autowired
+    ImageService imageService;
+
     //Save the uploaded file to this folder
     private static String UPLOAD_ROOT = "upload-dir";
-    private static String UPLOADED_FOLDER = "/home/naamini/Downloads/ona_app/src/main/resources/uploads/";//F://temp//
 
     private static final String BASE_PATH = "/images";
     private static final String FILENAME = "{filename:.+}";
@@ -50,7 +52,7 @@ public class TwitterController {
         this.connectionRepository = connectionRepository;
     }
 
-    @RequestMapping(value = "/next")
+    @RequestMapping(value = "/messages")
     public String index(Model model, Pageable pageable) throws IOException {
         final Page<Payload> page = twitterService.findPayloadPage(pageable);
         model.addAttribute("page", page);
@@ -63,15 +65,20 @@ public class TwitterController {
         return "/twitter/success";
     }
 
-   /*
-    @RequestMapping(value = "/listTweets")
-    public String showUsers(Model model) {
-   //     final Page<Payload> tweetpage = twitterService.findPayloadPage(pageable);
-        model.addAttribute("tweetpage", twitterService.listAllTweets());
-        return "/twitter/listTweets";
+    @RequestMapping(value = "/images")
+    public String listImages(Model model, Pageable pageable){
+        final  Page<Image> imagePage = imageService.findImagePage(pageable);
+        model.addAttribute("imagePage", imagePage);
+        if (imagePage.hasPrevious()) {
+            model.addAttribute("prev", pageable.previousOrFirst());
+        }
+        if (imagePage.hasNext()) {
+            model.addAttribute("next", pageable.next());
+        }
+        return "/twitter/listImage";
     }
 
-    */
+
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
@@ -133,59 +140,24 @@ public class TwitterController {
         return "/twitter/success";
     }
 
-    //POSTING TWEET DIRECTLY TO USER ACCOUNT
-/*
-    @RequestMapping(value = "/tweet", method = RequestMethod.GET)
-    public String savePayload(Model model, RedirectAttributes redirectAttributes) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/savePayload";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        Tweet tweets = twitter.timelineOperations().updateStatus("i'm using spring social!");
-        model.addAttribute("tweets",tweets);
-        redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + tweets);
-
-        return "/twitter/success";
-    }
- */
-
-
-    //POSTING TWEET USING A FORM
-/*
-    @RequestMapping(value = "/savePayload", method = RequestMethod.POST)
-    public String tweet(@ModelAttribute(value = "tweet") Payload payload, BindingResult bindingResult,
-                        RedirectAttributes redirectAttributes) throws Exception {
-      log.info("connecting ... payload: "+payload);
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            log.error("no connection to twitter");
-            return "redirect:/twitter/renderPostTweet/form";
-        }
-        else if(bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("flash.message", "Message was Not sent  => error details: " + bindingResult.getFieldError().toString());
-            return "redirect:/twitter/renderPostTweet/form";
-        }
-
-        twitterService.savePayload(payload);
-
-        Tweet tweets = twitter.timelineOperations().updateStatus(payload.getMessage("message"));
-        redirectAttributes.addFlashAttribute("flash.message","Tweet successfully posted => Tweet: "+payload.getMessage("message"));
-        log.info("Tweet posted successfully");
-        return "redirect:/twitter/success";
-   }
- */
 
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweet",method = RequestMethod.POST)
-    public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
+
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+
             log.error("no connection to twitter");
+
             return "redirect:/twitter/renderPostTweet/form";
+
         }else if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("flash.message", "Please select a file!");
             return "redirect:/twitter/renderPostTweet/form";
+
         }else {
                 try {
-                       Image image =twitterService.createImage(file);
+                       Image image = imageService.createImage(file);
 
                     //saving the tweet to DB
                     Payload createdPayload =twitterService.savePayload(payload);
@@ -195,19 +167,30 @@ public class TwitterController {
                     twitterService.savePayload(createdPayload);
 
                     TweetData tweetData = new TweetData(createdPayload.getMessage());
-                    tweetData.withMedia(twitterService.findOneImage(image.getName()));
+                    tweetData.withMedia(imageService.findOneImage(image.getName()));
 
 
                     Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+
                     log.info("tweet sent");
-                    log.error("not sent");
+
                     redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded");
 
                 } catch (IOException e) {
                     redirectAttributes.addFlashAttribute("flash.message", "Failed to upload" + file.getOriginalFilename() + "=>" + e);
                 }
             }
-        return "redirect:/twitter/next";
+        return "redirect:/twitter/messages";
     }
 
-}//main class
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
+    public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
+        try {
+            imageService.deleteImage(filename);
+            redirectAttributes.addFlashAttribute("flash.message", "Successfully deleted " + filename + "from the server");
+        } catch (IOException|RuntimeException e) {
+            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image" + filename + " => " + e.getMessage());
+        }
+        return "redirect:/twitter/images";
+    }
+}
