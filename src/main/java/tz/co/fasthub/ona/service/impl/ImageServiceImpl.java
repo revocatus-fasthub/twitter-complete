@@ -1,12 +1,12 @@
 package tz.co.fasthub.ona.service.impl;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import tz.co.fasthub.ona.domain.Image;
-import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.repository.ImageRepository;
 import tz.co.fasthub.ona.service.ImageService;
 
@@ -15,30 +15,29 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * Created by root on 3/10/17.
+ * Created by root on 3/9/17.
  */
 @Service
-public class ImageServiceImpl implements ImageService {
+public class ImageServiceImpl implements ImageService{
 
     private static String UPLOAD_ROOT = "upload-dir";
 
-    private final ResourceLoader resourceLoader;
-
     private final ImageRepository imageRepository;
 
-
+    private final ResourceLoader resourceLoader;
 
     @Autowired
-    public ImageServiceImpl(ResourceLoader resourceLoader, ImageRepository imageRepository) {
+    public ImageServiceImpl(ResourceLoader resourceLoader, ImageRepository imageRepo) {
         this.resourceLoader = resourceLoader;
-        this.imageRepository = imageRepository;
+        imageRepository = imageRepo;
     }
 
+    @Override
     public Resource findOneImage(String filename) {
-        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename);
+        return resourceLoader.getResource("file:"+ UPLOAD_ROOT + "/" +filename);
     }
 
-
+    @Override
     public Image createImage(MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {

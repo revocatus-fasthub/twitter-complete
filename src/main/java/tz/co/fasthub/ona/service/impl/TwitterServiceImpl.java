@@ -18,27 +18,20 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-/**
- * Created by root on 3/6/17.
- */
 @Service
 public class TwitterServiceImpl implements TwitterService {
 
-
     private final TwitterRepository twitterRepository;
 
-    private final ImageRepository imageRepository;
-
     @Autowired
-    public TwitterServiceImpl(TwitterRepository twitterRepository, ImageRepository imageRepository) {
-        this.twitterRepository = twitterRepository;
-        this.imageRepository=imageRepository;
+    public TwitterServiceImpl(TwitterRepository twitterRepository) {
+       this.twitterRepository = twitterRepository;
     }
 
     @Override
     public Payload savePayload(Payload payload) {
-            return twitterRepository.save(payload);
-        }
+        return twitterRepository.save(payload);
+    }
 
     @Override
     public Page<Payload> findPayloadPage(Pageable pageable) {
@@ -50,8 +43,11 @@ public class TwitterServiceImpl implements TwitterService {
         return twitterRepository.findAll();
     }
 
-    @Override
     public void updatePayload(Payload payload) {
-        imageRepository.save(payload);
+     twitterRepository.save(payload);
     }
-}
+
+    }
+
+
+

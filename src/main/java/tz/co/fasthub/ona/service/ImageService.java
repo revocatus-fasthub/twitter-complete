@@ -8,11 +8,13 @@ import tz.co.fasthub.ona.domain.Payload;
 import java.io.IOException;
 
 /**
- * Created by root on 3/10/17.
+ * Created by root on 3/9/17.
  */
 public interface ImageService {
+
     Resource findOneImage(String filename);
-    void updatePayload (Payload payload);
+
     Image createImage(MultipartFile file) throws IOException;
-    //  void deleteImage(String filename) throws IOException;
+
+
 }

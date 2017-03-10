@@ -25,4 +25,18 @@ public interface TwitterService {
 
     void updatePayload (Payload payload);
 
+
+
+
+
+
+    /*
+    Resource findOneImage(String filename);
+    void updatePayload (Payload payload);
+    Image createImage(MultipartFile file) throws IOException;
+    */
+
+
+
+    //  void deleteImage(String filename) throws IOException;
 }
