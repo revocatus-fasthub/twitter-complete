@@ -18,6 +18,14 @@ public class Payload {
     @JoinColumn(name = "image_id")
     private Image image;
 
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "video_id")
+    private Video video;
+
+
+
     private Payload(){}
 
     public Payload(String message) {
@@ -54,5 +62,13 @@ public class Payload {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public void setVideo(Video video) {
+        this.video = video;
     }
 }
