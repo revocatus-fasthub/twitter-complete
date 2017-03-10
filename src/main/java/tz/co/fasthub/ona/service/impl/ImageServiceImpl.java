@@ -4,6 +4,8 @@ package tz.co.fasthub.ona.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import tz.co.fasthub.ona.domain.Image;
@@ -33,6 +35,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
+    public Page<Image> findImagePage(Pageable pageable) {
+            return imageRepository.findAll(pageable);
+        }
+
+    @Override
     public Resource findOneImage(String filename) {
         return resourceLoader.getResource("file:"+ UPLOAD_ROOT + "/" +filename);
     }
@@ -48,4 +55,11 @@ public class ImageServiceImpl implements ImageService{
             return null;
         }
     }
+
+    @Override
+    public void deleteImage(String filename) throws IOException {
+        final Image byName = imageRepository.findByName(filename);
+        imageRepository.delete(byName);
+            Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
+        }
 }

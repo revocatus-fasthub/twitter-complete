@@ -9,5 +9,5 @@ import tz.co.fasthub.ona.domain.Payload;
  * Created by daniel on 3/9/17.
  */
 public interface ImageRepository extends PagingAndSortingRepository<Image,Long> {
-
+    Image findByName(String name);
 }

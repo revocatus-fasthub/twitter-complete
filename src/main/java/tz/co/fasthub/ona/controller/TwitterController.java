@@ -15,12 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
-import tz.co.fasthub.ona.repository.ImageRepository;
 import tz.co.fasthub.ona.service.ImageService;
 import tz.co.fasthub.ona.service.TwitterService;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -54,7 +52,7 @@ public class TwitterController {
         this.connectionRepository = connectionRepository;
     }
 
-    @RequestMapping(value = "/next")
+    @RequestMapping(value = "/messages")
     public String index(Model model, Pageable pageable) throws IOException {
         final Page<Payload> page = twitterService.findPayloadPage(pageable);
         model.addAttribute("page", page);
@@ -67,15 +65,20 @@ public class TwitterController {
         return "/twitter/success";
     }
 
-   /*
-    @RequestMapping(value = "/listTweets")
-    public String showUsers(Model model) {
-   //     final Page<Payload> tweetpage = twitterService.findPayloadPage(pageable);
-        model.addAttribute("tweetpage", twitterService.listAllTweets());
-        return "/twitter/listTweets";
+    @RequestMapping(value = "/images")
+    public String listImages(Model model, Pageable pageable){
+        final  Page<Image> imagePage = imageService.findImagePage(pageable);
+        model.addAttribute("imagePage", imagePage);
+        if (imagePage.hasPrevious()) {
+            model.addAttribute("prev", pageable.previousOrFirst());
+        }
+        if (imagePage.hasNext()) {
+            model.addAttribute("next", pageable.next());
+        }
+        return "/twitter/listImage";
     }
 
-    */
+
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
@@ -140,7 +143,7 @@ public class TwitterController {
 
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweet",method = RequestMethod.POST)
-    public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
 
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
 
@@ -177,7 +180,17 @@ public class TwitterController {
                     redirectAttributes.addFlashAttribute("flash.message", "Failed to upload" + file.getOriginalFilename() + "=>" + e);
                 }
             }
-        return "redirect:/twitter/next";
+        return "redirect:/twitter/messages";
     }
 
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
+    public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
+        try {
+            imageService.deleteImage(filename);
+            redirectAttributes.addFlashAttribute("flash.message", "Successfully deleted " + filename + "from the server");
+        } catch (IOException|RuntimeException e) {
+            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image" + filename + " => " + e.getMessage());
+        }
+        return "redirect:/twitter/images";
+    }
 }

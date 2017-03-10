@@ -10,15 +10,14 @@
 
 <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}"></h3>
 
-
-<div>
     <h3 th:text="${page.number + 1} + ' of ' + ${page.totalPages}"></h3>
     <h4 th:text="${page.size} + ' item(s) per page'"></h4>
-    <table>
+
+    Payload
+    <table title="Payload">
         <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Message</th>
-            <th>Image Uploaded</th>
         </tr>
         <tr th:each="payload : ${page.content}">
             <td th:text="${payload.id}"></td>
@@ -26,19 +25,12 @@
 
         </tr>
     </table>
-</div>
+<ul>
+    <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize},page=${prev.pageNumber})}">Previous</a></li>
+    <li th:if="${next}"><a th:href="@{/(size=${next.pageSize},page=${next.pageNumber})}">Next</a></li>
+</ul>
 
-
-<!--
-
-<h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
-
-<h4>You tweeted:</h4>
-
-<span th:text="${tweets}">Hello html</span>
-
-th:each="tweet:${tweets}" th:text="${tweets}">Tweet
--->
+    <p>View List of images here <a href="/twitter/images">here</a>.</p>
 
 </body>
 </html>
