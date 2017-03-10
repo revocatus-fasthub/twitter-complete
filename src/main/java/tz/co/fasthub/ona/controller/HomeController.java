@@ -48,7 +48,7 @@ public class HomeController {
 
     @RequestMapping("/twitter/renderPostTweet/form")
     public String tweet(){
-        return "/twitter/savePayload";
+        return "/twitter/postTweet";
     }
 }
 

@@ -11,7 +11,9 @@ public class Payload {
     @Id
     @GeneratedValue
     private Long id;
+
     private String message;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private Image image;

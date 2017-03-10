@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.repository.ImageRepository;
+import tz.co.fasthub.ona.service.ImageService;
 import tz.co.fasthub.ona.service.TwitterService;
 
 import javax.inject.Inject;
@@ -33,9 +35,11 @@ public class TwitterController {
     @Autowired
     TwitterService twitterService;
 
+    @Autowired
+    ImageService imageService;
+
     //Save the uploaded file to this folder
     private static String UPLOAD_ROOT = "upload-dir";
-    private static String UPLOADED_FOLDER = "/home/naamini/Downloads/ona_app/src/main/resources/uploads/";//F://temp//
 
     private static final String BASE_PATH = "/images";
     private static final String FILENAME = "{filename:.+}";
@@ -133,59 +137,24 @@ public class TwitterController {
         return "/twitter/success";
     }
 
-    //POSTING TWEET DIRECTLY TO USER ACCOUNT
-/*
-    @RequestMapping(value = "/tweet", method = RequestMethod.GET)
-    public String savePayload(Model model, RedirectAttributes redirectAttributes) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/savePayload";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        Tweet tweets = twitter.timelineOperations().updateStatus("i'm using spring social!");
-        model.addAttribute("tweets",tweets);
-        redirectAttributes.addFlashAttribute("flash.message", "Message was successfully created => Message: " + tweets);
-
-        return "/twitter/success";
-    }
- */
-
-
-    //POSTING TWEET USING A FORM
-/*
-    @RequestMapping(value = "/savePayload", method = RequestMethod.POST)
-    public String tweet(@ModelAttribute(value = "tweet") Payload payload, BindingResult bindingResult,
-                        RedirectAttributes redirectAttributes) throws Exception {
-      log.info("connecting ... payload: "+payload);
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            log.error("no connection to twitter");
-            return "redirect:/twitter/renderPostTweet/form";
-        }
-        else if(bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("flash.message", "Message was Not sent  => error details: " + bindingResult.getFieldError().toString());
-            return "redirect:/twitter/renderPostTweet/form";
-        }
-
-        twitterService.savePayload(payload);
-
-        Tweet tweets = twitter.timelineOperations().updateStatus(payload.getMessage("message"));
-        redirectAttributes.addFlashAttribute("flash.message","Tweet successfully posted => Tweet: "+payload.getMessage("message"));
-        log.info("Tweet posted successfully");
-        return "redirect:/twitter/success";
-   }
- */
 
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweet",method = RequestMethod.POST)
     public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+
             log.error("no connection to twitter");
+
             return "redirect:/twitter/renderPostTweet/form";
+
         }else if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("flash.message", "Please select a file!");
             return "redirect:/twitter/renderPostTweet/form";
+
         }else {
                 try {
-                       Image image =twitterService.createImage(file);
+                       Image image = imageService.createImage(file);
 
                     //saving the tweet to DB
                     Payload createdPayload =twitterService.savePayload(payload);
@@ -195,12 +164,13 @@ public class TwitterController {
                     twitterService.savePayload(createdPayload);
 
                     TweetData tweetData = new TweetData(createdPayload.getMessage());
-                    tweetData.withMedia(twitterService.findOneImage(image.getName()));
+                    tweetData.withMedia(imageService.findOneImage(image.getName()));
 
 
                     Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+
                     log.info("tweet sent");
-                    log.error("not sent");
+
                     redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded");
 
                 } catch (IOException e) {
@@ -210,4 +180,4 @@ public class TwitterController {
         return "redirect:/twitter/next";
     }
 
-}//main class
+}
