@@ -46,11 +46,9 @@ public class ImageServiceImpl implements ImageService{
 
     @Override
     public Image createImage(MultipartFile file) throws IOException {
-
         if (!file.isEmpty()) {
             Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
             return imageRepository.save(new Image(file.getOriginalFilename()));
-
         }else {
             return null;
         }

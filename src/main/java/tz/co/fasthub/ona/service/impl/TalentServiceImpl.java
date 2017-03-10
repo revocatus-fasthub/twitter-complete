@@ -22,7 +22,6 @@ public class TalentServiceImpl implements TalentService {
         this.talentRepository = talentRepository;
     }
 
-
     @Override
     public Talent getTalentByFname(String fname) {
         return talentRepository.findByFname(fname);

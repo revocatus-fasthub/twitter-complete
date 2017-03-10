@@ -13,7 +13,4 @@ public class TwitterTalentAccount {
     private String directmessage;
     private String recipientScreenName;
 
-
-
-
 }

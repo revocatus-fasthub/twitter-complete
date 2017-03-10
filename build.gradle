@@ -40,7 +40,9 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
     // https://mvnrepository.com/artifact/org.springframework/org.springframework.core
     compile group: 'org.springframework', name: 'org.springframework.core', version: '3.2.4.RELEASE'
-
+	compile 'com.sun.jersey:jersey-client:1.19'
+	compile 'com.sun.jersey.contribs:jersey-multipart:1.19'
+	compile 'com.sun.jersey:jersey-json:1.19'
     compile('org.springframework.boot:spring-boot-starter-integration')
 	compile('org.hibernate:hibernate-core')
 	runtime('mysql:mysql-connector-java')

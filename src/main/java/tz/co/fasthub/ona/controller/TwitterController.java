@@ -1,26 +1,39 @@
 package tz.co.fasthub.ona.controller;
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.RequestBuilder;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.domain.Video;
 import tz.co.fasthub.ona.service.ImageService;
 import tz.co.fasthub.ona.service.TwitterService;
+import tz.co.fasthub.ona.service.VideoService;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static org.hibernate.boot.cfgxml.spi.MappingReference.Type.RESOURCE;
 
 @Controller
 @RequestMapping("/twitter")
@@ -36,15 +49,15 @@ public class TwitterController {
     @Autowired
     ImageService imageService;
 
-    //Save the uploaded file to this folder
-    private static String UPLOAD_ROOT = "upload-dir";
+    @Autowired
+    VideoService videoService;
 
-    private static final String BASE_PATH = "/images";
+
+    private static final String BASE_PATH = "/videos";
     private static final String FILENAME = "{filename:.+}";
 
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
 
-    //String URL ="https://api.twitter.com";
 
     @Inject
     public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
@@ -62,7 +75,7 @@ public class TwitterController {
         if (page.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/success";
+        return "/twitter/listMessages";
     }
 
     @RequestMapping(value = "/images")
@@ -77,7 +90,6 @@ public class TwitterController {
         }
         return "/twitter/listImage";
     }
-
 
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model) {
@@ -128,22 +140,9 @@ public class TwitterController {
     }
 
 
-    @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
-    public String directMsg(Model model) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/sendDirectMessage";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        DirectMessage directMessage = twitter.directMessageOperations().sendDirectMessage("devFastHub","this must work");
-        model.addAttribute("directMessage",directMessage);
-
-        return "/twitter/success";
-    }
-
-
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweet",method = RequestMethod.POST)
-    public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
+    public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
 
@@ -157,20 +156,45 @@ public class TwitterController {
 
         }else {
                 try {
-                       Image image = imageService.createImage(file);
+                  //  Image image = imageService.createImage(file);
+                    Video video = videoService.createVideo(file);
 
                     //saving the tweet to DB
                     Payload createdPayload =twitterService.savePayload(payload);
 
-                    createdPayload.setImage(image);
+                   // createdPayload.setImage(image);
+                    createdPayload.setVideo(video);
 
                     twitterService.savePayload(createdPayload);
 
                     TweetData tweetData = new TweetData(createdPayload.getMessage());
-                    tweetData.withMedia(imageService.findOneImage(image.getName()));
+                    //tweetData.withMedia(imageService.findOneImage(image.getName()));
+                    tweetData.withMedia(videoService.findOneVideo(video.getName()));
 
 
+                    // 1. INIT the file upload
+               /*
+                    MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+                        params.add("command", "INIT");
+                        params.add("media_type", "video/mp4");
+                        params.add("media_category", "amplify_video");
+                    File videofile = new File(String.valueOf(video));
+                    int bytes = (int) videofile.length();
+                    String totalBytes = Integer.toString(bytes);
+
+                    params.add("total_bytes", totalBytes);
+                    params.add("total_bytes", totalBytes);
+
+                    ClientResponse response = webResource.path(RESOURCE)
+                            .type(MediaType.APPLICATION_FORM_URLENCODED)
+                            .accept(MediaType.APPLICATION_JSON_TYPE)
+                            .post(ClientResponse.class, params);
+
+                    int status = response.getStatus();
+
+                */
                     Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+                    //Twitter tweet = twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json",tweetData, MediaUploadResponse.class)
 
                     log.info("tweet sent");
 
@@ -182,6 +206,7 @@ public class TwitterController {
             }
         return "redirect:/twitter/messages";
     }
+
 
     @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
     public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
