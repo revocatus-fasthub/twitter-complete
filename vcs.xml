@@ -94,6 +94,10 @@
           <option name="url" value="https://github.com/revocatus-fasthub/twitter-complete.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/geowarin/boot-social-api.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="/home/revocatus/Temporary" />
