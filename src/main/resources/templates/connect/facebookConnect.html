@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Hello Facebook</title>
+</head>
+<body>
+<h3>Connect to Facebook</h3>
+<span th:if="${social_provider_error}">Provider error (maybe you need to configure the app id and secret?)</span>
+
+<form action="/connect/facebook" method="POST">
+    <div class="formInfo">
+        <p>You <strong>aren't</strong> connected to Facebook yet. Click the button to connect this application with your Facebook account.</p>
+    </div>
+    <p><button type="submit">Connect to Facebook</button></p>
+</form>
+
+</body>
+</html>

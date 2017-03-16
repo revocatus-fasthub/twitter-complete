@@ -14,9 +14,11 @@ public class Video {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long media_id;
 
     private String name;
+
+    private String size;
 
     private String path;
 
@@ -29,12 +31,12 @@ public class Video {
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
+    public Long getMedia_id() {
+        return media_id;
     }
 
-    private void setId(Long id) {
-        this.id = id;
+    public void setMedia_id(Long media_id) {
+        this.media_id = media_id;
     }
 
     public String getName() {
@@ -43,6 +45,14 @@ public class Video {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public String getPath() {

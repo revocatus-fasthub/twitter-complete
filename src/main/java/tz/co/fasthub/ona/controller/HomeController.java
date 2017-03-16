@@ -48,10 +48,24 @@ public class HomeController {
 
     @RequestMapping("/twitter/renderPostTweet/form")
     public String tweet(){
-        return "/twitter/postTweet";
+        return "/twitter/postTweetImage";
+    }
+
+    @RequestMapping("/twitter/postvideo/form")
+    public String tweetVideo(){
+        return "/twitter/postTweetVideo";
     }
 
 
+    @RequestMapping("/connect/facebookConnected")
+    public String fbConnected(){
+        return "/connect/facebookConnected";
+    }
+
+    @RequestMapping("/facebook/feeds")
+    public String fbfeeds(){
+        return "/facebook/feeds";
+    }
 }
 
 

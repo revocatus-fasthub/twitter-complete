@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 @Service
 public class ImageServiceImpl implements ImageService{
 
-    private static String UPLOAD_ROOT = "upload-dir";
+    private static String IMAGE_UPLOAD_ROOT = "imageUpload-dir";
 
     private final ImageRepository imageRepository;
 
@@ -41,14 +41,14 @@ public class ImageServiceImpl implements ImageService{
 
     @Override
     public Resource findOneImage(String filename) {
-        return resourceLoader.getResource("file:"+ UPLOAD_ROOT + "/" +filename);
+        return resourceLoader.getResource("file:"+ IMAGE_UPLOAD_ROOT + "/" +filename);
     }
 
     @Override
     public Image createImage(MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
-            Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
+            Files.copy(file.getInputStream(), Paths.get(IMAGE_UPLOAD_ROOT, file.getOriginalFilename()));
             return imageRepository.save(new Image(file.getOriginalFilename()));
 
         }else {
@@ -60,6 +60,6 @@ public class ImageServiceImpl implements ImageService{
     public void deleteImage(String filename) throws IOException {
         final Image byName = imageRepository.findByName(filename);
         imageRepository.delete(byName);
-            Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
+            Files.deleteIfExists(Paths.get(IMAGE_UPLOAD_ROOT, filename));
         }
 }

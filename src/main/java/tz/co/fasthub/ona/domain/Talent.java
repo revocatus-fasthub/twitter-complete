@@ -1,6 +1,8 @@
 package tz.co.fasthub.ona.domain;
 
 
+import org.springframework.social.oauth1.OAuthToken;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,15 +21,17 @@ public class Talent {
     private String email;
     private String password;
     private String Cpassword;
+    private OAuthToken accessToken;
 
     private Talent(){}
 
-    public Talent(String fname, String lname, String email, String password, String cpassword) {
+    public Talent(String fname, String lname, String email, String password, String cpassword, OAuthToken accessToken) {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.password = password;
         Cpassword = cpassword;
+        this.accessToken=accessToken;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class Talent {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", Cpassword='" + Cpassword + '\'' +
+                ", accessToken='" + accessToken + '\'' +
                 '}';
     }
 
@@ -88,5 +93,13 @@ public class Talent {
 
     public void setCpassword(String cpassword) {
         Cpassword = cpassword;
+    }
+
+    public OAuthToken getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(OAuthToken accessToken) {
+        this.accessToken = accessToken;
     }
 }

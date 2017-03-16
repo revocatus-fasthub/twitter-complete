@@ -3,7 +3,7 @@
       xsi:schemaLocation="http://www.thmyeleaf.org ">
 <head>
     <meta charset="UTF-8"/>
-    <title>All Messages</title>
+    <title>IMAGE LIST</title>
     <link rel="stylesheet" href="/main.css"/>
 </head>
 <body>
@@ -38,6 +38,6 @@ Image
     <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize},page=${prev.pageNumber})}">Previous</a></li>
     <li th:if="${next}"><a th:href="@{/(size=${next.pageSize},page=${next.pageNumber})}">Next</a></li>
 </ul>
-
+<p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Back</a></p>
 </body>
 </html>

@@ -24,7 +24,7 @@ import java.nio.file.Paths;
 @Service
 public class VideoServiceImpl implements VideoService {
 
-    private static String UPLOAD_ROOT = "upload-dir";
+    private static String VIDEO_UPLOAD_ROOT = "videoUpload-dir";
 
     private final VideoRepository videoRepository;
 
@@ -43,15 +43,16 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public Resource findOneVideo(String filename){
-        return resourceLoader.getResource("file:"+ UPLOAD_ROOT + "/" +filename);
+        return resourceLoader.getResource("file:"+ VIDEO_UPLOAD_ROOT + "/" +filename);
     }
 
     @Override
-    public Video createVideo(MultipartFile file) throws IOException {
+    public Video createVideo(MultipartFile videofile) throws IOException {
 
-        if (!file.isEmpty()) {
-            Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
-            return videoRepository.save(new Video(file.getOriginalFilename()));
+        if (!videofile.isEmpty()) {
+            Files.copy(videofile.getInputStream(), Paths.get(VIDEO_UPLOAD_ROOT, videofile.getOriginalFilename()));
+
+            return videoRepository.save(new Video(videofile.getOriginalFilename()));
 
         }else {
             return null;
@@ -59,10 +60,10 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public void deleteImage(String filename) throws IOException {
+    public void deleteVideo(String filename) throws IOException {
         final Video byName = videoRepository.findByName(filename);
         videoRepository.delete(byName);
-        Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
+        Files.deleteIfExists(Paths.get(VIDEO_UPLOAD_ROOT, filename));
     }
 
 }

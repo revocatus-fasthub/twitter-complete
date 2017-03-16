@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TWITTER VIDEO POST</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+</head>
+<body>
+
+
+<center>
+    <h3>POST TO VIDEO TWITTER:</h3>
+    <form modelAttribute="tweet" action="/twitter/postTweetVideo" enctype="multipart/form-data" method="post">
+        <p>Message: <input type="text" name="message"/></p>
+        <p>choose your file:   <input type="file" name="videofile" /></p>
+        <p><input type="submit" id="postTweetVideo" value="Post" /></p>
+
+        <p>
+            <a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Cancel</a>
+        </p>
+    </form>
+</center>
+
+</body>
+</html>
