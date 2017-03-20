@@ -1,5 +1,17 @@
 package tz.co.fasthub.ona.controller;
 
+import org.apache.catalina.WebResource;
+import org.glassfish.jersey.client.ClientResponse;
+import tz.co.fasthub.ona.domain.Video;
+
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * Created by root on 3/20/17.
  */
@@ -9,7 +21,7 @@ public class VideoUploadController {
         Properties properties = new Properties();
         InputStream input = null;
         try {
-            input = new FileInputStream("src/main/resources/config.properties");
+            input = new FileInputStream("src/main/resources/application.properties");
             properties.load(input);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -41,22 +53,14 @@ public class VideoUploadController {
             ex.printStackTrace();
         }
 
-        ClientServiceFactory.consumerKey = properties.getProperty("consumer.key");
-        ClientServiceFactory.consumerSecret = properties.getProperty("consumer.secret");
-        ClientServiceFactory.accessToken = properties.getProperty("access.token");
-        ClientServiceFactory.accessTokenSecret = properties.getProperty("access.secret");
 
         // String filePath = "C:/temp/doge.mp4";
         String filePath = "src/test/resources/doge.mp4";
 
-        ClientService clientService = ClientServiceFactory.getInstance();
-        Client videoUploadClient = clientService.getClient();
 
-        WebResource webResource = videoUploadClient.resource(DOMAIN);
-        webResource.addFilter(new LoggingFilter());
 
         // 1. INIT the file upload
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        MultivaluedMap<String, String> params = new MultivaluedHashMap<>();
 
         params.add("command", "INIT");
         params.add("media_type", "video/mp4");
