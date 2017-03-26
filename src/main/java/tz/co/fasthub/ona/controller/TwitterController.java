@@ -195,7 +195,7 @@ public class TwitterController {
         return "redirect:/twitter/messages";
     }
 
-    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/images/" + FILENAME)
     public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
         try {
             imageService.deleteImage(filename);
