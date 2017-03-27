@@ -38,7 +38,10 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-social-twitter')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
-    // https://mvnrepository.com/artifact/org.springframework/org.springframework.core
+	// https://mvnrepository.com/artifact/org.twitter4j/twitter4j-core
+	compile group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.6'
+
+	// https://mvnrepository.com/artifact/org.springframework/org.springframework.core
     compile group: 'org.springframework', name: 'org.springframework.core', version: '3.2.4.RELEASE'
 
     compile('org.springframework.boot:spring-boot-starter-integration')
