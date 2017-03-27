@@ -180,8 +180,7 @@ public class TwitterController {
                     tweetData.withMedia(videoService.findOneVideo(video.getName()));
 
 
-
-                    //Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+                    Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
                 //    Twitter tweet = twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json",tweetData, MediaUploadResponse.class)
 
                     log.info("tweet sent");
@@ -206,6 +205,7 @@ public class TwitterController {
         return "redirect:/twitter/images";
     }
 
+    /*
     @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
     public String deleteVideo(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
         try {
@@ -216,5 +216,6 @@ public class TwitterController {
         }
         return "redirect:/twitter/videos";
     }
+    */
 
 }

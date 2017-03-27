@@ -2,8 +2,10 @@ package tz.co.fasthub.ona.controller;
 
 import org.apache.catalina.WebResource;
 import org.glassfish.jersey.client.ClientResponse;
+import org.springframework.social.facebook.api.Account;
 import tz.co.fasthub.ona.domain.Video;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
@@ -16,6 +18,8 @@ import java.util.Properties;
  * Created by root on 3/20/17.
  */
 public class VideoUploadController {
+
+
 
     private static TwitterAdsClient getTwitterAdsClient() {
         Properties properties = new Properties();
@@ -138,6 +142,8 @@ public class VideoUploadController {
 		 * this is a very small video file, adjust according to size
 		 * print a dot for each second to the console.
 		 */
+
+
         Runnable notifier = new Runnable() {
             public void run() {
                 System.out.print(".");
@@ -178,7 +184,5 @@ public class VideoUploadController {
         System.out.println("video to string" + video.toString());
 
     }
-}
-
 
 }
