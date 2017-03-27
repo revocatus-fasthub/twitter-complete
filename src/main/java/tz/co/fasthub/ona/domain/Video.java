@@ -14,12 +14,15 @@ public class Video {
 
     @Id
     @GeneratedValue
-    private Long media_id;
+    private long mediaId;
 
+    private int imageWidth;
+    private int imageHeight;
+    private String imageType;
+    private long size;
+    private String processingState;
+    private int processingCheckAfterSecs;
     private String name;
-
-    private String size;
-
     private String path;
 
     @OneToOne(mappedBy = "video")
@@ -27,16 +30,68 @@ public class Video {
 
     private Video(){}
 
-    public Video(String name) {
+
+    public Video(int imageWidth, int imageHeight, String imageType, String name) {
+        this.imageWidth = imageWidth;
+        this.imageHeight = imageHeight;
+        this.imageType = imageType;
         this.name = name;
     }
 
-    public Long getMedia_id() {
-        return media_id;
+    public long getMediaId() {
+        return mediaId;
     }
 
-    public void setMedia_id(Long media_id) {
-        this.media_id = media_id;
+    public void setMediaId(long mediaId) {
+        this.mediaId = mediaId;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(int imageHeight) {
+        this.imageHeight = imageHeight;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public String getProcessingState() {
+        return processingState;
+    }
+
+    public void setProcessingState(String processingState) {
+        this.processingState = processingState;
+    }
+
+    public int getProcessingCheckAfterSecs() {
+        return processingCheckAfterSecs;
+    }
+
+    public void setProcessingCheckAfterSecs(int processingCheckAfterSecs) {
+        this.processingCheckAfterSecs = processingCheckAfterSecs;
     }
 
     public String getName() {
@@ -47,19 +102,19 @@ public class Video {
         this.name = name;
     }
 
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
     public String getPath() {
         return path;
     }
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Payload getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Payload payload) {
+        this.payload = payload;
     }
 }

@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}"></h3>
+<h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
 
 <h3 th:text="${videoPage.number + 1} + ' of ' + ${videoPage.totalPages}"></h3>
 <h4 th:text="${videoPage.size} + ' item(s) per page'"></h4>

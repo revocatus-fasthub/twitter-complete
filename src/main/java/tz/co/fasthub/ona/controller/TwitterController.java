@@ -9,7 +9,9 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1Parameters;
 import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.twitter.api.*;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -130,6 +132,7 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/viewTweets";
         }
+   //     log.debug("token is: "+accessGrant.getAccessToken());
         model.addAttribute(twitter.userOperations().getUserProfile());
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
         model.addAttribute("tweets",tweets);
@@ -159,7 +162,6 @@ public class TwitterController {
         model.addAttribute("followers", followers);
         return "/twitter/followersList";
     }
-
 
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
@@ -226,6 +228,9 @@ public class TwitterController {
 
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("flash.message", "Failed to upload Video " + videofile.getOriginalFilename() + ": " + e);
+            }
+            catch (Exception e) {
+                redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception: " + e);
             }
         }
         return "redirect:/twitter/videos";

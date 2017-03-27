@@ -6,10 +6,13 @@ import org.springframework.social.oauth1.OAuthToken;
 import tz.co.fasthub.ona.domain.Talent;
 
 public interface TalentService {
-     Talent getTalentByFname(String lname);
+     Talent getTalentByFname(String fname);
      void deleteTalentById(Long id);
-     Talent createTalent(Talent talent);
+     Object createTalent(Talent talent);
      Page<Talent> findTalentPage(Pageable pageable);
+     void updateTalent(Talent talent);
+     Talent findById(Long talent_id);
      Talent saveAccessToken(OAuthToken accessToken);
+     Talent findOne(Long talent_id);
 
 }
