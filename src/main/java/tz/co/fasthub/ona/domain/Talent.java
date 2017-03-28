@@ -5,6 +5,7 @@ import org.springframework.social.oauth1.OAuthToken;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -14,7 +15,7 @@ import javax.persistence.Id;
 public class Talent {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long talent_id;
     private String fname;
     private String lname;
@@ -25,12 +26,11 @@ public class Talent {
 
     private Talent(){}
 
-    public Talent(String fname, String lname, String email, String password, String cpassword, OAuthToken accessToken) {
+    public Talent(String fname, String lname, String email, String password, OAuthToken accessToken) {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.password = password;
-        Cpassword = cpassword;
         this.accessToken=accessToken;
     }
 

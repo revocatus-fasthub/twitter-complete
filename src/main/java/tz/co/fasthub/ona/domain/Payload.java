@@ -18,13 +18,9 @@ public class Payload {
     @JoinColumn(name = "image_id")
     private Image image;
 
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "video_id")
     private Video video;
-
-
 
     private Payload(){}
 

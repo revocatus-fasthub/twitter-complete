@@ -52,8 +52,8 @@ public class VideoServiceImpl implements VideoService {
         if (!videofile.isEmpty()) {
             Files.copy(videofile.getInputStream(), Paths.get(VIDEO_UPLOAD_ROOT, videofile.getOriginalFilename()));
 
-            return videoRepository.save(new Video(videofile.getOriginalFilename()));
-
+      //      return videoRepository.save(new Video(videofile.getOriginalFilename()));
+return null;
         }else {
             return null;
         }

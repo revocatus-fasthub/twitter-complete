@@ -1,9 +1,10 @@
-package tz.co.fasthub.ona.controller;
+
+//package tz.co.fasthub.ona.controller;
 
 /**
  * Created by root on 3/27/17.
  */
-
+/*
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,13 +43,13 @@ public class MediaUploadingController {
                 , new HttpParameter("media", image)).asJSONObject());
     }
 
-    
+
     public Video uploadMedia(String fileName, InputStream image) throws TwitterException {
         return new Video(post(conf.getUploadBaseURL() + "media/upload.json"
                 , new HttpParameter("media", fileName, image)).asJSONObject());
     }
 
-    
+
     public Video uploadMediaChunked(String fileName, InputStream media) throws TwitterException {
         //If the InputStream is remote, this is will download it into memory speeding up the chunked upload process
         byte[] dataBytes = null;
@@ -165,3 +166,5 @@ public class MediaUploadingController {
     }
 
 }
+
+ */

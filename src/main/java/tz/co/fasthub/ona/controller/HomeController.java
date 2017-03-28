@@ -13,6 +13,11 @@ public class HomeController {
     public String index() {
         return "index";
     }
+    @RequestMapping("/success")
+    public String successManual() {
+        return "success";
+    }
+
     //TALENT
     @RequestMapping("/talent/addTalent")
     public String addTalent() {

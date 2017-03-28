@@ -15,10 +15,13 @@ public class Video {
     @Id
     @GeneratedValue
     private long mediaId;
+    private String mediaIdString;
 
     private int imageWidth;
     private int imageHeight;
     private String imageType;
+
+
     private long size;
     private String processingState;
     private int processingCheckAfterSecs;
@@ -29,7 +32,6 @@ public class Video {
     private Payload payload;
 
     private Video(){}
-
 
     public Video(int imageWidth, int imageHeight, String imageType, String name) {
         this.imageWidth = imageWidth;
