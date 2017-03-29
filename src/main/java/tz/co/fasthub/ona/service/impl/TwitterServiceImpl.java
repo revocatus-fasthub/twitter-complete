@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.repository.TwitterRepository;
 import tz.co.fasthub.ona.service.TwitterService;
 
@@ -39,7 +40,7 @@ public class TwitterServiceImpl implements TwitterService {
      twitterRepository.save(payload);
     }
 
-    }
+}
 
 
 
