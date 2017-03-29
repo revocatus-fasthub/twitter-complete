@@ -6,12 +6,12 @@ package tz.co.fasthub.ona.domain.twitter;
 public class TwitterPayload {
 
     private TwitterMedia media;
-    private Image image;
+    private TwitterImage image;
 
     public TwitterPayload() {
     }
 
-    public TwitterPayload(TwitterMedia media, Image image) {
+    public TwitterPayload(TwitterMedia media, TwitterImage image) {
         this.media = media;
         this.image = image;
     }
@@ -32,11 +32,11 @@ public class TwitterPayload {
         this.media = media;
     }
 
-    public Image getImage() {
+    public TwitterImage getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(TwitterImage image) {
         this.image = image;
     }
 }

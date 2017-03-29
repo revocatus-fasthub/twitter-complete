@@ -24,6 +24,7 @@ import tz.co.fasthub.ona.service.TwitterService;
 import tz.co.fasthub.ona.service.VideoService;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -177,6 +178,7 @@ public class TwitterController {
                 tweetData.withMedia(imageService.findOneImage(image.getName()));
 
                 Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+
 
                 log.info("tweet image sent");
 

@@ -24,10 +24,11 @@ public class HomeController {
         return "talent/addTalent";
     }
 
-    @RequestMapping("/talent/update")
+    @RequestMapping("/talent/talentForm")
     public String updateForm(){
         return "talent/talentForm";
     }
+
     //TWITTER
     @RequestMapping("/twitter/connected")
     public String connected(){

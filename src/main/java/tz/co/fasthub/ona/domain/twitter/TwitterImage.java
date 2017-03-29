@@ -8,14 +8,14 @@ import javax.persistence.Id;
  * Created by root on 3/28/17.
  */
 
-public class Image {
+public class TwitterImage {
 
     private int w;
     private int h;
     private String image_type;
 
 
-    public Image(int w, int h, String image_type) {
+    public TwitterImage(int w, int h, String image_type) {
         this.w = w;
         this.h = h;
         this.image_type = image_type;

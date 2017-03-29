@@ -66,7 +66,7 @@ public class TalentController {
             return "redirect:/talents";
         } else {
             talentService.createTalent(talent);
-            sendMail(talent.getEmail(), "Welcome to ONA Platform", "ONA-Social Media Management Tool");
+            //sendMail(talent.getEmail(), "Welcome to ONA Platform", "ONA-Social Media Management Tool");
             redirectAttributes.addFlashAttribute("flash.message", "Talent was successfully created");//=> Talent: "+talent
             return "redirect:/talents";
         }
@@ -95,8 +95,8 @@ public class TalentController {
         return "redirect:/talents";
     }
 
-    @RequestMapping(value = "/talent/update/{talent_id}", method = RequestMethod.PUT)
-    public Talent update(@PathVariable("talent_id") Long talent_id, @RequestBody Talent talent, RedirectAttributes redirectAttributes) throws NotFoundException {
+    @RequestMapping(value = "/talent/update/{talent_id}", method = RequestMethod.POST)
+    public Talent update(@PathVariable("talent_id") Long talent_id, Talent talent, RedirectAttributes redirectAttributes) throws NotFoundException {
         log.info("Updating Talent with id: {}", talent_id);
         Talent currentTalent = talentService.findById(talent_id);
 
