@@ -43,7 +43,14 @@ public class TwitterMvcController {
             return "redirect:/tw/login";
         }
 
+        TwitterManualController.accessToken=token.getValue();
+
+//        twitter.timelineOperations().
+        TwitterManualController.postTwitter(twitter);
+
         model.addAttribute(TOKEN_NAME,token.getValue());
+
+
 
         return "connect/twitterConnected";
     }
