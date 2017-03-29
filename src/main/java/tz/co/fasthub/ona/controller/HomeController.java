@@ -8,18 +8,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class HomeController {
-
+    //HOMR
     @RequestMapping("/index")
     public String index() {
         return "index";
     }
+    @RequestMapping("/success")
+    public String successManual() {
+        return "success";
+    }
 
+    //TALENT
     @RequestMapping("/talent/addTalent")
     public String addTalent() {
         return "talent/addTalent";
     }
 
-
+    @RequestMapping("/talent/update")
+    public String updateForm(){
+        return "talent/talentForm";
+    }
+    //TWITTER
     @RequestMapping("/twitter/connected")
     public String connected(){
         return "twitter/connected";
@@ -40,7 +49,6 @@ public class HomeController {
         return "twitter/success";
     }
 
-
     @RequestMapping(value = "/messages")
     public String showMessages() {
         return "/twitter/success";
@@ -48,9 +56,29 @@ public class HomeController {
 
     @RequestMapping("/twitter/renderPostTweet/form")
     public String tweet(){
-        return "/twitter/postTweet";
+        return "/twitter/postTweetImage";
     }
 
+    @RequestMapping("/twitter/postvideo/form")
+    public String tweetVideo(){
+        return "/twitter/postTweetVideo";
+    }
+
+    //FACEBOOK
+    @RequestMapping("/connect/facebookConnected")
+    public String fbConnected(){
+        return "/connect/facebookConnected";
+    }
+
+    @RequestMapping("/facebook/feeds")
+    public String fbfeeds(){
+        return "/facebook/feeds";
+    }
+
+    @RequestMapping("/facebook/viewFriends")
+    public String fbfriends(){
+        return "/facebook/viewFriends";
+    }
 
 }
 

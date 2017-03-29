@@ -1,0 +1,54 @@
+<!--
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Update Talent</title>
+
+</head>
+<body>
+<div class="container">
+
+    <h2>Talent Details</h2>
+    <div>
+     <form th:object="${talent}" th:action="@{/product}" method="post">
+    <p>First Name: <input th:text="${talent.getFname()}"/></p>
+    <p>Last Name: <input type="text" th:text="${talent.getLname()}"/></p>
+    <p>Email: <input type="email" th:text="${talent.getEmail()}"/></p>
+    <div class="row">
+        <button type="submit" class="btn btn-default">Update</button>
+    </div>
+
+
+</form>
+</div>
+</div>
+
+</body>
+</html>
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Update TALENT</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+</head>
+<body>
+<center>
+    <h2>Update Talent</h2>
+</center>
+
+<form modelAttribute="updateTalent" action="/talent/update/{talent_id}" method="post">
+    <div align="center">
+        <p>First Name: <input type="text" name="fname" /></p>
+        <p>Last Name: <input type="text" name="lname" /></p>
+        <p>Email: <input type="email"  name="email"/></p>
+
+        <p> <input type="submit" id="updateTalent" value="Update" />
+            <a href="/index" th:href="@{/index}">Cancel</a>
+        </p>
+    </div>
+</form>
+
+</body>
+</html>
