@@ -33,11 +33,16 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-actuator-docs')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile("org.springframework.boot:spring-boot-devtools")
-    compile('org.springframework.boot:spring-boot-starter-jersey')
+    //compile('org.springframework.boot:spring-boot-starter-jersey')
 	compile('org.springframework.boot:spring-boot-starter-social-facebook')
 	compile('org.springframework.boot:spring-boot-starter-social-twitter')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-mail')
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jersey
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jersey', version: '1.2.0.RELEASE'
+    // https://mvnrepository.com/artifact/com.sun.jersey.contribs/jersey-multipart
+    compile group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.19'
     // https://mvnrepository.com/artifact/org.springframework/org.springframework.core
     compile group: 'org.springframework', name: 'org.springframework.core', version: '3.2.4.RELEASE'
 

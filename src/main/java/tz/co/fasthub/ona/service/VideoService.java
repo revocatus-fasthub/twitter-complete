@@ -19,5 +19,6 @@ public interface VideoService {
     Resource findOneVideo(String filename);
 
     Video createVideo(MultipartFile file) throws IOException;
-    void deleteImage(String filename) throws IOException;
+
+    void deleteVideo(String filename) throws IOException;
 }

@@ -6,19 +6,20 @@
     <link rel="stylesheet" href="/main.css"/>
 </head>
 <body>
-<h3 th:if="${#vars['flash.messages']}" th:text="${#vars['flash.messages']}" class="flash"></h3>
 
+<h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
 
 <div>
     <h3 th:text="${page.number+1}+' of '+${page.totalPages}"/>
-    <table>
+    <table title="TALENT">
         <thead>
         <tr>
-            <th>Talent Id</th>
+            <th>Id</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-
+            <th width="50"></th>
+            <th width="100"></th>
         </tr>
         </thead>
         <tbody>
@@ -28,18 +29,31 @@
             <td th:text="${talent.fname}"/>
             <td th:text="${talent.lname}"/>
             <td th:text="${talent.email}"/>
+
             <td>
                 <form th:method="delete" th:action="@{'/talent/'+${talent.talent_id}}">
                     <input type="submit" value="Delete"/>
-
+                </form>
+            </td>
+            <td>
+                <form th:method="post" th:action="@{'/talent/talentForm}">
+                    <input type="submit" value="Update"/>
                 </form>
             </td>
         </tr>
         </tbody>
     </table>
 
+
+    <ul>
+        <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize},page=${prev.pageNumber})}">Previous</a></li>
+        <li th:if="${next}"><a th:href="@{/(size=${next.pageSize},page=${next.pageNumber})}">Next</a></li>
+    </ul>
+
+
     <p>
-        <a href="/index" th:href="@{/index}">Ok</a>
+        <a href="/talent/addTalent" th:href="@{/talent/addTalent}"> Add New Talent</a>
+        <a href="/index" th:href="@{/index}">Back</a>
     </p>
 
 </div>
