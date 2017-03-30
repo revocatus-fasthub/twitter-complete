@@ -16,12 +16,9 @@ public class Video {
     @GeneratedValue
     private long mediaId;
     private String mediaIdString;
-
     private int imageWidth;
     private int imageHeight;
     private String imageType;
-
-
     private long size;
     private String processingState;
     private int processingCheckAfterSecs;

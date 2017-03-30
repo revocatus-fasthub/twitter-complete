@@ -2,7 +2,9 @@ package tz.co.fasthub.ona.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.twitter.TwitterPayload;
+import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
+import tz.co.fasthub.ona.service.VideoService;
 
-import com.sun.jersey.multipart.FormDataMultiPart;
-import com.sun.jersey.multipart.file.FileDataBodyPart;
 
+import javax.inject.Inject;
 import java.io.File;
 
 import static org.springframework.integration.support.management.graph.LinkNode.Type.output;
@@ -31,9 +35,11 @@ import static org.springframework.integration.support.management.graph.LinkNode.
 public class TwitterManualController {
 
 
- //   private static String url = "https://upload.twitter.com/1.1/media/upload.json";
+    //   private static String url = "https://upload.twitter.com/1.1/media/upload.json";
     final static String DOMAIN = "https://upload.twitter.com";
     final static String RESOURCE = "/1.1/media/upload.json";
+    @Autowired
+    private  static   VideoService videoService;
 
     private static final Logger log = LoggerFactory.getLogger(TwitterManualController.class);
     public static String accessToken;
@@ -42,8 +48,9 @@ public class TwitterManualController {
     static File file;
 
 
+
     @RequestMapping(value = "/twitter/manual", method = RequestMethod.GET)
-    public String querying(Model model){
+    public String querying(Model model) {
 
         return "/success";
     }
@@ -52,49 +59,53 @@ public class TwitterManualController {
         try {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("command", "INIT");
-            parts.add("total_bytes","10240");
-            parts.add("media_type","image/jpeg");
+            parts.add("total_bytes", "10240");
+            parts.add("media_type", "image/jpeg");
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 //            headers.set(HttpHeaders.AUTHORIZATION,"Bearer "+accessToken);
 
-            HttpEntity<?> entity = new HttpEntity<Object>(parts,headers);
+            HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
-           Object payload = twitter.restOperations().postForObject(DOMAIN+RESOURCE,entity,Object.class);
-            log.info("init: "+payload.toString());
+            TwitterResponse payload = twitter.restOperations().postForObject(DOMAIN + RESOURCE, entity, TwitterResponse.class);
+            log.info("init: " + payload.toString());
+
+            log.info("media_id ya Naamini: "+ payload.getMedia_id());
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Exception: ", e);
         }
     }
 
-/*
-
-    public static void postTwitterAPPEND(Twitter twitter){
-    //String media_id = Integer.parseInt(payload.)
-
+    public static void postTwitterApend(Twitter twitter, Payload payload) {
         try {
-            final FormDataMultiPart form = new FormDataMultiPart();
-            form.field("command", "APPEND");
-            form.field("media_id", media_id);
-            form.field("segment_index", "0");
 
-            final FileDataBodyPart filePart = new FileDataBodyPart("media", file);
+            for (int i = 0; i < 1; i++) {
+                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("command", "APPEND");
+                parts.add("media_id", "10240");
+                parts.add("media", videoService.findOneVideo(payload.getVideo().getName()));
+                parts.add("segment_index", i);
 
-            final FormDataMultiPart multiPartForm = (FormDataMultiPart) form.bodyPart(filePart);
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-            Object payload = twitter.restOperations().postForObject(DOMAIN,multiPartForm,Object.class);
-            log.info("appending: "+payload);
+                HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
-        }catch (RestClientException e) {
+                Object responseData = twitter.restOperations().postForObject(DOMAIN , entity, Object.class);
+
+                log.info("Append Command response: " + responseData.toString());
+
+            }
+
+
+        } catch (RestClientException e) {
             log.error("RestClientException: ", e);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Exception: ", e);
         }
     }
 
-
- */
 }
