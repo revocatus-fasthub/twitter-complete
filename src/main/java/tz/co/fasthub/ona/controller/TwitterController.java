@@ -24,7 +24,6 @@ import tz.co.fasthub.ona.service.TwitterService;
 import tz.co.fasthub.ona.service.VideoService;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -175,9 +174,15 @@ public class TwitterController {
                 twitterService.savePayload(createdPayload);
 
                 TweetData tweetData = new TweetData(createdPayload.getMessage());
-                tweetData.withMedia(imageService.findOneImage(image.getName()));
+
+                if (file!=null&&file.getContentType().equals("image/jpeg")){
+                    tweetData.withMedia(imageService.findOneImage(image.getName()));
+                }else  if (file!=null && file.getContentType().equals("video/mp4")){
+                    TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
+                }
 
                 Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+
 
 
                 log.info("tweet image sent");

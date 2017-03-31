@@ -3,7 +3,6 @@ package tz.co.fasthub.ona.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParser;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,19 +15,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.twitter.TwitterPayload;
 import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
-import tz.co.fasthub.ona.service.TalentService;
-import tz.co.fasthub.ona.service.TwitterTalentService;
 import tz.co.fasthub.ona.service.VideoService;
 
 
-import javax.inject.Inject;
 import java.io.File;
-
-import static org.springframework.integration.support.management.graph.LinkNode.Type.output;
 
 /**
  * Created by root on 3/28/17.
@@ -56,35 +49,36 @@ public class TwitterManualController {
         return "/success";
     }
 
-    public static void postTwitter(Twitter twitter) {
+    public static TwitterResponse postINITCommandToTwitter(Twitter twitter, Resource file, String mediaType) {
+        TwitterResponse payload = null;
         try {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("command", "INIT");
-            parts.add("total_bytes", "10240");
-            parts.add("media_type", "image/jpeg");
+            parts.add("total_bytes", Integer.toString((int) file.contentLength()));
+            parts.add("media_type", mediaType);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        //    headers.set(HttpHeaders.AUTHORIZATION,"Bearer "+accessToken);
-
             HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
-            TwitterResponse payload = twitter.restOperations().postForObject(DOMAIN + RESOURCE, entity, TwitterResponse.class);
+            payload = twitter.restOperations().postForObject(DOMAIN + RESOURCE, entity, TwitterResponse.class);
             log.info("init: " + payload.toString());
 
-            log.info("media_id ya Naamini: "+ payload.getMedia_id());
+            log.info("media_id featched from Twitter API: "+ payload.getMedia_id());
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
         } catch (Exception e) {
             log.error("Exception: ", e);
         }
+        return payload;
     }
 
-    public static void postTwitterApend(Twitter twitter, Payload payload,TwitterResponse twitterResponse) {
+    public static void postAPPENDCommandToTwitter(Twitter twitter, Payload payload, TwitterResponse twitterResponse) {
         try {
 
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+
             for (int i = 0; i < 1; i++) {
-                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
                 parts.add("media", videoService.findOneVideo(payload.getVideo().getName()));
@@ -108,5 +102,30 @@ public class TwitterManualController {
             log.error("Exception: ", e);
         }
     }
+
+    public static TwitterResponse postFINALIZECommandToTwitter(Twitter twitter, TwitterResponse twitterResponse) {
+        try {
+            MultiValueMap<String, Object> finalize = new LinkedMultiValueMap<String, Object>();
+            finalize.add("command", "FINALIZE");
+            finalize.add("media_id",twitterResponse.getMedia_id());
+
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            //    headers.set(HttpHeaders.AUTHORIZATION,"Bearer "+accessToken);
+
+            HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
+
+            TwitterResponse payload1 = twitter.restOperations().postForObject(DOMAIN, entity, TwitterResponse.class);
+            log.info("finalize: " + payload1.toString());
+
+        } catch (RestClientException e) {
+            log.error("RestClientException: ", e);
+        } catch (Exception e) {
+            log.error("Exception: ", e);
+        }
+        return null;
+    }
+
 
 }
