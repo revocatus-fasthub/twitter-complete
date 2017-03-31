@@ -1,11 +1,5 @@
 package tz.co.fasthub.ona.controller;
 
-import org.springframework.stereotype.Controller;
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.social.connect.Connection;
 import org.springframework.social.oauth1.AuthorizedRequestToken;
 import org.springframework.social.oauth1.OAuth1Operations;
@@ -17,6 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * Created by daniel on 3/26/17.
  */
@@ -25,9 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TwitterMvcController {
 
 
+
     private static final String API_KEY = "oR9ZSqmD9uqSz33iI8hgmptl3";
     private static final String API_SECRET = "dW69QN3GUQ54SUH2m7U5nqXNRn4wazybpkSCZAuDdrOn4iBrNt";
-    private static final String CALLBACK_URL = "http://127.0.0.1:8080/tw/callback";
+    private static final String CALLBACK_URL = "http://localhost:8080/tw/callback";
     private static final String REQUEST_TOKEN_NAME = "requestToken";
     private static final String TOKEN_NAME = "twitterToken";
 
@@ -45,7 +44,13 @@ public class TwitterMvcController {
             return "redirect:/tw/login";
         }
 
+        TwitterManualController.accessToken=token.getValue();
+
+        TwitterManualController.postTwitter(twitter);
+
         model.addAttribute(TOKEN_NAME,token.getValue());
+
+
 
         return "connect/twitterConnected";
     }

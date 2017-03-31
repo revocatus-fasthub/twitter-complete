@@ -10,9 +10,6 @@
 <ol>
     <li th:each="follower:${followers}" th:text="${follower.name}">Follower</li>
 </ol>
-<p>
-    <a href="/connect/twitterConnected" th:href="@{/twitter/postTweet}">Post a Tweet</a>
-</p>
 <p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Menu</a>
 </p>
 </body>
