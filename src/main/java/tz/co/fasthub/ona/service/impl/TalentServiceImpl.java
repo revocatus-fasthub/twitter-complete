@@ -1,6 +1,5 @@
 package tz.co.fasthub.ona.service.impl;
 
-import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Service;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.repository.TalentRepository;
 import tz.co.fasthub.ona.service.TalentService;
+
+import javax.transaction.Transactional;
 
 /**
  * Created by root on 2/10/17.
@@ -24,6 +25,11 @@ public class TalentServiceImpl implements TalentService {
         this.talentRepository = talentRepository;
     }
 
+
+    @Override
+    public Talent getTalentbyId(Long talent_id) {
+        return talentRepository.getOne(talent_id);
+    }
 
     @Override
     public Talent getTalentByFname(String fname) {
@@ -46,22 +52,8 @@ public class TalentServiceImpl implements TalentService {
     }
 
     @Override
-    public Talent saveAccessToken(OAuthToken accessToken) {
-        return null;//talentRepository.save(accessToken);
-    }
-
-    @Override
     public Talent findOne(Long talent_id) {
         return talentRepository.findOne(talent_id);
-    }
-
-    public void updateTalent(Talent talent){
-        createTalent(talent);
-    }
-
-    //@Override
-    public Talent saveTalent(Talent talent) {
-        return talentRepository.findOne(talent.getTalent_id());
     }
 
     @Override

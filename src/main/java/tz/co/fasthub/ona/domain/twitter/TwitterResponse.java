@@ -3,13 +3,13 @@ package tz.co.fasthub.ona.domain.twitter;
 /**
  * Created by daniel on 3/29/17.
  */
-
-
 public class TwitterResponse {
     private  String media_id;
     private String media_id_string;
     private String expires_after_secs;
 
+    public TwitterResponse() {
+    }
 
     public TwitterResponse(String media_id, String media_id_string, String expires_after_secs) {
         this.media_id = media_id;

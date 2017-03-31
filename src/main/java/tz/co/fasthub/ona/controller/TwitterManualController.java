@@ -20,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.twitter.TwitterPayload;
 import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
+import tz.co.fasthub.ona.service.TalentService;
+import tz.co.fasthub.ona.service.TwitterTalentService;
 import tz.co.fasthub.ona.service.VideoService;
 
 
@@ -42,16 +44,15 @@ public class TwitterManualController {
     private  static   VideoService videoService;
 
     private static final Logger log = LoggerFactory.getLogger(TwitterManualController.class);
+
     public static String accessToken;
 
     private TwitterPayload twitterPayload;
+
     static File file;
-
-
 
     @RequestMapping(value = "/twitter/manual", method = RequestMethod.GET)
     public String querying(Model model) {
-
         return "/success";
     }
 
@@ -64,7 +65,7 @@ public class TwitterManualController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//            headers.set(HttpHeaders.AUTHORIZATION,"Bearer "+accessToken);
+        //    headers.set(HttpHeaders.AUTHORIZATION,"Bearer "+accessToken);
 
             HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
@@ -79,13 +80,13 @@ public class TwitterManualController {
         }
     }
 
-    public static void postTwitterApend(Twitter twitter, Payload payload) {
+    public static void postTwitterApend(Twitter twitter, Payload payload,TwitterResponse twitterResponse) {
         try {
 
             for (int i = 0; i < 1; i++) {
                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
                 parts.add("command", "APPEND");
-                parts.add("media_id", "10240");
+                parts.add("media_id",twitterResponse.getMedia_id());
                 parts.add("media", videoService.findOneVideo(payload.getVideo().getName()));
                 parts.add("segment_index", i);
 

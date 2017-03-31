@@ -3,10 +3,7 @@ package tz.co.fasthub.ona.domain;
 
 import org.springframework.social.oauth1.OAuthToken;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by root on 2/23/17.
@@ -22,7 +19,10 @@ public class Talent {
     private String email;
     private String password;
     private String Cpassword;
-    private OAuthToken accessToken;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "twitterAccount_id")
+    private TwitterTalentAccount twitterTalentAccount;
 
     private Talent(){}
 
@@ -30,9 +30,7 @@ public class Talent {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
-        this.password = password;
-        this.accessToken=accessToken;
-    }
+        this.password = password;}
 
     @Override
     public String toString() {
@@ -43,7 +41,6 @@ public class Talent {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", Cpassword='" + Cpassword + '\'' +
-                ", accessToken='" + accessToken + '\'' +
                 '}';
     }
 
@@ -95,11 +92,11 @@ public class Talent {
         Cpassword = cpassword;
     }
 
-    public OAuthToken getAccessToken() {
-        return accessToken;
+    public TwitterTalentAccount getTwitterTalentAccount() {
+        return twitterTalentAccount;
     }
 
-    public void setAccessToken(OAuthToken accessToken) {
-        this.accessToken = accessToken;
+    public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
+        this.twitterTalentAccount = twitterTalentAccount;
     }
 }

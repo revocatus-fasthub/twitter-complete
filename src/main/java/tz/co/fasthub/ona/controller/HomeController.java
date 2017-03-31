@@ -1,7 +1,9 @@
 package tz.co.fasthub.ona.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import tz.co.fasthub.ona.domain.Talent;
 
 /**
  * Created by root on 2/23/17.
@@ -25,10 +27,10 @@ public class HomeController {
     }
 
     @RequestMapping("/talent/talentForm")
-    public String updateForm(){
+    public String updateForm(Model model, Talent talent){
+       // model.addAttribute("talent",talent);
         return "talent/talentForm";
     }
-
     //TWITTER
     @RequestMapping("/twitter/connected")
     public String connected(){
