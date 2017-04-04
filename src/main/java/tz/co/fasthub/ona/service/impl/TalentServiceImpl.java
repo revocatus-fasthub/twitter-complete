@@ -9,9 +9,11 @@ import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.repository.TalentRepository;
 import tz.co.fasthub.ona.service.TalentService;
 
+import javax.transaction.Transactional;
+
 /**
  * Created by root on 2/10/17.
- */
+ */ 
 @Service
 public class TalentServiceImpl implements TalentService {
 
@@ -25,6 +27,11 @@ public class TalentServiceImpl implements TalentService {
 
 
     @Override
+    public Talent getTalentbyId(Long talent_id) {
+        return talentRepository.getOne(talent_id);
+    }
+
+    @Override
     public Talent getTalentByFname(String fname) {
         return talentRepository.findByFname(fname);
     }
@@ -36,7 +43,7 @@ public class TalentServiceImpl implements TalentService {
 
     @Override
     public Talent createTalent(Talent talent) {
-        return talentRepository.save(talent);
+       return talentRepository.save(talent);
     }
 
     @Override
@@ -45,17 +52,8 @@ public class TalentServiceImpl implements TalentService {
     }
 
     @Override
-    public Talent saveAccessToken(OAuthToken accessToken) {
-        return null;//talentRepository.save(accessToken);
-    }
-
-    @Override
     public Talent findOne(Long talent_id) {
         return talentRepository.findOne(talent_id);
-    }
-
-    public void updateTalent(Talent talent){
-        createTalent(talent);
     }
 
     @Override

@@ -36,7 +36,7 @@
                 </form>
             </td>
             <td>
-                <form th:method="post" th:action="@{'/talent/talentForm'}">
+                <form th:method="get" th:action="@{'/showTalent/'+${talent.talent_id}}">
                     <input type="submit" value="Update"/>
                 </form>
             </td>
