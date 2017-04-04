@@ -25,9 +25,14 @@ public class HomeController {
     }
 
     @RequestMapping("/talent/talentForm")
-    public String updateForm(){
+    public String talentForm() {
         return "talent/talentForm";
     }
+
+    /*@RequestMapping("/talent/talentForm")
+    public String updateForm(){
+        return "talent/talentForm";
+    }*/
 
     //TWITTER
     @RequestMapping("/twitter/connected")

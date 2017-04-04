@@ -79,7 +79,7 @@ public class TwitterManualController {
         }
     }
 
-    public static void postTwitterApend(Twitter twitter, Payload payload) {
+    public static void postTwitterAppend(Twitter twitter, Payload payload) {
         try {
 
             for (int i = 0; i < 1; i++) {

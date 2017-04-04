@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.oauth1.OAuthToken;
 import tz.co.fasthub.ona.domain.Talent;
-import tz.co.fasthub.ona.repository.TalentRepository;
 
 public interface TalentService {
      Talent getTalentByFname(String fname);

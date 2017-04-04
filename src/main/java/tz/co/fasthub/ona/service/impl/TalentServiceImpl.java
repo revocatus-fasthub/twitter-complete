@@ -1,6 +1,5 @@
 package tz.co.fasthub.ona.service.impl;
 
-import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +11,7 @@ import tz.co.fasthub.ona.service.TalentService;
 
 /**
  * Created by root on 2/10/17.
- */ 
+ */
 @Service
 public class TalentServiceImpl implements TalentService {
 
@@ -37,7 +36,7 @@ public class TalentServiceImpl implements TalentService {
 
     @Override
     public Talent createTalent(Talent talent) {
-       return talentRepository.save(talent);
+        return talentRepository.save(talent);
     }
 
     @Override
@@ -57,11 +56,6 @@ public class TalentServiceImpl implements TalentService {
 
     public void updateTalent(Talent talent){
         createTalent(talent);
-    }
-
-    //@Override
-    public Talent saveTalent(Talent talent) {
-        return talentRepository.findOne(talent.getTalent_id());
     }
 
     @Override
