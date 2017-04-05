@@ -1,28 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <title>REGISTER TALENT</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Register Talent</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
+
 <body>
-<center>
-    <h2>register here</h2>
-</center>
 
-<form modelAttribute="addTalentForm" action="/talent/addTalent" method="post">
-    <div align="center">
-        <p>First Name: <input type="text" name="fname" /></p>
-        <p>Last Name: <input type="text" name="lname" /></p>
-        <p>Email: <input type="email"  name="email"/></p>
-        <p>Password: <input type="password" name="password" /></p>
-        <p>Confirm Password: <input type="password" name="Cpassword" /></p>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
-        <p> <input type="submit" id="addTalent" value="Submit" />
-            <a href="/index" th:href="@{/index}">Cancel</a>
-        </p>
+    <h2>Talent Details</h2>
+<div class="container">
+<form class="form-horizontal" modelAttribute="addTalentForm" action="/talent/addTalent" method="post">
+
+    <div><label class="col-sm-5 control-label">Fist Name:</label>
+    <div class="col-sm-7">
+        <p><input type="text" name="fname" /></p>
     </div>
-</form>
+    </div>
 
+    <div><label class="col-sm-5 control-label">Last Name:</label>
+        <div class="col-sm-7">
+            <p><input type="text" name="lname" /></p>
+        </div>
+    </div>
+
+    <div><label class="col-sm-5 control-label">Email:</label>
+        <div class="col-sm-7">
+            <p><input type="email" name="email" /></p>
+        </div>
+    </div>
+
+    <div><label class="col-sm-5 control-label">Password:</label>
+        <div class="col-sm-7">
+            <p><input type="password" name="password" /></p>
+        </div>
+    </div>
+
+    <div><label class="col-sm-5 control-label">Confirm Password:</label>
+        <div class="col-sm-7">
+            <p><input type="password" name="cpassword" /></p>
+        </div>
+    </div><br/>
+
+        <div class="col-sm-7 control-label">
+            <p> <input type="submit" id="addTalent" value="Submit" />
+                <a href="/" th:href="@{/talents}">Cancel</a>
+            </p>
+        </div>
+
+</form>
+</div>
+</div>
 </body>
 </html>

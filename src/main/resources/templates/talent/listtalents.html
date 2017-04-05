@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thmyeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>All Talents</title>
-    <link rel="stylesheet" href="/main.css"/>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>VIEW ALL TALENTS</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
-
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
 
-<div>
-    <h3 th:text="${page.number+1}+' of '+${page.totalPages}"/>
-    <table title="TALENT">
-        <thead>
+    <div th:if="${not #lists.isEmpty(talents)}">
+
+  <!--   <h3 th:text="${page.number+1}+' of '+${page.totalPages}"/>-->
+    <table class="table table-striped">
         <tr>
             <th>Id</th>
             <th>First Name</th>
@@ -21,17 +23,15 @@
             <th width="50"></th>
             <th width="100"></th>
         </tr>
-        </thead>
-        <tbody>
-        <tr th:each="talent : ${page.content}">
+        <tr th:each="talent : ${talents}">
 
-            <td th:text="${talent.talent_id}"/>
-            <td th:text="${talent.fname}"/>
-            <td th:text="${talent.lname}"/>
-            <td th:text="${talent.email}"/>
+            <td th:text="${talent.talent_id}">Talent Id</td>
+            <td th:text="${talent.fname}">First Name</td>
+            <td th:text="${talent.lname}">Last Name</td>
+            <td th:text="${talent.email}"> Email</td>
 
             <td>
-                <form th:method="delete" th:action="@{'/talent/'+${talent.talent_id}}">
+                <form th:method="delete" th:action="@{'/talent/delete/'+${talent.talent_id}}">
                     <input type="submit" value="Delete"/>
                 </form>
             </td>
@@ -41,7 +41,7 @@
                 </form>
             </td>
         </tr>
-        </tbody>
+
     </table>
 
 
@@ -51,11 +51,10 @@
     </ul>
 
 
-    <p>
-        <a href="/talent/addTalent" th:href="@{/talent/addTalent}"> Add New Talent</a>
-        <a href="/index" th:href="@{/index}">Back</a>
-    </p>
-
+    <!-- <p><a href="/talent/addTalent" th:href="@{/talent/addTalent}"> Add New Talent</a></p>
+        <p><a href="/index" th:href="@{/index}">Back</a></p>
+-->
+</div>
 </div>
 </body>
 </html>

@@ -1,39 +1,14 @@
-<!--
-<html xmlns:th="http://www.thymeleaf.org">
-<head lang="en">
-
-    <title>Update Talent</title>
-
-</head>
-<body>
-<div class="container">
-
-    <h2>Talent Details</h2>
-    <div>
-     <form th:object="${talent}" th:action="@{/product}" method="post">
-    <p>First Name: <input th:text="${talent.getFname()}"/></p>
-    <p>Last Name: <input type="text" th:text="${talent.getLname()}"/></p>
-    <p>Email: <input type="email" th:text="${talent.getEmail()}"/></p>
-    <div class="row">
-        <button type="submit" class="btn btn-default">Update</button>
-    </div>
-
-
-</form>
-</div>
-</div>
-
-</body>
-</html>
--->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
-    <title>Update TALENT</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+
+    <title>REGISTER TALENT</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
 <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
 
@@ -66,7 +41,11 @@
     <div class="row">
         <button type="submit" class="btn btn-default">Update</button>
     </div>
+    <div class="row">
+    <a href="/talents" th:href="@{/talents}">Cancel</a>
+    </div>
 </form>
+</div>
 </div>
 </body>
 </html>

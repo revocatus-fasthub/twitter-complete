@@ -3,17 +3,14 @@ package tz.co.fasthub.ona.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.stereotype.Service;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.repository.TalentRepository;
 import tz.co.fasthub.ona.service.TalentService;
 
-import javax.transaction.Transactional;
-
 /**
  * Created by root on 2/10/17.
- */ 
+ */
 @Service
 public class TalentServiceImpl implements TalentService {
 
@@ -43,7 +40,7 @@ public class TalentServiceImpl implements TalentService {
 
     @Override
     public Talent createTalent(Talent talent) {
-       return talentRepository.save(talent);
+        return talentRepository.save(talent);
     }
 
     @Override
@@ -54,6 +51,11 @@ public class TalentServiceImpl implements TalentService {
     @Override
     public Talent findOne(Long talent_id) {
         return talentRepository.findOne(talent_id);
+    }
+
+    @Override
+    public Iterable<Talent> listAllTalent() {
+        return talentRepository.findAll();
     }
 
     @Override

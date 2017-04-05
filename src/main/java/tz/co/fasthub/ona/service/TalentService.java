@@ -9,9 +9,11 @@ import tz.co.fasthub.ona.domain.Talent;
 public interface TalentService {
     Talent getTalentbyId(Long talent_id);
     Talent getTalentByFname(String fname);
-     void deleteTalentById(Long id) throws NotFoundException;
-     Object createTalent(Talent talent);
-     Page<Talent> findTalentPage(Pageable pageable);
-     Talent findById(Long talent_id);
-     Talent findOne(Long talent_id) throws NotFoundException;
+    void deleteTalentById(Long id) throws NotFoundException;
+    Object createTalent(Talent talent);
+    Page<Talent> findTalentPage(Pageable pageable);
+    Talent findById(Long talent_id);
+    Talent findOne(Long talent_id) throws NotFoundException;
+    Iterable<Talent> listAllTalent();
+
 }

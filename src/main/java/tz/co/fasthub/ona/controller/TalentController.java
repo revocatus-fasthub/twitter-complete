@@ -1,11 +1,9 @@
 package tz.co.fasthub.ona.controller;
 
-import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,7 +21,6 @@ import tz.co.fasthub.ona.service.TalentService;
 import tz.co.fasthub.ona.service.impl.MailContentBuilder;
 
 import javax.mail.MessagingException;
-import java.util.Locale;
 
 
 /**
@@ -33,34 +30,40 @@ import java.util.Locale;
 @ComponentScan
 public class TalentController {
 
-    private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
+    private static final Logger log = LoggerFactory.getLogger(TalentController.class);
 
     @Autowired
     TalentService talentService;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
 
-    @Autowired
+    private JavaMailSender javaMailSender;
     private MailContentBuilder mailContentBuilder;
 
-    Locale locale;
+    @Autowired
+    public TalentController(JavaMailSender javaMailSender, MailContentBuilder mailContentBuilder) {
+        this.javaMailSender = javaMailSender;
+        this.mailContentBuilder = mailContentBuilder;
+    }
+
     private MailSender mailSender;
-    // private SimpleMailMessage templateMessage;
+
+    private SimpleMailMessage message;
 
     public void setMailSender(MailSender mailSender) {
         this.mailSender = mailSender;
     }
 
-    //  public void setTemplateMessage(SimpleMailMessage templateMessage) {
-    //  this.templateMessage = templateMessage;
-    // }
-
     @RequestMapping(value = "/talents")
     public String showUsers(Model model, Pageable pageable) {
-        final Page<Talent> page = talentService.findTalentPage(pageable);
-        model.addAttribute("page", page);
+        // final Page<Talent> page = talentService.listAllTalent();
+        model.addAttribute("talents", talentService.listAllTalent());
         return "/talent/listtalents";
+    }
+
+    @RequestMapping("talent/new")
+    public String newTalent(Model model) {
+        model.addAttribute("talent", new Talent());
+        return "/talent/addTalent";
     }
 
     @RequestMapping(value = "/talent/addTalent", method = RequestMethod.POST)
@@ -68,14 +71,30 @@ public class TalentController {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash.message", "Talent was Not Created  => error details: " + bindingResult.getFieldError().toString());
-            return "redirect:/talents";
+            return "redirect:/talent/addTalent";
         } else {
-            talentService.createTalent(talent);
-            sendMail(talent.getEmail(), "Welcome to ONA Platform", "ONA-Social Media Management Tool");
-            redirectAttributes.addFlashAttribute("flash.message", "Successful!!!");//=> Talent: "+talent
+            try {
+                talentService.createTalent(talent);
+                //  sendMail(talent.getEmail(), "Welcome to ONA Platform", "ONA-Social Media Management Tool");
+                sendMail(talent.getEmail(),"WELCOME TO ONA PLATFORM","Hello "+talent.getFname()+",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");
+                log.info("email sent");
+
+            } catch (Exception e){
+                log.error("message sending failed");
+                redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception" +e);//=> Talent: "+talent
+            }
+            redirectAttributes.addFlashAttribute("flash.message", "Success!");//=> Talent: "+talent
             return "redirect:/talents";
+            //return "redirect:/talent/" + talent.getTalent_id();
         }
     }
+
+    @RequestMapping("talent/{id}")
+    public String showTalent(@PathVariable("talent_id") Long talent_id, Model model) {
+        model.addAttribute("talent", talentService.getTalentbyId(talent_id));
+        return "/talent/talentshow";
+    }
+
     private void sendMail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -84,7 +103,8 @@ public class TalentController {
         javaMailSender.send(message);
     }
 
-    @RequestMapping(value = "/talent/{talent_id}", method = RequestMethod.DELETE)
+
+    @RequestMapping(value = "/talent/delete/{talent_id}", method = RequestMethod.DELETE)
     public String deleteTalentById(@PathVariable("talent_id") Long talent_id, RedirectAttributes redirectAttributes) {
         try {
             talentService.deleteTalentById(talent_id);
