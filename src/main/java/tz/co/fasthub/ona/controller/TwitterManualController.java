@@ -18,6 +18,7 @@ import org.springframework.web.client.RestClientException;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.twitter.TwitterPayload;
 import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
+import tz.co.fasthub.ona.service.ImageService;
 import tz.co.fasthub.ona.service.VideoService;
 
 
@@ -34,7 +35,7 @@ public class TwitterManualController {
     final static String DOMAIN = "https://upload.twitter.com";
     final static String RESOURCE = "/1.1/media/upload.json";
     @Autowired
-    private  static   VideoService videoService;
+    private  static ImageService imageService;
 
     private static final Logger log = LoggerFactory.getLogger(TwitterManualController.class);
 
@@ -79,9 +80,11 @@ public class TwitterManualController {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
             for (int i = 0; i < 1; i++) {
+
+
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
-                parts.add("media", videoService.findOneVideo(payload.getVideo().getName()));
+                parts.add("media", imageService.findOneImage(payload.getImage().getName()).getInputStream());
                 parts.add("segment_index", i);
 
                 HttpHeaders headers = new HttpHeaders();
