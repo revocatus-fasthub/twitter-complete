@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thmyeleaf.org" lang="en" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thmyeleaf.org ">
+<head>
+    <meta charset="UTF-8"/>
+    <title>VIDEOS LIST</title>
+    <link rel="stylesheet" href="/main.css"/>
+</head>
+<body>
+
+<h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
+
+<h3 th:text="${videoPage.number + 1} + ' of ' + ${videoPage.totalPages}"></h3>
+<h4 th:text="${videoPage.size} + ' item(s) per page'"></h4>
+
+Videos
+<table title="Videos">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="video : ${videoPage.content}">
+        <td th:text="${video.media_id}"></td>
+        <td th:text="${video.name}"></td>
+        <td>
+            <form th:method="delete" th:action="@{'/twitter/videos/' + ${video.name}}">
+                <input type="submit" value="Delete" />
+            </form>
+        </td>
+
+    </tr>
+</table>
+
+<ul>
+    <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize},page=${prev.pageNumber})}">Previous</a></li>
+    <li th:if="${next}"><a th:href="@{/(size=${next.pageSize},page=${next.pageNumber})}">Next</a></li>
+</ul>
+<p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Back</a></p>
+</body>
+</html>

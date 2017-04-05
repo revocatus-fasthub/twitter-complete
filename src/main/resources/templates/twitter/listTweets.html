@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="/main.css"/>
 </head>
 <body>
-<h3 th:if="${#vars['flash.messages']}" th:text="${#vars['flash.messages']}" class="flash"></h3>
+
+<h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
 
 
 <div>

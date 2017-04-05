@@ -1,21 +1,14 @@
 package tz.co.fasthub.ona.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
-import tz.co.fasthub.ona.repository.ImageRepository;
+import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.repository.TwitterRepository;
 import tz.co.fasthub.ona.service.TwitterService;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service

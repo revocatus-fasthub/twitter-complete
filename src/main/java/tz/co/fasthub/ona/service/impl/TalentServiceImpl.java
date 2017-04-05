@@ -10,7 +10,7 @@ import tz.co.fasthub.ona.service.TalentService;
 
 /**
  * Created by root on 2/10/17.
- */ 
+ */
 @Service
 public class TalentServiceImpl implements TalentService {
 
@@ -23,22 +23,42 @@ public class TalentServiceImpl implements TalentService {
     }
 
     @Override
+    public Talent getTalentbyId(Long talent_id) {
+        return talentRepository.getOne(talent_id);
+    }
+
+    @Override
     public Talent getTalentByFname(String fname) {
         return talentRepository.findByFname(fname);
     }
 
     @Override
-    public void deleteTalentById(Long id) {
-        talentRepository.delete(id);
+    public void deleteTalentById(Long talent_id) {
+        talentRepository.delete(talent_id);
     }
 
     @Override
-    public Talent createTalent(Talent Talent) {
-       return talentRepository.save(Talent);
+    public Talent createTalent(Talent talent) {
+        return talentRepository.save(talent);
     }
 
     @Override
     public Page<Talent> findTalentPage(Pageable pageable) {
         return talentRepository.findAll(pageable);
+    }
+
+    @Override
+    public Talent findOne(Long talent_id) {
+        return talentRepository.findOne(talent_id);
+    }
+
+    @Override
+    public Iterable<Talent> listAllTalent() {
+        return talentRepository.findAll();
+    }
+
+    @Override
+    public Talent findById(Long talent_id) {
+        return talentRepository.findOne(talent_id);
     }
 }

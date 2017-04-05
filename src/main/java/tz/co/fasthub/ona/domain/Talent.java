@@ -1,9 +1,9 @@
 package tz.co.fasthub.ona.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.springframework.social.oauth1.OAuthToken;
+
+import javax.persistence.*;
 
 /**
  * Created by root on 2/23/17.
@@ -12,7 +12,7 @@ import javax.persistence.Id;
 public class Talent {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long talent_id;
     private String fname;
     private String lname;
@@ -20,15 +20,17 @@ public class Talent {
     private String password;
     private String Cpassword;
 
-    private Talent(){}
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "twitterAccount_id")
+    private TwitterTalentAccount twitterTalentAccount;
 
-    public Talent(String fname, String lname, String email, String password, String cpassword) {
+    public Talent(){}
+
+    public Talent(String fname, String lname, String email, String password, OAuthToken accessToken) {
         this.fname = fname;
         this.lname = lname;
         this.email = email;
-        this.password = password;
-        Cpassword = cpassword;
-    }
+        this.password = password;}
 
     @Override
     public String toString() {
@@ -88,5 +90,13 @@ public class Talent {
 
     public void setCpassword(String cpassword) {
         Cpassword = cpassword;
+    }
+
+    public TwitterTalentAccount getTwitterTalentAccount() {
+        return twitterTalentAccount;
+    }
+
+    public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
+        this.twitterTalentAccount = twitterTalentAccount;
     }
 }

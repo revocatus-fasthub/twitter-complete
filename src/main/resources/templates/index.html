@@ -7,13 +7,19 @@
 </head>
 <body>
 <center>
-    <h1>WELCOME TO ONA</h1>
+    <h1>ONA</h1>
 
-    <p><a href="/addTalent" th:href="@{/talent/addTalent}">Register New Talent</a></p>
+    <div class="row text-center">
+        <img src="../../static/images/boot.png" width="200" th:src="@{/images/boot.png}"/>
+    </div>
+
+    <h3> SOCIAL MEDIA MANAGEMENT TOOL</h3>
+
+    <p><a href="/talent/talents" th:href="@{/talents}">Register New Talent</a></p>
 
     <p><a href="/connect/twitter" th:href="@{/connect/twitter}" >Connect to twitter</a></p>
 
-    <p><a href="/connect" th:href="@{/facebook/connect}">Connect to FaceBook</a></p>
+    <p><a href="/connect/facebook" th:href="@{/connect/facebook}" >Connect to Facebook</a></p>
 
 </center>
 

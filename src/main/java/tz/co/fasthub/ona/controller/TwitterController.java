@@ -1,8 +1,5 @@
 package tz.co.fasthub.ona.controller;
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.RequestBuilder;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +19,13 @@ import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.Video;
 import tz.co.fasthub.ona.service.ImageService;
+import tz.co.fasthub.ona.service.TalentService;
 import tz.co.fasthub.ona.service.TwitterService;
 import tz.co.fasthub.ona.service.VideoService;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import static org.hibernate.boot.cfgxml.spi.MappingReference.Type.RESOURCE;
 
 @Controller
 @RequestMapping("/twitter")
@@ -47,17 +39,28 @@ public class TwitterController {
     TwitterService twitterService;
 
     @Autowired
+    TalentService talentService;
+
+    @Autowired
     ImageService imageService;
 
     @Autowired
     VideoService videoService;
 
 
-    private static final String BASE_PATH = "/videos";
+    final static String DOMAIN = "https://upload.twitter.com";
+    final static String RESOURCE = "/1.1/media/upload.json";
+
+    //Save the uploaded file to this folder
+    private static String IMAGE_UPLOAD_ROOT = "imageUpload-dir";
+
+    private static final String BASE_PATH = "/images";
+    //private static final String BASE_PATH = "/videos";
     private static final String FILENAME = "{filename:.+}";
 
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
 
+    //String URL ="https://api.twitter.com";
 
     @Inject
     public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
@@ -91,16 +94,26 @@ public class TwitterController {
         return "/twitter/listImage";
     }
 
-    @RequestMapping(method=RequestMethod.GET)
-    public String twitterConnection(Model model) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
 
+    @RequestMapping(value = "/videos")
+    public String listVideos(Model model, Pageable pageable){
+        final  Page<Video> videoPage = videoService.findVideoPage(pageable);
+        model.addAttribute("videoPage", videoPage);
+        if (videoPage.hasPrevious()) {
+            model.addAttribute("prev", pageable.previousOrFirst());
+        }
+        if (videoPage.hasNext()) {
+            model.addAttribute("next", pageable.next());
+        }
+        return "/twitter/listVideos";
+    }
+
+    @RequestMapping(method=RequestMethod.GET)
+    public String twitterConnection(){
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
-       // twitter.directMessageOperations().sendDirectMessage("devFastHub", "You going to the Dolphins game?");
-        //twitter.timelineOperations().updateStatus("I'm tweeting from Mbeya!");
-       // return "/twitter/success";
-       return "/connect/twitterConnected";
+        return "/connect/twitterConnected";
     }
 
 
@@ -109,6 +122,7 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/viewTweets";
         }
+   //     log.debug("token is: "+accessGrant.getAccessToken());
         model.addAttribute(twitter.userOperations().getUserProfile());
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
         model.addAttribute("tweets",tweets);
@@ -139,83 +153,110 @@ public class TwitterController {
         return "/twitter/followersList";
     }
 
-
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
-    @RequestMapping(value = "/postTweet",method = RequestMethod.POST)
-    public String uploadAndTweet(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-
+    @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
+    public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-
             log.error("no connection to twitter");
-
             return "redirect:/twitter/renderPostTweet/form";
-
         }else if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("flash.message", "Please select a file!");
             return "redirect:/twitter/renderPostTweet/form";
+        }else{
+            try {
+                Image image = imageService.createImage(file);
 
-        }else {
-                try {
-                  //  Image image = imageService.createImage(file);
-                    Video video = videoService.createVideo(file);
+                //saving the tweet to DB
+                Payload createdPayload =twitterService.savePayload(payload);
 
-                    //saving the tweet to DB
-                    Payload createdPayload =twitterService.savePayload(payload);
+                createdPayload.setImage(image);
 
-                   // createdPayload.setImage(image);
-                    createdPayload.setVideo(video);
+                twitterService.savePayload(createdPayload);
 
-                    twitterService.savePayload(createdPayload);
+                TweetData tweetData = new TweetData(createdPayload.getMessage());
 
-                    TweetData tweetData = new TweetData(createdPayload.getMessage());
-                    //tweetData.withMedia(imageService.findOneImage(image.getName()));
-                    tweetData.withMedia(videoService.findOneVideo(video.getName()));
-
-
-                    // 1. INIT the file upload
-               /*
-                    MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-                        params.add("command", "INIT");
-                        params.add("media_type", "video/mp4");
-                        params.add("media_category", "amplify_video");
-                    File videofile = new File(String.valueOf(video));
-                    int bytes = (int) videofile.length();
-                    String totalBytes = Integer.toString(bytes);
-
-                    params.add("total_bytes", totalBytes);
-                    params.add("total_bytes", totalBytes);
-
-                    ClientResponse response = webResource.path(RESOURCE)
-                            .type(MediaType.APPLICATION_FORM_URLENCODED)
-                            .accept(MediaType.APPLICATION_JSON_TYPE)
-                            .post(ClientResponse.class, params);
-
-                    int status = response.getStatus();
-
-                */
-                    Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
-                    //Twitter tweet = twitter.restOperations().postForObject("https://upload.twitter.com/1.1/media/upload.json",tweetData, MediaUploadResponse.class)
-
-                    log.info("tweet sent");
-
-                    redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded");
-
-                } catch (IOException e) {
-                    redirectAttributes.addFlashAttribute("flash.message", "Failed to upload" + file.getOriginalFilename() + "=>" + e);
+                if (file!=null&&file.getContentType().equals("image/jpeg")){
+                    tweetData.withMedia(imageService.findOneImage(image.getName()));
+                }else  if (file!=null && file.getContentType().equals("video/mp4")){
+                    TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
                 }
+
+                Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+
+
+
+                log.info("tweet image sent");
+
+                redirectAttributes.addFlashAttribute("flash.message", "Image Successfully uploaded");
+
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("flash.message", "Failed to upload image" + file.getOriginalFilename() + ": " + e);
             }
-        return "redirect:/twitter/messages";
+        }
+        return "redirect:/twitter/images";
+        }
+
+    //POSTING TWEET AND AN VIDEO FILE TO USER ACCOUNT
+    @RequestMapping(value = "/postTweetVideo",method = RequestMethod.POST)
+    public String uploadAndTweetVideo(@RequestParam("videofile") MultipartFile videofile, Payload payload, RedirectAttributes redirectAttributes) {
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            log.error("no connection to twitter");
+            return "redirect:/twitter/postvideo/form";
+        }else if (videofile.isEmpty()) {
+            redirectAttributes.addFlashAttribute("flash.message", "Please select a video file to post!");
+            return "redirect:/twitter/postvideo/form";
+        }else{
+            try {
+                Video video = videoService.createVideo(videofile);
+                //saving the tweet to DB
+                Payload createdPayload =twitterService.savePayload(payload);
+
+                createdPayload.setVideo(video);
+                twitterService.savePayload(createdPayload);
+
+                TweetData tweetData = new TweetData(createdPayload.getMessage());
+                tweetData.withMedia(videoService.findOneVideo(video.getName()));
+
+
+                Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+                log.info("tweet sent");
+
+                redirectAttributes.addFlashAttribute("flash.message", "Video Successfully uploaded");
+
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("flash.message", "Failed to upload Video " + videofile.getOriginalFilename() + ": " + e);
+            }
+            catch (Exception e) {
+                redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception: " + e);
+            }
+        }
+        return "redirect:/twitter/videos";
     }
 
-
-    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/images/" + FILENAME)
     public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
         try {
             imageService.deleteImage(filename);
-            redirectAttributes.addFlashAttribute("flash.message", "Successfully deleted " + filename + "from the server");
+            redirectAttributes.addFlashAttribute("flash.message", "Image Successfully deleted " + filename + " from the server");
         } catch (IOException|RuntimeException e) {
-            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image" + filename + " => " + e.getMessage());
+            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image " + filename + " => " + e.getMessage());
         }
         return "redirect:/twitter/images";
     }
+
+/*
+
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
+    public String deleteVideo(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
+        try {
+            videoService.deleteVideo(filename);
+            redirectAttributes.addFlashAttribute("flash.message", "Video Successfully deleted " + filename + "from the server");
+        } catch (IOException|RuntimeException e) {
+            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Video" + filename + " => " + e.getMessage());
+        }
+        return "redirect:/twitter/videos";
+    }
+
+ */
+
 }

@@ -24,4 +24,6 @@ public interface TwitterService {
     List<Payload> listAllTweets();
 
     void updatePayload (Payload payload);
+
+    //  void deleteImage(String filename) throws IOException;
 }

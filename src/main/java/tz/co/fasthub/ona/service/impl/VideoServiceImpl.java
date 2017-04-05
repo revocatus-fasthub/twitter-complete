@@ -3,8 +3,11 @@ package tz.co.fasthub.ona.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Video;
 import tz.co.fasthub.ona.repository.VideoRepository;
 import tz.co.fasthub.ona.service.VideoService;
@@ -21,7 +24,7 @@ import java.nio.file.Paths;
 @Service
 public class VideoServiceImpl implements VideoService {
 
-    private static String UPLOAD_ROOT = "upload-dir";
+    private static String VIDEO_UPLOAD_ROOT = "videoUpload-dir";
 
     private final VideoRepository videoRepository;
 
@@ -34,20 +37,33 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public Resource findOneVideo(String filename){
-        return resourceLoader.getResource("file:"+ UPLOAD_ROOT + "/" +filename);
+    public Page<Video> findVideoPage(Pageable pageable) {
+        return videoRepository.findAll(pageable);
     }
 
     @Override
-    public Video createVideo(MultipartFile file) throws IOException {
+    public Resource findOneVideo(String filename){
+        return resourceLoader.getResource("file:"+ VIDEO_UPLOAD_ROOT + "/" +filename);
+    }
 
-        if (!file.isEmpty()) {
-            Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
-            return videoRepository.save(new Video(file.getOriginalFilename()));
+    @Override
+    public Video createVideo(MultipartFile videofile) throws IOException {
 
+        if (!videofile.isEmpty()) {
+            Files.copy(videofile.getInputStream(), Paths.get(VIDEO_UPLOAD_ROOT, videofile.getOriginalFilename()));
+
+      //      return videoRepository.save(new Video(videofile.getOriginalFilename()));
+return null;
         }else {
             return null;
         }
+    }
+
+    @Override
+    public void deleteVideo(String filename) throws IOException {
+        final Video byName = videoRepository.findByName(filename);
+        videoRepository.delete(byName);
+        Files.deleteIfExists(Paths.get(VIDEO_UPLOAD_ROOT, filename));
     }
 
 }

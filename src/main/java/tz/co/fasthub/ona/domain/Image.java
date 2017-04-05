@@ -15,11 +15,13 @@ public class Image {
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
+
     private String path;
+
     @OneToOne(mappedBy = "image")
     private Payload payload;
-
 
     private Image() {
     }
@@ -50,5 +52,13 @@ public class Image {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Payload getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Payload payload) {
+        this.payload = payload;
     }
 }

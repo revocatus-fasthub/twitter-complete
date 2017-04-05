@@ -5,14 +5,11 @@
 <body>
 <h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
 
-<h4>These are your FOLLOWERS:</h4>
+<h4>These are your Followers:</h4>
 
 <ol>
     <li th:each="follower:${followers}" th:text="${follower.name}">Follower</li>
 </ol>
-<p>
-    <a href="/connect/twitterConnected" th:href="@{/twitter/postTweet}">Post a Tweet</a>
-</p>
 <p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Menu</a>
 </p>
 </body>
