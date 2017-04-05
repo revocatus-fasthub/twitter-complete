@@ -80,8 +80,9 @@ public class TalentController {
                 log.info("email sent");
 
             } catch (Exception e){
-                log.error("message sending failed");
+                log.error("email sending failed");
                 redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception" +e);//=> Talent: "+talent
+
             }
             redirectAttributes.addFlashAttribute("flash.message", "Success!");//=> Talent: "+talent
             return "redirect:/talents";

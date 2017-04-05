@@ -1,27 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <title>ONA HOMEPAGE</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="/main.css" th:href="@{/main.css}" />
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>INDEX</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
+
 <body>
-<center>
-    <h1>ONA</h1>
 
-    <div class="row text-center">
-        <img src="../../static/images/boot.png" width="200" th:src="@{/images/boot.png}"/>
-    </div>
-
-    <h3> SOCIAL MEDIA MANAGEMENT TOOL</h3>
-
-    <p><a href="/talent/talents" th:href="@{/talents}">Register New Talent</a></p>
+<div class="container">
+    <center>
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
     <p><a href="/connect/twitter" th:href="@{/connect/twitter}" >Connect to twitter</a></p>
-
     <p><a href="/connect/facebook" th:href="@{/connect/facebook}" >Connect to Facebook</a></p>
-
 </center>
-
+</div>
 </body>
 </html>

@@ -12,7 +12,7 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
-    <h2>Talent Details</h2>
+    <h2>Register Talent</h2>
 <div class="container">
 <form class="form-horizontal" modelAttribute="addTalentForm" action="/talent/addTalent" method="post">
 
@@ -48,7 +48,7 @@
 
         <div class="col-sm-7 control-label">
             <p> <input type="submit" id="addTalent" value="Submit" />
-                <a href="/" th:href="@{/talents}">Cancel</a>
+                <a href="/" th:href="@{/index}">Cancel</a>
             </p>
         </div>
 
