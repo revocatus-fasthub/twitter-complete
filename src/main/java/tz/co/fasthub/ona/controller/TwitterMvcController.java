@@ -8,7 +8,6 @@ import org.springframework.social.oauth1.AuthorizedRequestToken;
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1Parameters;
 import org.springframework.social.oauth1.OAuthToken;
-import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
@@ -60,16 +59,6 @@ public class TwitterMvcController {
 
         TwitterManualController.accessToken=token.getValue();
         log.info("user's access token is: "+TwitterManualController.accessToken);
-
-        //saving user's access token
-     //   twitterTalentAccount.getAccessToken(TwitterManualController.accessToken);
-
-    //    twitterTalentAccount.getProfileImageUrl();
-      //  twitterTalentAccount.getPassword();
-        //twitterTalentAccount.getUsername();
-       // twitterTalentService.save(twitterTalentAccount);
-
-        TwitterManualController.postTwitter(twitter);
 
         model.addAttribute(TOKEN_NAME,token.getValue());
 
