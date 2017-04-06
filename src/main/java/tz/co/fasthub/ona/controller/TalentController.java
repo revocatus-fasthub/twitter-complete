@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tz.co.fasthub.ona.component.TalentValidator;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.service.TalentService;
 import tz.co.fasthub.ona.service.impl.MailContentBuilder;
@@ -35,6 +36,8 @@ public class TalentController {
     @Autowired
     TalentService talentService;
 
+    @Autowired
+    private TalentValidator talentValidator;
 
     private JavaMailSender javaMailSender;
     private MailContentBuilder mailContentBuilder;
@@ -68,8 +71,9 @@ public class TalentController {
 
     @RequestMapping(value = "/talent/addTalent", method = RequestMethod.POST)
     public String registration(@ModelAttribute("addTalentForm") Talent talent, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws MessagingException {
-
+        talentValidator.validate(talent, bindingResult);
         if (bindingResult.hasErrors()) {
+            bindingResult.getFieldError();
             redirectAttributes.addFlashAttribute("flash.message", "Talent was Not Created  => error details: " + bindingResult.getFieldError().toString());
             return "redirect:/talent/addTalent";
         } else {
