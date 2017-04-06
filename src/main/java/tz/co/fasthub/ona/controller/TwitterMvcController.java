@@ -36,12 +36,18 @@ public class TwitterMvcController {
 
     private static final Logger log = LoggerFactory.getLogger(TwitterMvcController.class);
 
+    private Twitter twitter;
+
     @Autowired
     TwitterTalentService twitterTalentService;
 
     TwitterTalentAccount twitterTalentAccount;
 
     private TwitterTemplate twitterTemplate;
+
+    public TwitterMvcController(Twitter twitter) {
+        this.twitter = twitter;
+    }
 
     @RequestMapping("/tw")
     public String tw(Model model, HttpServletRequest request) {
@@ -56,6 +62,9 @@ public class TwitterMvcController {
         if( ! twitter.isAuthorized()) {
             return "redirect:/tw/login";
         }
+        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
+  //      twitterTalentService.save(twitterTalentAccount);
+
 
         TwitterManualController.accessToken=token.getValue();
         log.info("user's access token is: "+TwitterManualController.accessToken);
@@ -110,6 +119,7 @@ public class TwitterMvcController {
         OAuthToken token = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
         request.getSession().setAttribute(TOKEN_NAME, token);
         log.info("Token is: "+token);
+//        twitterTalentAccount.getAccessToken(requestToken.getValue());
 
         log.info("requestToken Secret: "+requestToken.getSecret());
 

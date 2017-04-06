@@ -57,7 +57,7 @@ public class TwitterTalentAccount {
         this.profileImageUrl = profileImageUrl;
     }
 
-    public String getUsername() {
+    public String getUsername(String screenName) {
         return username;
     }
 

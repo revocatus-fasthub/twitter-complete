@@ -23,8 +23,7 @@ public class TwitterTalentServiceImpl implements TwitterTalentService {
     }
 
     @Override
-    public TwitterTalentAccount save
-            (TwitterTalentAccount twitterTalentAccount) {
+    public TwitterTalentAccount save(TwitterTalentAccount twitterTalentAccount) {
         return twitterTalentRepository.save(twitterTalentAccount);
     }
 

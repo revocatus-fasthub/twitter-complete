@@ -33,6 +33,7 @@ public class TalentController {
 
     private static final Logger log = LoggerFactory.getLogger(TalentController.class);
 
+
     @Autowired
     TalentService talentService;
 
@@ -89,7 +90,7 @@ public class TalentController {
 
             }
             redirectAttributes.addFlashAttribute("flash.message", "Success!");//=> Talent: "+talent
-            return "redirect:/talents";
+            return "redirect:/index";
             //return "redirect:/talent/" + talent.getTalent_id();
         }
     }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.domain.Video;
-import tz.co.fasthub.ona.service.ImageService;
-import tz.co.fasthub.ona.service.TalentService;
-import tz.co.fasthub.ona.service.TwitterService;
-import tz.co.fasthub.ona.service.VideoService;
+import tz.co.fasthub.ona.service.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,12 +31,21 @@ import java.util.List;
 @RequestMapping("/twitter")
 public class TwitterController {
 
+    private static final String API_KEY = "oR9ZSqmD9uqSz33iI8hgmptl3";
+    private static final String API_SECRET = "dW69QN3GUQ54SUH2m7U5nqXNRn4wazybpkSCZAuDdrOn4iBrNt";
+    private static final String CALLBACK_URL = "http://localhost:8080/tw/callback";
+    private static final String REQUEST_TOKEN_NAME = "requestToken";
+    private static final String TOKEN_NAME = "twitterToken";
+
     private Twitter twitter;
 
     private ConnectionRepository connectionRepository;
 
     @Autowired
     TwitterService twitterService;
+
+    @Autowired
+    TwitterTalentService twitterTalentService;
 
     @Autowired
     TalentService talentService;
@@ -109,10 +118,18 @@ public class TwitterController {
     }
 
     @RequestMapping(method=RequestMethod.GET)
-    public String twitterConnection(){
+    public String twitterConnection(Model model, TwitterTalentAccount twitterTalentAccount,HttpServletRequest request){
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
+        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+        TwitterManualController.accessToken=token.getValue();
+        log.info("user's access token is: "+TwitterManualController.accessToken);
+        twitterTalentAccount.getAccessToken(token.getValue());
+        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
+        twitterTalentService.save(twitterTalentAccount);
+
+        model.addAttribute(TOKEN_NAME,token.getValue());
         return "/connect/twitterConnected";
     }
 
@@ -122,7 +139,9 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/viewTweets";
         }
-   //     log.debug("token is: "+accessGrant.getAccessToken());
+
+   //    log.debug("token is: "+accessGrant.getAccessToken());
+
         model.addAttribute(twitter.userOperations().getUserProfile());
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
         model.addAttribute("tweets",tweets);
