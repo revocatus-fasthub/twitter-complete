@@ -122,14 +122,14 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
-        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+   /*     OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
         TwitterManualController.accessToken=token.getValue();
         log.info("user's access token is: "+TwitterManualController.accessToken);
         twitterTalentAccount.getAccessToken(token.getValue());
         twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
         twitterTalentService.save(twitterTalentAccount);
 
-        model.addAttribute(TOKEN_NAME,token.getValue());
+        model.addAttribute(TOKEN_NAME,token.getValue());*/
         return "/connect/twitterConnected";
     }
 
