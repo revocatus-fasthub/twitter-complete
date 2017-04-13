@@ -1,55 +1,63 @@
 package tz.co.fasthub.ona.domain;
 
 
-import org.springframework.social.oauth1.OAuthToken;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 
 /**
- * Created by root on 2/23/17.
+ * Talent entity.
  */
 @Entity
 public class Talent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long talent_id;
+    @Column(name = "talent_id")
+    private Integer id;
+
+    @Version
+    private Integer version;
+
+    @Column(name = "first_name")
+    @NotEmpty(message = "*Please provide your first name")
     private String fname;
+
+    @Column(name = "last_name")
+    @NotEmpty(message = "*Please provide your last name")
     private String lname;
+
+    @Column(name = "email")
+    @Email(message = "*Please provide a valid Email")
+    @NotEmpty(message = "*Please provide an email")
     private String email;
+
+    @Column(name = "password")
+    @Length(min = 5, message = "*Your password must have at least 5 characters")
+    @NotEmpty(message = "*Password does not match")
+    @Transient
     private String password;
+
+    @NotEmpty(message = "*password and confirm password do not match")
+    @Transient
     private String Cpassword;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "twitterAccount_id")
-    private TwitterTalentAccount twitterTalentAccount;
-
-    public Talent(){}
-
-    public Talent(String fname, String lname, String email, String password, OAuthToken accessToken) {
-        this.fname = fname;
-        this.lname = lname;
-        this.email = email;
-        this.password = password;}
-
-    @Override
-    public String toString() {
-        return "Talent{" +
-                "talent_id=" + talent_id +
-                ", fname='" + fname + '\'' +
-                ", lname='" + lname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", Cpassword='" + Cpassword + '\'' +
-                '}';
+    public Integer getId() {
+        return id;
     }
 
-    public Long getTalent_id() {
-        return talent_id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setTalent_id(Long talent_id) {
-        this.talent_id = talent_id;
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getFname() {
@@ -82,6 +90,7 @@ public class Talent {
 
     public void setPassword(String password) {
         this.password = password;
+        //checkPassword();
     }
 
     public String getCpassword() {
@@ -89,14 +98,17 @@ public class Talent {
     }
 
     public void setCpassword(String cpassword) {
-        Cpassword = cpassword;
+        this.Cpassword = cpassword;
+        //checkPassword();
     }
 
-    public TwitterTalentAccount getTwitterTalentAccount() {
-        return twitterTalentAccount;
+    /*
+    private void checkPassword() {
+        if(this.password == null || this.Cpassword == null){
+            return;
+        }else if(!this.password.equals(Cpassword)){
+            this.Cpassword = null;
+        }
     }
-
-    public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
-        this.twitterTalentAccount = twitterTalentAccount;
-    }
+    */
 }

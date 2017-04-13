@@ -28,9 +28,6 @@ public class TalentValidator implements Validator {
         if (user.getFname().length() < 6 || user.getFname().length() > 32) {
             errors.rejectValue("fname", "Size.userForm.fname");
         }
-        if (talentService.getTalentByFname(user.getFname()) != null) {
-            errors.rejectValue("fname", "Duplicate.userForm.fname");
-        }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
         if (user.getPassword().length() < 4 || user.getPassword().length() > 32) {
