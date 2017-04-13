@@ -1,7 +1,6 @@
 package tz.co.fasthub.ona.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.service.TalentService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
 
 @Controller
 public class TalentController {
