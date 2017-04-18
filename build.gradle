@@ -58,3 +58,7 @@ dependencyManagement {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.BUILD-SNAPSHOT"
 	}
 }
+
+springBoot {
+	executable = true
+}
