@@ -4,14 +4,20 @@ package tz.co.fasthub.ona.domain;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import tz.co.fasthub.ona.component.TalentValidator;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 
 /**
  * Talent entity.
  */
 @Entity
-public class Talent {
+public class Talent implements Validator{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,9 +46,21 @@ public class Talent {
     @Transient
     private String password;
 
-    @NotEmpty(message = "*password and confirm password do not match")
+    @NotNull(message = "*Password do not match")
     @Transient
+   // @Constraint(validatedBy = TalentValidator.class)
     private String Cpassword;
+
+
+    public boolean supports(Class<?> aClass) {
+        return Talent.class.equals(aClass);
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+
+    }
+
 
     public Integer getId() {
         return id;
@@ -97,18 +115,21 @@ public class Talent {
         return Cpassword;
     }
 
-    public void setCpassword(String cpassword) {
-        this.Cpassword = cpassword;
-        //checkPassword();
+    public void setCpassword(String Cpassword) {
+     //   if(!password.equals(this.password))
+       // this.password = null;
+        this.Cpassword=Cpassword;
+        checkPassword();
     }
 
-    /*
+
     private void checkPassword() {
+        Talent user = null; Errors errors = null;
         if(this.password == null || this.Cpassword == null){
             return;
-        }else if(!this.password.equals(Cpassword)){
-            this.Cpassword = null;
+        }else if (!Cpassword.equals(password)) {
+            errors.rejectValue("Cpassword", "Diff.userForm.cpassword");
         }
     }
-    */
+
 }

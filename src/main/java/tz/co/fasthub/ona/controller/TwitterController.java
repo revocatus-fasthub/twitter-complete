@@ -87,7 +87,7 @@ public class TwitterController {
         if (page.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listMessages";
+        return "twitter/listMessages";
     }
 
     @RequestMapping(value = "/images")
@@ -100,7 +100,7 @@ public class TwitterController {
         if (imagePage.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listImage";
+        return "twitter/listImage";
     }
 
 
@@ -114,8 +114,10 @@ public class TwitterController {
         if (videoPage.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listVideos";
+        return "twitter/listVideos";
     }
+
+   // @RequestMapping(value = "/disconnectUrl")
 
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model, TwitterTalentAccount twitterTalentAccount,HttpServletRequest request){
@@ -146,7 +148,7 @@ public class TwitterController {
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
         model.addAttribute("tweets",tweets);
 
-        return "/twitter/viewTweets";
+        return "twitter/viewTweets";
 
     }
 
@@ -158,7 +160,7 @@ public class TwitterController {
         model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
         model.addAttribute("friends", friends);
-        return "/twitter/viewFriendList";
+        return "twitter/viewFriendList";
     }
 
     @RequestMapping(value = "/followers", method = RequestMethod.GET)
@@ -169,7 +171,7 @@ public class TwitterController {
         model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
         model.addAttribute("followers", followers);
-        return "/twitter/followersList";
+        return "twitter/followersList";
     }
 
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
@@ -212,7 +214,7 @@ public class TwitterController {
                 redirectAttributes.addFlashAttribute("flash.message", "Failed to upload image" + file.getOriginalFilename() + ": " + e);
             }
         }
-        return "redirect:/twitter/images";
+        return "redirect:twitter/images";
         }
 
     //POSTING TWEET AND AN VIDEO FILE TO USER ACCOUNT
@@ -249,7 +251,7 @@ public class TwitterController {
                 redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception: " + e);
             }
         }
-        return "redirect:/twitter/videos";
+        return "redirect:twitter/videos";
     }
 
     @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/images/" + FILENAME)
@@ -260,8 +262,9 @@ public class TwitterController {
         } catch (IOException|RuntimeException e) {
             redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image " + filename + " => " + e.getMessage());
         }
-        return "redirect:/twitter/images";
+        return "redirect:twitter/images";
     }
+
 
 /*
 

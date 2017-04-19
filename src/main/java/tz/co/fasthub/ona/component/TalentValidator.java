@@ -24,15 +24,16 @@ public class TalentValidator implements Validator {
     public void validate(Object o, Errors errors) {
         Talent user = (Talent) o;
 
+        /*
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fname", "NotEmpty");
         if (user.getFname().length() < 6 || user.getFname().length() > 32) {
             errors.rejectValue("fname", "Size.userForm.fname");
         }
-
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
-        if (user.getPassword().length() < 4 || user.getPassword().length() > 32) {
+*/
+        //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
+        /*if (user.getPassword().length() < 5 || user.getPassword().length() > 32) {
             errors.rejectValue("password", "Size.userForm.password");
-        }
+        }*/
 
         if (!user.getCpassword().equals(user.getPassword())) {
             errors.rejectValue("Cpassword", "Diff.userForm.cpassword");

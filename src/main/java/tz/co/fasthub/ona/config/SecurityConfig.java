@@ -4,7 +4,7 @@ package tz.co.fasthub.ona.config;
  * Created by root on 4/5/17.
  */
 
-        import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.context.annotation.Configuration;
         import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
         import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,20 +24,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.formLogin().loginPage("/login")
+        httpSecurity.formLogin().loginPage("/login").permitAll()
                 .usernameParameter("userId")
                 .passwordParameter("password");
 
         httpSecurity.formLogin().defaultSuccessUrl("/index")
                 .failureUrl("/login?error");
 
-        httpSecurity.logout().logoutSuccessUrl("/login? logout");
+        httpSecurity.logout().permitAll().logoutSuccessUrl("/login? logout");
 
 
         httpSecurity.exceptionHandling().accessDeniedPage("/login?accessDenied");
 
         httpSecurity.authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/","/index").permitAll()
+                .anyRequest().authenticated()
                 .antMatchers("/**/talent/new").access("hasRole('ADMIN')")
                 .antMatchers("/**/talents/**").access("hasRole('USER')");
 
