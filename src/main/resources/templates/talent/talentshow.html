@@ -10,6 +10,8 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
+    <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
+
     <h2>Talent Successfully Registered</h2><br/>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Fist Name:</label>
