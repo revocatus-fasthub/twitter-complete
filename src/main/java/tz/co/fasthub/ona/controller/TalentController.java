@@ -2,7 +2,6 @@ package tz.co.fasthub.ona.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.service.TalentService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
 
 @Controller
 public class TalentController {
@@ -76,12 +74,15 @@ public class TalentController {
         talentService.saveTalent(talent);
         try {
             sendMail(talent.getEmail(), "WELCOME TO ONA PLATFORM", "Hello " + talent.getFname() + " " + talent.getLname() + ",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");
-        }catch (MailException me){
-            redirectAttributes.addFlashAttribute("flash.message", "Email not sEnt! "+me.getMessage());
-        }catch (Exception e){
-            redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception: "+e.getMessage());
+        } catch (MailException me)
+        {redirectAttributes.addFlashAttribute("flash.message", "Email not sent! " +me);
+           // return "redirect:/talent/" + talent.getId();
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception: " + e);
         }
+
         return "redirect:/talent/" + talent.getId();
+
     }
 
     private void sendMail(String to, String subject, String body) {
