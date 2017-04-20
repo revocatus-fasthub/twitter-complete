@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,9 @@ import javax.validation.Valid;
 
 @Controller
 public class TalentController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private TalentService talentService;
 
@@ -39,6 +44,7 @@ public class TalentController {
    public void setTalentValidator(TalentValidator talentValidator){
        this.talentValidator=talentValidator;
    }
+
 
     @Autowired
     public TalentController(JavaMailSender javaMailSender) {
@@ -84,6 +90,7 @@ public class TalentController {
         if(result.hasErrors()){
             return "talent/talentform";
         }
+        talent.setPassword(passwordEncoder.encode(talent.getPassword()));
         talentService.saveTalent(talent);
         try {
             sendMail(talent.getEmail(), "WELCOME TO ONA PLATFORM", "Hello " + talent.getFname() + " " + talent.getLname() + ",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");
@@ -109,14 +116,10 @@ public class TalentController {
     /* Delete talent by its id.*/
 
     @RequestMapping("talent/delete/{id}")
-    public String delete(@PathVariable Integer id) {
+    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         talentService.deleteTalent(id);
+        redirectAttributes.addFlashAttribute("flash.message", "Successfully deleted");
         return "redirect:/talents";
     }
-
-    /*@AssertTrue
-    public boolean isDifferentPass() {
-        return !password.equals(matchingPassword) ? false : true;
-    }*/
 
 }

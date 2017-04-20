@@ -38,5 +38,4 @@ public class TalentServiceImpl implements TalentService {
     public void deleteTalent(Integer id) {
         talentRepository.delete(id);
     }
-
 }
