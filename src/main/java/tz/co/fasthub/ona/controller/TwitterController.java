@@ -256,7 +256,7 @@ public class TwitterController {
         return "redirect:twitter/videos";
     }
 
-    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/images/" + FILENAME)
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
     public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
         try {
             imageService.deleteImage(filename);
@@ -264,7 +264,7 @@ public class TwitterController {
         } catch (IOException|RuntimeException e) {
             redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image " + filename + " => " + e.getMessage());
         }
-        return "redirect:twitter/images";
+        return "redirect:/twitter/images";
     }
 
 
