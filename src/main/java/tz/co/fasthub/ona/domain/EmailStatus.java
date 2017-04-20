@@ -1,7 +1,7 @@
 package tz.co.fasthub.ona.domain;
 
 /**
- * Created by root on 4/4/17.
+ * Created by Naamini on 4/4/17.
  */
 
 public class EmailStatus {

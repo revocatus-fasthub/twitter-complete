@@ -9,20 +9,20 @@ import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.service.TalentService;
 
 /**
- * Created by root on 4/6/17.
+ * Created by Naamini on 4/6/17.
  */
 @Component
 public class TalentValidator implements Validator {
-
-    @Autowired
-    private TalentService talentService;
 
     public boolean supports(Class<?> aClass) {
         return Talent.class.equals(aClass);
     }
 
     public void validate(Object o, Errors errors) {
-        Talent user = (Talent) o;
+
+        Talent talent = (Talent)o;
+        String password = talent.getPassword();
+        String cpassword = talent.getCpassword();
 
         /*
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fname", "NotEmpty");
@@ -35,10 +35,8 @@ public class TalentValidator implements Validator {
             errors.rejectValue("password", "Size.userForm.password");
         }*/
 
-        if (!user.getCpassword().equals(user.getPassword())) {
-            errors.rejectValue("Cpassword", "Diff.userForm.cpassword");
+        if (!password.equals(cpassword)) {
+            errors.rejectValue("cpassword", "talent.password.mismatch");
         }
     }
-
-
 }

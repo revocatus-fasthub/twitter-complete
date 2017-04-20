@@ -119,7 +119,7 @@ public class TwitterController {
 
     @RequestMapping(value = "/disconnectUrl", method = RequestMethod.POST)
     public String disconnectTwitter(){
-        return "/connect/twitterConnect"
+        return "/connect/twitterConnect";
     }
 
     @RequestMapping(method=RequestMethod.GET)
@@ -198,16 +198,15 @@ public class TwitterController {
                 twitterService.savePayload(createdPayload);
 
                 TweetData tweetData = new TweetData(createdPayload.getMessage());
+                tweetData.withMedia(imageService.findOneImage(image.getName()));
 
-                if (file!=null&&file.getContentType().equals("image/jpeg")){
+               /* if (file!=null&&file.getContentType().equals("image/jpeg")){
                     tweetData.withMedia(imageService.findOneImage(image.getName()));
                 }else  if (file!=null && file.getContentType().equals("video/mp4")){
                     TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
-                }
+                }*/
 
                 Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
-
-
 
                 log.info("tweet image sent");
 
@@ -217,7 +216,7 @@ public class TwitterController {
                 redirectAttributes.addFlashAttribute("flash.message", "Failed to upload image" + file.getOriginalFilename() + ": " + e);
             }
         }
-        return "redirect:twitter/images";
+        return "redirect:/twitter/images";
         }
 
     //POSTING TWEET AND AN VIDEO FILE TO USER ACCOUNT

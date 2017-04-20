@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tz.co.fasthub.ona.component.TalentValidator;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.service.TalentService;
 
@@ -22,11 +23,22 @@ public class TalentController {
     private TalentService talentService;
 
     @Autowired
+    TalentValidator talentValidator;
+
+    @Autowired
     public void setTalentService(TalentService talentService) {
         this.talentService = talentService;
     }
 
     private JavaMailSender javaMailSender;
+
+   public TalentValidator getTalentValidator(){
+       return talentValidator;
+   }
+
+   public void setTalentValidator(TalentValidator talentValidator){
+       this.talentValidator=talentValidator;
+   }
 
     @Autowired
     public TalentController(JavaMailSender javaMailSender) {
@@ -68,6 +80,7 @@ public class TalentController {
     @RequestMapping(value = "talent", method = RequestMethod.POST)
     public String saveTalent(@Valid Talent talent, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("Talent", talent);
+        talentValidator.validate(talent,result);
         if(result.hasErrors()){
             return "talent/talentform";
         }

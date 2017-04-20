@@ -1,7 +1,7 @@
 package tz.co.fasthub.ona.config;
 
 /**
- * Created by root on 4/5/17.
+ * Created by Naamini on 4/5/17.
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
