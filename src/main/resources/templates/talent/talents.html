@@ -17,8 +17,6 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
-                <th>Password</th>
-                <th>Confirm Password</th>
                 <th>View</th>
                 <th>Edit</th>
                 <th>Delete</th>
@@ -28,8 +26,6 @@
                 <td th:text="${talent.fname}">First Name</td>
                 <td th:text="${talent.lname}">Last Name</td>
                 <td th:text="${talent.email}">Email</td>
-                <td th:text="${talent.password}"><a href="/talent/${talent.password}">Password</a></td>
-                <td th:text="${talent.Cpassword}"><a href="/talent/${talent.Cpassword}">Confirm Password</a></td>
 
                 <td><a th:href="${ '/talent/' + talent.id}">View</a></td>
                 <td><a th:href="${'/talent/edit/' + talent.id}">Edit</a></td>

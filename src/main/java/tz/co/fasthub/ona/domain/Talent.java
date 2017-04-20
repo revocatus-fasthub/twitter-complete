@@ -4,14 +4,21 @@ package tz.co.fasthub.ona.domain;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import tz.co.fasthub.ona.component.TalentValidator;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
+import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 
 /**
  * Talent entity.
  */
 @Entity
-public class Talent {
+public class Talent{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,22 +38,23 @@ public class Talent {
 
     @Column(name = "email")
     @Email(message = "*Please provide a valid Email")
-    @NotEmpty(message = "*Please provide an email")
+    @NotEmpty(message = "*Please provide your email address")
     private String email;
 
     @Column(name = "password")
     @Length(min = 5, message = "*Your password must have at least 5 characters")
-    @NotEmpty(message = "*Password does not match")
-    @Transient
+    //@Transient
     private String password;
 
-    @NotEmpty(message = "*password and confirm password do not match")
-    @Transient
+    @Length(min = 5, message = "*Your password must have at least 5 characters")
+    //@Transient
+    // @Constraint(validatedBy = TalentValidator.class)
     private String Cpassword;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "twitterAccount_id")
     private TwitterTalentAccount twitterTalentAccount;
+
 
     public Integer getId() {
         return id;
@@ -94,33 +102,13 @@ public class Talent {
 
     public void setPassword(String password) {
         this.password = password;
-        //checkPassword();
     }
 
     public String getCpassword() {
         return Cpassword;
     }
 
-    public void setCpassword(String cpassword) {
-        this.Cpassword = cpassword;
-        //checkPassword();
+    public void setCpassword(String Cpassword) {
+        this.Cpassword=Cpassword;
     }
-
-    public TwitterTalentAccount getTwitterTalentAccount() {
-        return twitterTalentAccount;
-    }
-
-    public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
-        this.twitterTalentAccount = twitterTalentAccount;
-    }
-
-    /*
-    private void checkPassword() {
-        if(this.password == null || this.Cpassword == null){
-            return;
-        }else if(!this.password.equals(Cpassword)){
-            this.Cpassword = null;
-        }
-    }
-    */
 }

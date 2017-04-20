@@ -16,8 +16,9 @@ public class TwitterTalentAccount {
     private String password;
     private String accessToken;
 
-    @OneToOne(mappedBy = "twitterTalentAccount")
-    private Talent talent;
+    //@OneToOne(mappedBy = "twitterTalentAccount")
+    //private Talent talent;
+
 
     public TwitterTalentAccount() {
     }
@@ -78,13 +79,5 @@ public class TwitterTalentAccount {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
-    }
-
-    public Talent getTalent() {
-        return talent;
-    }
-
-    public void setTalent(Talent talent) {
-        this.talent = talent;
     }
 }
