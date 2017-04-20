@@ -135,7 +135,7 @@ public class TwitterController {
         twitterTalentService.save(twitterTalentAccount);
 
         model.addAttribute(TOKEN_NAME,token.getValue());*/
-        return "/connect/twitterConnected";
+        return "connect/twitterConnected";
     }
 
 

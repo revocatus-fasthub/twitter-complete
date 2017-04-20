@@ -1,9 +1,15 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head lang="en">
 
-<title>Followers Twitter</title>
+    <title>Twitter Followers</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
+<br/><br/>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/headerlogin :: header"></th:block> /*/-->
 <h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
 
 <h4>These are your Followers:</h4>
@@ -13,5 +19,7 @@
 </ol>
 <p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Menu</a>
 </p>
+
+</div>
 </body>
 </html>
