@@ -117,7 +117,10 @@ public class TwitterController {
         return "twitter/listVideos";
     }
 
-   // @RequestMapping(value = "/disconnectUrl")
+    @RequestMapping(value = "/disconnectUrl", method = RequestMethod.POST)
+    public String disconnectTwitter(){
+        return "/connect/twitterConnect"
+    }
 
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model, TwitterTalentAccount twitterTalentAccount,HttpServletRequest request){
