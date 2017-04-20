@@ -44,6 +44,10 @@ public class Talent {
     @Transient
     private String Cpassword;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "twitterAccount_id")
+    private TwitterTalentAccount twitterTalentAccount;
+
     public Integer getId() {
         return id;
     }
@@ -100,6 +104,14 @@ public class Talent {
     public void setCpassword(String cpassword) {
         this.Cpassword = cpassword;
         //checkPassword();
+    }
+
+    public TwitterTalentAccount getTwitterTalentAccount() {
+        return twitterTalentAccount;
+    }
+
+    public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
+        this.twitterTalentAccount = twitterTalentAccount;
     }
 
     /*
