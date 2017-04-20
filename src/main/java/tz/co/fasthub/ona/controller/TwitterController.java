@@ -87,7 +87,7 @@ public class TwitterController {
         if (page.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listMessages";
+        return "twitter/listMessages";
     }
 
     @RequestMapping(value = "/images")
@@ -100,7 +100,7 @@ public class TwitterController {
         if (imagePage.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listImage";
+        return "twitter/listImage";
     }
 
 
@@ -130,7 +130,7 @@ public class TwitterController {
         twitterTalentService.save(twitterTalentAccount);
 
         model.addAttribute(TOKEN_NAME,token.getValue());*/
-        return "/connect/twitterConnected";
+        return "connect/twitterConnected";
     }
 
 
@@ -146,7 +146,7 @@ public class TwitterController {
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
         model.addAttribute("tweets",tweets);
 
-        return "/twitter/viewTweets";
+        return "twitter/viewTweets";
 
     }
 
@@ -158,7 +158,7 @@ public class TwitterController {
         model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
         model.addAttribute("friends", friends);
-        return "/twitter/viewFriendList";
+        return "twitter/viewFriendList";
     }
 
     @RequestMapping(value = "/followers", method = RequestMethod.GET)
@@ -169,7 +169,7 @@ public class TwitterController {
         model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
         model.addAttribute("followers", followers);
-        return "/twitter/followersList";
+        return "twitter/followersList";
     }
 
    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
