@@ -10,6 +10,7 @@ import tz.co.fasthub.ona.component.TalentValidator;
 
 import javax.persistence.*;
 import javax.validation.Constraint;
+import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 

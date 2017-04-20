@@ -1,10 +1,13 @@
 package tz.co.fasthub.ona.component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import tz.co.fasthub.ona.controller.TwitterController;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.service.TalentService;
 
@@ -13,6 +16,9 @@ import tz.co.fasthub.ona.service.TalentService;
  */
 @Component
 public class TalentValidator implements Validator {
+
+    private static final Logger log = LoggerFactory.getLogger(TalentValidator.class);
+
 
     public boolean supports(Class<?> aClass) {
         return Talent.class.equals(aClass);
@@ -36,7 +42,8 @@ public class TalentValidator implements Validator {
         }*/
 
         if (!password.equals(cpassword)) {
-            errors.rejectValue("cpassword", "talent.password.mismatch");
+            errors.rejectValue("password", "Diff.userForm.cpassword");
+            errors.rejectValue("cpassword", "Diff.userForm.cpassword");
         }
     }
 }
