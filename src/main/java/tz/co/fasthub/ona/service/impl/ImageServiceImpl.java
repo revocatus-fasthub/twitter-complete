@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 @Service
 public class ImageServiceImpl implements ImageService{
 
-    private static String IMAGE_UPLOAD_ROOT = "imageUpload-dir";
+    private static String IMAGE_UPLOAD_ROOT = "/var/ona_fasthub/imageUpload-dir";
 
     private final ImageRepository imageRepository;
 

@@ -61,7 +61,8 @@ public class TwitterController {
     final static String RESOURCE = "/1.1/media/upload.json";
 
     //Save the uploaded file to this folder
-    private static String IMAGE_UPLOAD_ROOT = "imageUpload-dir";
+    private static String IMAGE_UPLOAD_ROOT = "/var/ona_fasthub/imageUpload-dir";
+    private static String VIDEO_UPLOAD_ROOT = "/var/ona_fasthub/videoUpload-dir";
 
     private static final String BASE_PATH = "/images";
     //private static final String BASE_PATH = "/videos";
