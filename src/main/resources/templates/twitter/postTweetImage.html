@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head lang="en">
 
     <title>Post Twitter</title>
@@ -15,7 +15,8 @@
 <center>
     <h3>POST IMAGE TO TWITTER:</h3>
     <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
-        <p>Message: <input type="text" name="message"/></p>
+        <p>Message:</p>
+            <p> <textarea rows="6" cols="45" name="message" ></textarea></p>
         <p>choose your file:   <input type="file" name="file" /></p>
         <p><input type="submit" id="postTweet" value="Post" /></p>
 

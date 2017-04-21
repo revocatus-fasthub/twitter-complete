@@ -55,23 +55,15 @@ public class TwitterMvcController {
         if(token == null) {
             return "redirect:/tw/login";
         }
+          //TwitterManualController.accessToken=token.getValue();
+//        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
+//        twitterTalentAccount.getAccessToken(token.getValue());
 
-        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
-        Connection<Twitter> connection = connectionFactory.createConnection(token);
-        Twitter twitter = connection.getApi();
-        if( ! twitter.isAuthorized()) {
-            return "redirect:/tw/login";
-        }
-        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
-  //      twitterTalentService.save(twitterTalentAccount);
+    //    twitterTalentService.save(twitterTalentAccount);
 
-
-        TwitterManualController.accessToken=token.getValue();
         log.info("user's access token is: "+TwitterManualController.accessToken);
 
         model.addAttribute(TOKEN_NAME,token.getValue());
-
-
 
         return "connect/twitterConnected";
     }
@@ -118,8 +110,15 @@ public class TwitterMvcController {
         OAuth1Operations oAuthOperations = connectionFactory.getOAuthOperations();
         OAuthToken token = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
         request.getSession().setAttribute(TOKEN_NAME, token);
+
+        //TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
+        Connection<Twitter> connection = connectionFactory.createConnection(token);
+        Twitter twitter = connection.getApi();
+        if( ! twitter.isAuthorized()) {
+            return "redirect:/tw/login";
+        }
+
         log.info("Token is: "+token);
-//        twitterTalentAccount.getAccessToken(requestToken.getValue());
 
         log.info("requestToken Secret: "+requestToken.getSecret());
 

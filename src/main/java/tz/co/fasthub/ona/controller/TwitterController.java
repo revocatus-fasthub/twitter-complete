@@ -254,6 +254,12 @@ public class TwitterController {
         return "redirect:twitter/videos";
     }
 
+    @RequestMapping(value="/twitter/search", method=RequestMethod.GET)
+    public String searchOperations(@RequestParam("query") String query, Model model) {
+        model.addAttribute("timeline", twitter.searchOperations().search(query).getTweets());
+        return "twitter/timeline";
+    }
+
     @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
     public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
         try {

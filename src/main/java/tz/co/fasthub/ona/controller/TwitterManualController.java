@@ -115,7 +115,7 @@ public class TwitterManualController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            //    headers.set(HttpHeaders.AUTHORIZATION,"Bearer "+accessToken);
+            //headers.set(HttpHeaders.AUTHORIZATION,"Bearer "+accessToken);
 
             HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
 

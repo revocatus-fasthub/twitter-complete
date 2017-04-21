@@ -28,6 +28,14 @@
              </li>
          </ol>
 
+    <form id="disconnect" method="post">
+        <input type="hidden" name="_csrf" /> <!--th:value="${_csrf.token}"  -->
+        <div class="formInfo">
+            <button type="submit">Disconnect</button>
+            <input type="hidden" name="_method" value="delete" />
+        </div>
+    </form>
+
         </p>
 </div>
 	</body>
