@@ -43,12 +43,12 @@ public class Talent{
 
     @Column(name = "password")
     @Length(min = 5, message = "*Your password must have at least 5 characters")
-   //@Transient
+    //@Transient
     private String password;
 
     @Length(min = 5, message = "*Your password must have at least 5 characters")
     //@Transient
-   // @Constraint(validatedBy = TalentValidator.class)
+    // @Constraint(validatedBy = TalentValidator.class)
     private String Cpassword;
 
     @OneToOne(cascade = CascadeType.ALL)

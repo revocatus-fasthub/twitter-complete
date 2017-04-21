@@ -21,13 +21,13 @@ import javax.validation.Valid;
 @Controller
 public class TalentController {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     private TalentService talentService;
 
     @Autowired
     TalentValidator talentValidator;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void setTalentService(TalentService talentService) {
@@ -36,21 +36,20 @@ public class TalentController {
 
     private JavaMailSender javaMailSender;
 
-   public TalentValidator getTalentValidator(){
-       return talentValidator;
-   }
+    public TalentValidator getTalentValidator(){
+        return talentValidator;
+    }
 
-   public void setTalentValidator(TalentValidator talentValidator){
-       this.talentValidator=talentValidator;
-   }
-
+    public void setTalentValidator(TalentValidator talentValidator){
+        this.talentValidator=talentValidator;
+    }
 
     @Autowired
     public TalentController(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
-    /* List all talents.*/
+    // List all talents
 
     @RequestMapping(value = "/talents", method = RequestMethod.GET)
     public String list(Model model) {
@@ -58,7 +57,7 @@ public class TalentController {
         return "talent/talents";
     }
 
-    /* View a specific talent by its id.*/
+    // View a specific talent by its id
 
     @RequestMapping("talent/{id}")
     public String showTalent(@PathVariable Integer id, Model model) {
@@ -69,10 +68,10 @@ public class TalentController {
     @RequestMapping("talent/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
         model.addAttribute("talent", talentService.getTalentById(id));
-        return "talent/talentform";
+        return "talent/talenteditform";
     }
 
-    /* New talent.*/
+    // New talent
 
     @RequestMapping("talent/new")
     public String newTalent(Model model) {
@@ -80,7 +79,7 @@ public class TalentController {
         return "talent/talentform";
     }
 
-    /* Save talent to database.*/
+    // Save talent to database
 
     @RequestMapping(value = "talent", method = RequestMethod.POST)
     public String saveTalent(@Valid Talent talent, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
@@ -89,7 +88,9 @@ public class TalentController {
         if(result.hasErrors()){
             return "talent/talentform";
         }
+
         talent.setPassword(passwordEncoder.encode(talent.getPassword()));
+        
         talentService.saveTalent(talent);
         try {
             sendMail(talent.getEmail(), "WELCOME TO ONA PLATFORM", "Hello " + talent.getFname() + " " + talent.getLname() + ",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");
@@ -112,13 +113,13 @@ public class TalentController {
         javaMailSender.send(message);
     }
 
-    /* Delete talent by its id.*/
+    // Delete talent by its id
 
     @RequestMapping("talent/delete/{id}")
-    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Integer id) {
         talentService.deleteTalent(id);
-        redirectAttributes.addFlashAttribute("flash.message", "Successfully deleted");
         return "redirect:/talents";
     }
 
 }
+

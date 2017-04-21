@@ -3,7 +3,7 @@ package tz.co.fasthub.ona.domain;
 import javax.persistence.*;
 
 /**
- * Created by Naamini on 3/3/17.
+ * Created by root on 3/3/17.
  */
 @Entity
 public class TwitterTalentAccount {
@@ -16,8 +16,8 @@ public class TwitterTalentAccount {
     private String password;
     private String accessToken;
 
-    @OneToOne(mappedBy = "twitterTalentAccount")
-    private Talent talent;
+    //@OneToOne(mappedBy = "twitterTalentAccount")
+    //private Talent talent;
 
 
     public TwitterTalentAccount() {
@@ -57,7 +57,7 @@ public class TwitterTalentAccount {
         this.profileImageUrl = profileImageUrl;
     }
 
-    public String getUsername() {
+    public String getUsername(String screenName) {
         return username;
     }
 

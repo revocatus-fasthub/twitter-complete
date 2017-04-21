@@ -62,7 +62,7 @@ public class TwitterMvcController {
         if( ! twitter.isAuthorized()) {
             return "redirect:/tw/login";
         }
-      //  twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
+        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
   //      twitterTalentService.save(twitterTalentAccount);
 
 

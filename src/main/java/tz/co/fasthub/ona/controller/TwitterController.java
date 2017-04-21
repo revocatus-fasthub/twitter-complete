@@ -10,10 +10,7 @@ import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
@@ -140,13 +137,13 @@ public class TwitterController {
     }
 
 
-    @RequestMapping(value = "/viewTweets",method = RequestMethod.GET)
+    @GetMapping("/viewTweets")
     public String viewTweets(Model model){
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/viewTweets";
         }
 
-   //    log.debug("token is: "+accessGrant.getAccessToken());
+        //    log.debug("token is: "+accessGrant.getAccessToken());
 
         model.addAttribute(twitter.userOperations().getUserProfile());
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
@@ -178,7 +175,7 @@ public class TwitterController {
         return "twitter/followersList";
     }
 
-   //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
+    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
     public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
@@ -218,7 +215,7 @@ public class TwitterController {
             }
         }
         return "redirect:/twitter/images";
-        }
+    }
 
     //POSTING TWEET AND AN VIDEO FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetVideo",method = RequestMethod.POST)
