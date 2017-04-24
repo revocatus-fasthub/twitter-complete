@@ -61,6 +61,8 @@ public class HomeController {
         return "twitter/profile";
     }
 
+
+
     @RequestMapping("/talent/viewTweets")
     public String viewTweets() {
         return "talent/viewTweets";
@@ -80,10 +82,7 @@ public class HomeController {
     public String tweet(){
         return "twitter/postTweetImage";
     }
-    @RequestMapping(value="/twitter/timeline")
-    public String timeline(){
-        return "twitter/timeline";
-    }
+
 
     @RequestMapping("/twitter/postvideo/form")
     public String tweetVideo(){

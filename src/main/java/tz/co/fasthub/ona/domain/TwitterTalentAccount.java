@@ -11,10 +11,11 @@ public class TwitterTalentAccount {
     @Id
     @GeneratedValue
     private Long id;
-    private String profileImageUrl;
+    private String profileUrl;
     private String username;
     private String password;
     private String accessToken;
+    private String imageUrl;
 
     //@OneToOne(mappedBy = "twitterTalentAccount")
     //private Talent talent;
@@ -23,21 +24,23 @@ public class TwitterTalentAccount {
     public TwitterTalentAccount() {
     }
 
-    public TwitterTalentAccount(String profileImageUrl, String username, String password, String accessToken) {
-        this.profileImageUrl = profileImageUrl;
+    public TwitterTalentAccount(String profileUrl, String username, String password, String accessToken, String imageUrl) {
+        this.profileUrl = profileUrl;
         this.username = username;
         this.password = password;
         this.accessToken = accessToken;
+        this.imageUrl = imageUrl;
     }
 
     @Override
     public String toString() {
         return "TwitterTalentAccount{" +
                 "id=" + id +
-                ", profile_url='" + profileImageUrl + '\'' +
+                ", profileUrl='" + profileUrl + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", accessToken='" + accessToken + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 
@@ -49,15 +52,15 @@ public class TwitterTalentAccount {
         this.id = id;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getProfileUrl() {
+        return profileUrl;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 
-    public String getUsername(String screenName) {
+    public String getUsername() {
         return username;
     }
 
@@ -73,11 +76,19 @@ public class TwitterTalentAccount {
         this.password = password;
     }
 
-    public String getAccessToken(String accessToken) {
-        return this.accessToken;
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

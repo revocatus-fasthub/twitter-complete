@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.connect.ConnectionValues;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -125,6 +125,7 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
+
    /*     OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
         TwitterManualController.accessToken=token.getValue();
         log.info("user's access token is: "+TwitterManualController.accessToken);
@@ -135,6 +136,15 @@ public class TwitterController {
         model.addAttribute(TOKEN_NAME,token.getValue());*/
         return "connect/twitterConnected";
     }
+/*
+
+    public void setConnectionValues(Twitter twitter, ConnectionValues values, TwitterTalentAccount twitterTalentAccount) {
+        TwitterProfile profile = twitter.userOperations().getUserProfile();
+        values.setProviderUserId(Long.toString(profile.getId()));
+        values.setDisplayName("@" + profile.getScreenName());
+        values.setProfileUrl(profile.getProfileUrl());
+        values.setImageUrl(profile.getProfileImageUrl());
+    }*/
 
 
     @GetMapping("/viewTweets")
@@ -259,6 +269,28 @@ public class TwitterController {
         model.addAttribute("timeline", twitter.searchOperations().search(query).getTweets());
         return "twitter/timeline";
     }
+
+    @RequestMapping(value="/timeline", method=RequestMethod.GET)
+    public String showTimeline(Model model) {
+        showTimeline("Home", model);
+        return "twitter/timeline";
+    }
+
+    @RequestMapping(value="/timeline/{timelineType}", method=RequestMethod.GET)
+    public String showTimeline(@PathVariable("timelineType") String timelineType, Model model) {
+        if(timelineType.equals("Home")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getHomeTimeline());
+        } else if(timelineType.equals("User")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getUserTimeline());
+        } else if(timelineType.equals("Mentions")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getMentions());
+        } else if(timelineType.equals("Favorites")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getFavorites());
+        }
+        model.addAttribute("timelineName", timelineType);
+        return "twitter/timeline";
+    }
+
 
     @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
     public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
