@@ -8,6 +8,8 @@ public interface TalentService {
 
     Talent getTalentById(Integer id);
 
+    Talent findByTwitterScreenName(String twitterScreenName);
+
     Talent saveTalent(Talent talent);
 
     void deleteTalent(Integer id);

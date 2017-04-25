@@ -51,13 +51,17 @@ public class Talent{
     // @Constraint(validatedBy = TalentValidator.class)
     private String Cpassword;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "twitterAccount_id")
-    private TwitterTalentAccount twitterTalentAccount;
+    private String twitterScreenName;
+    private String facebookScreenName;
+    private String instagramScreenName;
+    private String snapchatScreenName;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payload_id")
     private Payload payload;
+
+    @OneToOne(mappedBy = "talent")
+    private TwitterTalentAccount twitterTalentAccount;
 
 
     public Integer getId() {
@@ -114,5 +118,53 @@ public class Talent{
 
     public void setCpassword(String Cpassword) {
         this.Cpassword=Cpassword;
+    }
+
+    public String getTwitterScreenName() {
+        return twitterScreenName;
+    }
+
+    public void setTwitterScreenName(String twitterScreenName) {
+        this.twitterScreenName = twitterScreenName;
+    }
+
+    public String getFacebookScreenName() {
+        return facebookScreenName;
+    }
+
+    public void setFacebookScreenName(String facebookScreenName) {
+        this.facebookScreenName = facebookScreenName;
+    }
+
+    public String getInstagramScreenName() {
+        return instagramScreenName;
+    }
+
+    public void setInstagramScreenName(String instagramScreenName) {
+        this.instagramScreenName = instagramScreenName;
+    }
+
+    public String getSnapchatScreenName() {
+        return snapchatScreenName;
+    }
+
+    public void setSnapchatScreenName(String snapchatScreenName) {
+        this.snapchatScreenName = snapchatScreenName;
+    }
+
+    public TwitterTalentAccount getTwitterTalentAccount() {
+        return twitterTalentAccount;
+    }
+
+    public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
+        this.twitterTalentAccount = twitterTalentAccount;
+    }
+
+    public Payload getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Payload payload) {
+        this.payload = payload;
     }
 }

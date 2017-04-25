@@ -19,12 +19,16 @@ public class TwitterTalentAccount {
     private String appsAccessTokenSecret;
     private String requestTokenSecret;
     private String requestTokenValue;
-
-//@OneToOne(mappedBy = "twitterTalentAccount")
-    //private Talent talent;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "talent_id")
+    private Talent talent;
 
     public TwitterTalentAccount() {
+    }
+
+
+    public TwitterTalentAccount(String displayName) {
+        this.displayName = displayName;
     }
 
     public TwitterTalentAccount(String profileUrl, String displayName, String accessToken, String imageUrl,
@@ -126,5 +130,13 @@ public class TwitterTalentAccount {
 
     public void setRequestTokenValue(String requestTokenValue) {
         this.requestTokenValue = requestTokenValue;
+    }
+
+    public Talent getTalent() {
+        return talent;
+    }
+
+    public void setTalent(Talent talent) {
+        this.talent = talent;
     }
 }

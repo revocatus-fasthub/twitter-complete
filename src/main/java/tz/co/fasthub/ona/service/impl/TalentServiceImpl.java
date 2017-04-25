@@ -30,6 +30,11 @@ public class TalentServiceImpl implements TalentService {
     }
 
     @Override
+    public Talent findByTwitterScreenName(String twitterScreenName) {
+        return talentRepository.findByTwitterScreenName(twitterScreenName);
+    }
+
+    @Override
     public Talent saveTalent(Talent talent) {
         return talentRepository.save(talent);
     }
