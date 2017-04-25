@@ -3,7 +3,7 @@ package tz.co.fasthub.ona.service.impl;
 /**
  * Created by root on 4/24/17.
  */
-
+/*
 import org.apache.log4j.Logger;
 import tz.co.fasthub.ona.config.OAuthTwitterConfig;
 import org.json.JSONObject;
@@ -129,3 +129,4 @@ public class OAuthTwitterApplicationOnlyService implements InitializingBean {
         catch (IOException e) { return new String(); }
     }
 }
+*/

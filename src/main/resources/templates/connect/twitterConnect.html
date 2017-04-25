@@ -6,7 +6,7 @@
 <h3>Connect to Twitter</h3>
 	<span th:if="${social_provider_error}">Provider error (maybe you need to configure the app id and secret?)</span>
 
-	<form action="/connect/twitter" method="POST">
+	<form action="/tw/login" method="POST">
 		<div class="formInfo">
 			<p>You <strong>aren't</strong> connected to Twitter yet. Click the button to connect this application with your Twitter account.</p>
 		</div>

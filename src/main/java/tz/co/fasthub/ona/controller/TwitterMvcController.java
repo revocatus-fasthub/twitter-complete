@@ -3,6 +3,7 @@ package tz.co.fasthub.ona.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.oauth1.AuthorizedRequestToken;
 import org.springframework.social.oauth1.OAuth1Operations;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
+import tz.co.fasthub.ona.repository.UsersConnectionRepository;
 import tz.co.fasthub.ona.service.TwitterTalentService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,12 +43,16 @@ public class TwitterMvcController {
     @Autowired
     TwitterTalentService twitterTalentService;
 
+    UsersConnectionRepository usersConnectionRepository;
+
     TwitterTalentAccount twitterTalentAccount;
 
     private TwitterTemplate twitterTemplate;
 
     public TwitterMvcController(Twitter twitter) {
+
         this.twitter = twitter;
+
     }
 
     @RequestMapping("/tw")
@@ -55,13 +61,13 @@ public class TwitterMvcController {
         if(token == null) {
             return "redirect:/tw/login";
         }
-          //TwitterManualController.accessToken=token.getValue();
+
 //        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
 //        twitterTalentAccount.getAccessToken(token.getValue());
 
     //    twitterTalentService.save(twitterTalentAccount);
 
-        log.info("user's access token is: "+TwitterManualController.accessToken);
+       // log.info("user's access token is: "+TwitterManualController.accessToken);
 
         model.addAttribute(TOKEN_NAME,token.getValue());
 
@@ -108,17 +114,55 @@ public class TwitterMvcController {
 
         OAuthToken requestToken = (OAuthToken) request.getSession().getAttribute(REQUEST_TOKEN_NAME);
         OAuth1Operations oAuthOperations = connectionFactory.getOAuthOperations();
-        OAuthToken token = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
-        request.getSession().setAttribute(TOKEN_NAME, token);
+        OAuthToken accessToken = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
+        request.getSession().setAttribute(TOKEN_NAME, accessToken);
 
-        //TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
-        Connection<Twitter> connection = connectionFactory.createConnection(token);
-        Twitter twitter = connection.getApi();
+        String accToken = accessToken.getValue();
+        String accTokenSecret = accessToken.getSecret();
+
+             twitter = new TwitterTemplate( API_KEY, API_SECRET, accToken, accTokenSecret );
+
+        Connection<Twitter> connection = connectionFactory.createConnection(accessToken);
+             twitter = connection.getApi();
+
+             log.info("users's profile url: "+connection.getProfileUrl());
+             String profileUrl = connection.getProfileUrl();
+             log.info("user's image url: " +connection.getImageUrl());
+             String imageUrl = connection.getImageUrl();
+             log.info("user;s display name: " +connection.getDisplayName());
+             String displayName = connection.getDisplayName();
+
         if( ! twitter.isAuthorized()) {
             return "redirect:/tw/login";
         }
 
-        log.info("Token is: "+token);
+        TwitterManualController.accessToken=accessToken.getValue();
+            log.info("twitteManualController.accesstoken: "+TwitterManualController.accessToken);
+
+        //providerUSerId==connection.getKey();
+        String providerUserId = connection.getKey().getProviderUserId();
+            log.info("App's Access Token: "+providerUserId);
+
+        twitterTalentAccount.setImageUrl(imageUrl);
+        twitterTalentAccount.setDisplayName(displayName);
+        twitterTalentAccount.setProfileUrl(profileUrl);
+        twitterTalentAccount.setAccessToken(TwitterManualController.accessToken);
+        twitterTalentAccount.setAppsAccessToken(providerUserId);
+        twitterTalentAccount.setAppsAccessTokenSecret(accTokenSecret);
+        twitterTalentAccount.setRequestTokenSecret(requestToken.getSecret());
+        twitterTalentAccount.setRequestTokenValue(requestToken.getValue());
+
+//        usersConnectionRepository.createConnectionRepository(providerUserId);
+/*
+        TwitterTalentAccount userDetails = new TwitterTalentAccount(talent);
+        userAuth = new SocialAuthenticationToken(connection, userDetails,
+                null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(userAuth);
+*/
+
+        log.info("IDK what this is: "+accessToken);
+
+        log.info("App's Access Token Secret is: "+accTokenSecret);
 
         log.info("requestToken Secret: "+requestToken.getSecret());
 
@@ -126,5 +170,7 @@ public class TwitterMvcController {
 
         return "redirect:/tw";
     }
+
+
 
 }

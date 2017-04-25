@@ -55,6 +55,10 @@ public class Talent{
     @JoinColumn(name = "twitterAccount_id")
     private TwitterTalentAccount twitterTalentAccount;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payload_id")
+    private Payload payload;
+
 
     public Integer getId() {
         return id;

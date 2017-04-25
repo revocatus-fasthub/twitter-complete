@@ -3,7 +3,7 @@ package tz.co.fasthub.ona.controller;
 /**
  * Created by Naamini on 4/24/17.
  */
-
+/*
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -76,7 +76,7 @@ public class TwitterControllerNew implements InitializingBean {
 
 
     @RequestMapping("VIEW")
-    protected ModelAndView renderView(RenderRequest request, RenderResponse response) throws Exception {
+    public ModelAndView renderView(RenderRequest request, RenderResponse response) throws Exception {
 
         ModelMap model = new ModelMap();
 
@@ -236,4 +236,4 @@ public class TwitterControllerNew implements InitializingBean {
     }
 
 
-}
+}*/

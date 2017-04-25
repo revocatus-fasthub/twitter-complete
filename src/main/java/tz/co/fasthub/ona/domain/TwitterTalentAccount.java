@@ -12,35 +12,47 @@ public class TwitterTalentAccount {
     @GeneratedValue
     private Long id;
     private String profileUrl;
-    private String username;
-    private String password;
-    private String accessToken;
+    private String displayName;
+    private String accessToken;//from twitterManualController
     private String imageUrl;
+    private String appsAccessToken;
+    private String appsAccessTokenSecret;
+    private String requestTokenSecret;
+    private String requestTokenValue;
 
-    //@OneToOne(mappedBy = "twitterTalentAccount")
+//@OneToOne(mappedBy = "twitterTalentAccount")
     //private Talent talent;
 
 
     public TwitterTalentAccount() {
     }
 
-    public TwitterTalentAccount(String profileUrl, String username, String password, String accessToken, String imageUrl) {
+    public TwitterTalentAccount(String profileUrl, String displayName, String accessToken, String imageUrl,
+                                String appsAccessToken, String appsAccessTokenSecret, String requestTokenSecret,
+                                String requestTokenValue) {
         this.profileUrl = profileUrl;
-        this.username = username;
-        this.password = password;
+        this.displayName = displayName;
         this.accessToken = accessToken;
         this.imageUrl = imageUrl;
+        this.appsAccessToken = appsAccessToken;
+        this.appsAccessTokenSecret = appsAccessTokenSecret;
+        this.requestTokenSecret = requestTokenSecret;
+        this.requestTokenValue = requestTokenValue;
     }
 
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "TwitterTalentAccount{" +
                 "id=" + id +
                 ", profileUrl='" + profileUrl + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", displayName='" + displayName + '\'' +
                 ", accessToken='" + accessToken + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", appsAccessToken='" + appsAccessToken + '\'' +
+                ", appsAccessTokenSecret='" + appsAccessTokenSecret + '\'' +
+                ", requestTokenSecret='" + requestTokenSecret + '\'' +
+                ", requestTokenValue='" + requestTokenValue + '\'' +
                 '}';
     }
 
@@ -60,20 +72,12 @@ public class TwitterTalentAccount {
         this.profileUrl = profileUrl;
     }
 
-    public String getUsername() {
-        return username;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getAccessToken() {
@@ -90,5 +94,37 @@ public class TwitterTalentAccount {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getAppsAccessToken() {
+        return appsAccessToken;
+    }
+
+    public void setAppsAccessToken(String appsAccessToken) {
+        this.appsAccessToken = appsAccessToken;
+    }
+
+    public String getAppsAccessTokenSecret() {
+        return appsAccessTokenSecret;
+    }
+
+    public void setAppsAccessTokenSecret(String appsAccessTokenSecret) {
+        this.appsAccessTokenSecret = appsAccessTokenSecret;
+    }
+
+    public String getRequestTokenSecret() {
+        return requestTokenSecret;
+    }
+
+    public void setRequestTokenSecret(String requestTokenSecret) {
+        this.requestTokenSecret = requestTokenSecret;
+    }
+
+    public String getRequestTokenValue() {
+        return requestTokenValue;
+    }
+
+    public void setRequestTokenValue(String requestTokenValue) {
+        this.requestTokenValue = requestTokenValue;
     }
 }

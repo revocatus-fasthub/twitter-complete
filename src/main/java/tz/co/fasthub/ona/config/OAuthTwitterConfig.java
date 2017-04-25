@@ -3,7 +3,7 @@ package tz.co.fasthub.ona.config;
 /**
  * Created by Naamini on 4/24/17.
  */
-
+/*
 public class OAuthTwitterConfig {
 
     private String consumerKey;
@@ -36,4 +36,4 @@ public class OAuthTwitterConfig {
         this.callbackUrl = callbackUrl;
     }
 
-}
+}*/
