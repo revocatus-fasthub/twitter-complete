@@ -1,7 +1,7 @@
 package tz.co.fasthub.ona.controller;
 
 /**
- * Created by root on 4/24/17.
+ * Created by Naamini on 4/24/17.
  */
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class TwitterControllerNew implements InitializingBean {
 
     public void afterPropertiesSet() throws Exception {
         if(oAuthTwitterConfig != null && !oAuthTwitterConfig.getConsumerKey().isEmpty() && !oAuthTwitterConfig.getConsumerSecret().isEmpty()) {
-            service = new ServiceBuilder().provider(TwitterApi.SSL.class)
+            service = new ServiceBuilder().provider(TwitterApi.class)
                     .apiKey(oAuthTwitterConfig.getConsumerKey())
                     .apiSecret(oAuthTwitterConfig.getConsumerSecret())
                     // .callback(oAuthTwitterConfig.getCallbackUrl())
