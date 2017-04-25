@@ -29,21 +29,6 @@ public class TwitterHandler {
         TwitterManualController.postFINALIZECommandToTwitter(twitter,twitterResponse);
 
     }
-
-    public void updateTwitterParameters(Payload payload){
-
-
-        payload.getTwitterTalentAccount().setImageUrl(imageUrl);
-        payload.getTwitterTalentAccount().setDisplayName(displayName);
-        payload.getTwitterTalentAccount().setProfileUrl(profileUrl);
-        payload.getTwitterTalentAccount().setAccessToken(TwitterManualController.accessToken);
-        payload.getTwitterTalentAccount().setAppsAccessToken(providerUserId);
-        payload.getTwitterTalentAccount().setAppsAccessTokenSecret(accTokenSecret);
-        payload.getTwitterTalentAccount().setRequestTokenSecret(requestToken.getSecret());
-        payload.getTwitterTalentAccount().setRequestTokenValue(requestToken.getValue());
-
-        twitterTalentService.save(payload.getTwitterTalentAccount());
-
-    }
+    
 
 }

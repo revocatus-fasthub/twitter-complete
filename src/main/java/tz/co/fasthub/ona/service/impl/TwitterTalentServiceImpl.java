@@ -33,6 +33,11 @@ public class TwitterTalentServiceImpl implements TwitterTalentService {
     }
 
     @Override
+    public TwitterTalentAccount getTalentByDisplayName(String displayName) {
+        return twitterTalentRepository.findByDisplayName(displayName);
+    }
+
+    @Override
     public void deleteTalentById(Long id) throws NotFoundException {
         twitterTalentRepository.delete(id);
     }

@@ -45,7 +45,6 @@ public class TwitterMvcController {
 
     UsersConnectionRepository usersConnectionRepository;
 
-    TwitterTalentAccount twitterTalentAccount;
 
     private TwitterTemplate twitterTemplate;
 
@@ -74,26 +73,7 @@ public class TwitterMvcController {
         return "connect/twitterConnected";
     }
 
-/*
 
-    @RequestMapping(value = "tweet/{search}/{count}",method= RequestMethod.GET)
-    public String searchTwitter(Model model, @PathVariable String search, @PathVariable int count, TwitterTalentAccount twitterTalentAccount) {
-        SearchResults results = twitterTemplate.searchOperations().search(
-                new SearchParameters(search)
-                        .resultType(SearchParameters.ResultType.RECENT)
-                        .count(count));
-
-        List<Tweet> tweets = results.getTweets();
-        model.addAttribute("tweets", tweets);
-
-        for (Tweet tweet : tweets) {
-            twitterTalentAccount  = new twitterTalentAccount(tweet.getProfileImageUrl(), tweet.getCreatedAt(), tweet.getFromUser());
-            twitterTalentService.save(twitterTalentAccount);
-        }
-        return "search";
-    }
-
- */
     @RequestMapping("/tw/login")
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
@@ -129,7 +109,7 @@ public class TwitterMvcController {
              String profileUrl = connection.getProfileUrl();
              log.info("user's image url: " +connection.getImageUrl());
              String imageUrl = connection.getImageUrl();
-             log.info("user;s display name: " +connection.getDisplayName());
+             log.info("user's display name_display name: " +connection.getDisplayName());
              String displayName = connection.getDisplayName();
 
         if( ! twitter.isAuthorized()) {
@@ -141,16 +121,24 @@ public class TwitterMvcController {
 
         //providerUSerId==connection.getKey();
         String providerUserId = connection.getKey().getProviderUserId();
-            log.info("App's Access Token: "+providerUserId);
+            log.info("App's Access Token providerUserId: "+providerUserId);
 
-        twitterTalentAccount.setImageUrl(imageUrl);
-        twitterTalentAccount.setDisplayName(displayName);
-        twitterTalentAccount.setProfileUrl(profileUrl);
-        twitterTalentAccount.setAccessToken(TwitterManualController.accessToken);
-        twitterTalentAccount.setAppsAccessToken(providerUserId);
-        twitterTalentAccount.setAppsAccessTokenSecret(accTokenSecret);
-        twitterTalentAccount.setRequestTokenSecret(requestToken.getSecret());
-        twitterTalentAccount.setRequestTokenValue(requestToken.getValue());
+        TwitterTalentAccount twitterTalentAccount=twitterTalentService.getTalentByDisplayName(displayName);
+
+
+        if (twitterTalentAccount!=null) {
+            twitterTalentAccount.setImageUrl(imageUrl);
+            twitterTalentAccount.setDisplayName(displayName);
+            twitterTalentAccount.setProfileUrl(profileUrl);
+            twitterTalentAccount.setAccessToken(TwitterManualController.accessToken);
+            twitterTalentAccount.setAppsAccessToken(providerUserId);
+            twitterTalentAccount.setAppsAccessTokenSecret(accTokenSecret);
+            twitterTalentAccount.setRequestTokenSecret(requestToken.getSecret());
+            twitterTalentAccount.setRequestTokenValue(requestToken.getValue());
+
+            twitterTalentService.save(twitterTalentAccount);
+        }
+
 
 //        usersConnectionRepository.createConnectionRepository(providerUserId);
 /*

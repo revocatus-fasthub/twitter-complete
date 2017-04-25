@@ -198,6 +198,7 @@ public class TwitterController {
             try {
                 Image image = imageService.createImage(file);
 
+
                 //saving the tweet to DB
                 Payload createdPayload =twitterService.savePayload(payload);
 
@@ -213,6 +214,7 @@ public class TwitterController {
                 }else  if (file!=null && file.getContentType().equals("video/mp4")){
                     TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
                 }*/
+
 
                 Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
 
