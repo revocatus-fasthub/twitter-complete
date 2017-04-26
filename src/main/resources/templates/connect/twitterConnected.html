@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thmyeleaf.org" lang="en">
-<head>
-		<title>Hello Twitter</title>
-	</head>
-	<body>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Twitter Followers</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<br/><br/>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/headerlogin :: header"></th:block> /*/-->
 		<p>
 			<h2>You are now connected to your Twitter account</h2>
 
@@ -18,13 +24,22 @@
                  Click <a href="/twitter/followers">here</a> to see your Twitter Followers.
              </li>
              <li>
-                 Click <a href="/twitter/renderPostTweet/form">here</a> to POST iMAGE to Twitter.
+                 Click <a href="/twitter/renderPostTweet/form">here</a> to Post Media to Twitter.
              </li>
              <li>
-                 Click <a href="/twitter/postvideo/form">here</a> to POST ViDEO to Twitter.
+                 Click <a href="/twitter/timeline">here</a> to navigate to timeline.
              </li>
          </ol>
 
+    <form id="disconnect" method="post">
+        <input type="hidden" name="_csrf" /> <!--th:value="${_csrf.token}"  -->
+        <div class="formInfo">
+            <button type="submit">Disconnect</button>
+            <input type="hidden" name="_method" value="delete" />
+        </div>
+    </form>
+
         </p>
+</div>
 	</body>
 </html>

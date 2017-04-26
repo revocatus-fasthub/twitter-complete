@@ -14,6 +14,8 @@ public interface TwitterTalentService {
 
     TwitterTalentAccount getTalentById(Long id);
 
+    TwitterTalentAccount getTalentByDisplayName(String displayName);
+
     void deleteTalentById(Long id) throws NotFoundException;
 
     Page<TwitterTalentAccount> findTalentPage(Pageable pageable);

@@ -1,14 +1,9 @@
 package tz.co.fasthub.ona.repository;
 
-
-import org.springframework.data.jpa.repository.JpaRepository;
 import tz.co.fasthub.ona.domain.Talent;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * Created by root on 2/10/17.
- */
-public interface TalentRepository extends JpaRepository<Talent,Long> {
+public interface TalentRepository extends JpaRepository<Talent, Integer> {
 
-    Talent findByFname(String fname);
-    Talent findByEmail(String email);
+    Talent findByTwitterScreenName(String twitterScreenName);
 }

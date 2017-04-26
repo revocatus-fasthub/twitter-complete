@@ -8,6 +8,6 @@ import tz.co.fasthub.ona.domain.TwitterTalentAccount;
  */
 public interface TwitterTalentRepository extends JpaRepository<TwitterTalentAccount, Long> {
 
-    TwitterTalentAccount findByUsername(String username);
+   TwitterTalentAccount findByDisplayName(String displayName);
 
 }

@@ -24,7 +24,7 @@ import java.nio.file.Paths;
 @Service
 public class VideoServiceImpl implements VideoService {
 
-    private static String VIDEO_UPLOAD_ROOT = "videoUpload-dir";
+    private static String VIDEO_UPLOAD_ROOT = "/var/ona_fasthub/videoUpload-dir";
 
     private final VideoRepository videoRepository;
 

@@ -22,6 +22,10 @@ public class Payload {
     @JoinColumn(name = "video_id")
     private Video video;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "talentTalentAccount_id")
+    private TwitterTalentAccount twitterTalentAccount;
+
     private Payload(){}
 
     public Payload(String message) {
@@ -68,5 +72,11 @@ public class Payload {
         this.video = video;
     }
 
+    public TwitterTalentAccount getTwitterTalentAccount() {
+        return twitterTalentAccount;
+    }
 
+    public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
+        this.twitterTalentAccount = twitterTalentAccount;
+    }
 }

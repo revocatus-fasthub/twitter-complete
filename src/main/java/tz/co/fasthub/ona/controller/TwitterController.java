@@ -6,14 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.connect.ConnectionValues;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.domain.Image;
@@ -61,7 +58,8 @@ public class TwitterController {
     final static String RESOURCE = "/1.1/media/upload.json";
 
     //Save the uploaded file to this folder
-    private static String IMAGE_UPLOAD_ROOT = "imageUpload-dir";
+    private static String IMAGE_UPLOAD_ROOT = "/var/ona_fasthub/imageUpload-dir";
+    private static String VIDEO_UPLOAD_ROOT = "/var/ona_fasthub/videoUpload-dir";
 
     private static final String BASE_PATH = "/images";
     //private static final String BASE_PATH = "/videos";
@@ -87,7 +85,7 @@ public class TwitterController {
         if (page.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listMessages";
+        return "twitter/listMessages";
     }
 
     @RequestMapping(value = "/images")
@@ -100,7 +98,7 @@ public class TwitterController {
         if (imagePage.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listImage";
+        return "twitter/listImage";
     }
 
 
@@ -114,7 +112,12 @@ public class TwitterController {
         if (videoPage.hasNext()) {
             model.addAttribute("next", pageable.next());
         }
-        return "/twitter/listVideos";
+        return "twitter/listVideos";
+    }
+
+    @RequestMapping(value = "/disconnectUrl", method = RequestMethod.POST)
+    public String disconnectTwitter(){
+        return "/connect/twitterConnect";
     }
 
     @RequestMapping(method=RequestMethod.GET)
@@ -122,31 +125,41 @@ public class TwitterController {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
-        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+
+   /*     OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
         TwitterManualController.accessToken=token.getValue();
         log.info("user's access token is: "+TwitterManualController.accessToken);
         twitterTalentAccount.getAccessToken(token.getValue());
         twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
         twitterTalentService.save(twitterTalentAccount);
 
-        model.addAttribute(TOKEN_NAME,token.getValue());
-        return "/connect/twitterConnected";
+        model.addAttribute(TOKEN_NAME,token.getValue());*/
+        return "connect/twitterConnected";
     }
+/*
+
+    public void setConnectionValues(Twitter twitter, ConnectionValues values, TwitterTalentAccount twitterTalentAccount) {
+        TwitterProfile profile = twitter.userOperations().getUserProfile();
+        values.setProviderUserId(Long.toString(profile.getId()));
+        values.setDisplayName("@" + profile.getScreenName());
+        values.setProfileUrl(profile.getProfileUrl());
+        values.setImageUrl(profile.getProfileImageUrl());
+    }*/
 
 
-    @RequestMapping(value = "/viewTweets",method = RequestMethod.GET)
+    @GetMapping("/viewTweets")
     public String viewTweets(Model model){
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/viewTweets";
         }
 
-   //    log.debug("token is: "+accessGrant.getAccessToken());
+        //    log.debug("token is: "+accessGrant.getAccessToken());
 
         model.addAttribute(twitter.userOperations().getUserProfile());
         List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
         model.addAttribute("tweets",tweets);
 
-        return "/twitter/viewTweets";
+        return "twitter/viewTweets";
 
     }
 
@@ -158,7 +171,7 @@ public class TwitterController {
         model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
         model.addAttribute("friends", friends);
-        return "/twitter/viewFriendList";
+        return "twitter/viewFriendList";
     }
 
     @RequestMapping(value = "/followers", method = RequestMethod.GET)
@@ -169,10 +182,10 @@ public class TwitterController {
         model.addAttribute(twitter.userOperations().getUserProfile());
         CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
         model.addAttribute("followers", followers);
-        return "/twitter/followersList";
+        return "twitter/followersList";
     }
 
-   //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
+    //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
     public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
@@ -185,6 +198,7 @@ public class TwitterController {
             try {
                 Image image = imageService.createImage(file);
 
+
                 //saving the tweet to DB
                 Payload createdPayload =twitterService.savePayload(payload);
 
@@ -193,16 +207,16 @@ public class TwitterController {
                 twitterService.savePayload(createdPayload);
 
                 TweetData tweetData = new TweetData(createdPayload.getMessage());
+                tweetData.withMedia(imageService.findOneImage(image.getName()));
 
-                if (file!=null&&file.getContentType().equals("image/jpeg")){
+               /* if (file!=null&&file.getContentType().equals("image/jpeg")){
                     tweetData.withMedia(imageService.findOneImage(image.getName()));
                 }else  if (file!=null && file.getContentType().equals("video/mp4")){
                     TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
-                }
+                }*/
+
 
                 Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
-
-
 
                 log.info("tweet image sent");
 
@@ -213,7 +227,7 @@ public class TwitterController {
             }
         }
         return "redirect:/twitter/images";
-        }
+    }
 
     //POSTING TWEET AND AN VIDEO FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetVideo",method = RequestMethod.POST)
@@ -249,10 +263,38 @@ public class TwitterController {
                 redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception: " + e);
             }
         }
-        return "redirect:/twitter/videos";
+        return "redirect:twitter/videos";
     }
 
-    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/images/" + FILENAME)
+    @RequestMapping(value="/twitter/search", method=RequestMethod.GET)
+    public String searchOperations(@RequestParam("query") String query, Model model) {
+        model.addAttribute("timeline", twitter.searchOperations().search(query).getTweets());
+        return "twitter/timeline";
+    }
+
+    @RequestMapping(value="/timeline", method=RequestMethod.GET)
+    public String showTimeline(Model model) {
+        showTimeline("Home", model);
+        return "twitter/timeline";
+    }
+
+    @RequestMapping(value="/timeline/{timelineType}", method=RequestMethod.GET)
+    public String showTimeline(@PathVariable("timelineType") String timelineType, Model model) {
+        if(timelineType.equals("Home")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getHomeTimeline());
+        } else if(timelineType.equals("User")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getUserTimeline());
+        } else if(timelineType.equals("Mentions")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getMentions());
+        } else if(timelineType.equals("Favorites")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getFavorites());
+        }
+        model.addAttribute("timelineName", timelineType);
+        return "twitter/timeline";
+    }
+
+
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
     public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
         try {
             imageService.deleteImage(filename);
@@ -262,6 +304,7 @@ public class TwitterController {
         }
         return "redirect:/twitter/images";
     }
+
 
 /*
 

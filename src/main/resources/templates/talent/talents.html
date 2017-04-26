@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>View Talent</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <div th:if="${not #lists.isEmpty(talents)}">
+        <h2>Talent List</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>View</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <tr th:each="talent : ${talents}">
+                <td th:text="${talent.id}"><a href="/talent/${talent.id}">Id</a></td>
+                <td th:text="${talent.fname}">First Name</td>
+                <td th:text="${talent.lname}">Last Name</td>
+                <td th:text="${talent.email}">Email</td>
+
+                <td><a th:href="${ '/talent/' + talent.id}">View</a></td>
+                <td><a th:href="${'/talent/edit/' + talent.id}">Edit</a></td>
+                <td><a th:href="${'/talent/delete/' + talent.id}">Delete</a></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>
