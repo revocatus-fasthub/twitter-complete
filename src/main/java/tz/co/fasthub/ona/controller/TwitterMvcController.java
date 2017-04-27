@@ -82,7 +82,7 @@ public class TwitterMvcController {
             return "redirect:/tw/login";
         }
 
-        populateTwitterParams(token, connection, oauth_verifier);
+        populateTwitterParams(token, connection, oauth_verifier, token);
 
         TwitterManualController.accessToken = token.getValue();
         log.info("user's access token is: " + TwitterManualController.accessToken);
@@ -99,6 +99,8 @@ public class TwitterMvcController {
         OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
 
         OAuthToken requestToken = oauthOperations.fetchRequestToken(CALLBACK_URL, null);
+
+
         request.getSession().setAttribute(REQUEST_TOKEN_NAME, requestToken);
         log.info("...-..." + requestToken);
         String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
@@ -111,9 +113,9 @@ public class TwitterMvcController {
     public String callback(String oauth_token, String oauth_verifier, HttpServletRequest request) {
         TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
 
-        OAuthToken requestToken = (OAuthToken) request.getSession().getAttribute(REQUEST_TOKEN_NAME);
+        OAuthToken oAuthToken = (OAuthToken) request.getSession().getAttribute(REQUEST_TOKEN_NAME);
         OAuth1Operations oAuthOperations = connectionFactory.getOAuthOperations();
-        OAuthToken accessToken = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
+        OAuthToken accessToken = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(oAuthToken, oauth_verifier), null);
         request.getSession().setAttribute(TOKEN_NAME, accessToken);
         request.getSession().setAttribute("oauth_verifier", oauth_verifier);
 
@@ -121,7 +123,7 @@ public class TwitterMvcController {
     }
 
 
-    private void populateTwitterParams(OAuthToken token, Connection<Twitter> connection, String oauth_verifier) {
+    private void populateTwitterParams(OAuthToken token, Connection<Twitter> connection, String oauth_verifier,OAuthToken ouathRequestToken) {
 
         Talent talent=talentService.findByTwitterScreenName(connection.getDisplayName());
         if (talent!=null) {
@@ -134,7 +136,8 @@ public class TwitterMvcController {
                 twitterTalentAccount.setAccessToken(token.getValue());
                 twitterTalentAccount.setAppsAccessToken(connection.getKey().getProviderId());
                 twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
-                twitterTalentAccount.setRequestTokenSecret(token.getSecret());
+                twitterTalentAccount.setRequestTokenValue(ouathRequestToken.getValue());
+                twitterTalentAccount.setRequestTokenSecret(ouathRequestToken.getSecret());
                 twitterTalentAccount.setTalent(talent);
                 twitterTalentAccount.setOauth_verifier(oauth_verifier);
 

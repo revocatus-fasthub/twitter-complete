@@ -67,11 +67,11 @@ public class TwitterUtilities {
                 TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(TwitterMvcController.getApiKey(), TwitterMvcController.getApiSecret());
 
 
-
                 OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
 
-                OAuthToken requestToken = oauthOperations.fetchRequestToken(TwitterMvcController.getCallbackUrl(), null);
+              //  OAuthToken requestToken = oauthOperations.fetchRequestToken(TwitterMvcController.getCallbackUrl(), null);
 
+                OAuthToken requestToken = new  OAuthToken(twitterTalentAccount.getRequestTokenValue(),twitterTalentAccount.getRequestTokenSecret());
 
                 OAuth1Operations oAuthOperations = connectionFactory.getOAuthOperations();
                 OAuthToken token = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken,twitterTalentAccount.getOauth_verifier()), null);
