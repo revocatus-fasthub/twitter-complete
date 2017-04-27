@@ -82,10 +82,7 @@ public class TwitterMvcController {
             return "redirect:/tw/login";
         }
 
-        populateTwitterParams(token, connection, oauth_verifier, token);
-
-        TwitterManualController.accessToken = token.getValue();
-        log.info("user's access token is: " + TwitterManualController.accessToken);
+        populateTwitterParams(token, connection, oauth_verifier);
 
         model.addAttribute(TOKEN_NAME, token.getValue());
 
@@ -123,7 +120,7 @@ public class TwitterMvcController {
     }
 
 
-    private void populateTwitterParams(OAuthToken token, Connection<Twitter> connection, String oauth_verifier,OAuthToken ouathRequestToken) {
+    private void populateTwitterParams(OAuthToken token, Connection<Twitter> connection, String oauth_verifier) {
 
         Talent talent=talentService.findByTwitterScreenName(connection.getDisplayName());
         if (talent!=null) {
@@ -136,8 +133,10 @@ public class TwitterMvcController {
                 twitterTalentAccount.setAccessToken(token.getValue());
                 twitterTalentAccount.setAppsAccessToken(connection.getKey().getProviderId());
                 twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
-                twitterTalentAccount.setRequestTokenValue(ouathRequestToken.getValue());
-                twitterTalentAccount.setRequestTokenSecret(ouathRequestToken.getSecret());
+                twitterTalentAccount.setRequestTokenValue(token.getValue());
+                twitterTalentAccount.setRequestTokenSecret(token.getSecret());
+                twitterTalentAccount.setRequestExchangeTokenValue(token.getValue());
+                twitterTalentAccount.setRequestExchangeTokenSecret(token.getSecret());
                 twitterTalentAccount.setTalent(talent);
                 twitterTalentAccount.setOauth_verifier(oauth_verifier);
 

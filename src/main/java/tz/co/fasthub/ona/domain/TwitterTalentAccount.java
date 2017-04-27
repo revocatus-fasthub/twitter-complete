@@ -19,6 +19,8 @@ public class TwitterTalentAccount {
     private String appsAccessTokenSecret;
     private String requestTokenSecret;
     private String requestTokenValue;
+    private String requestExchangeTokenSecret;
+    private String requestExchangeTokenValue;
     private String oauth_verifier;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -148,5 +150,21 @@ public class TwitterTalentAccount {
 
     public void setOauth_verifier(String oauth_verifier) {
         this.oauth_verifier = oauth_verifier;
+    }
+
+    public String getRequestExchangeTokenSecret() {
+        return requestExchangeTokenSecret;
+    }
+
+    public void setRequestExchangeTokenSecret(String requestExchangeTokenSecret) {
+        this.requestExchangeTokenSecret = requestExchangeTokenSecret;
+    }
+
+    public String getRequestExchangeTokenValue() {
+        return requestExchangeTokenValue;
+    }
+
+    public void setRequestExchangeTokenValue(String requestExchangeTokenValue) {
+        this.requestExchangeTokenValue = requestExchangeTokenValue;
     }
 }
