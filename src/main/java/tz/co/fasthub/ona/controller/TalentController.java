@@ -5,6 +5,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.component.TalentValidator;
+import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.service.TalentService;
@@ -60,6 +62,10 @@ public class TalentController {
 
     @RequestMapping(value = "/talents", method = RequestMethod.GET)
     public String list(Model model) {
+
+        new TwitterUtilities().connector("@d_buchafwe");
+
+
         model.addAttribute("talents", talentService.listAllTalent());
         return "talent/talents";
     }

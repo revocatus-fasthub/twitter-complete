@@ -58,6 +58,7 @@ dependencies {
 
     compile('org.springframework.boot:spring-boot-starter-integration')
 	compile('org.hibernate:hibernate-core')
+	compile('org.springframework.boot:spring-boot-starter-security')
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

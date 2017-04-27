@@ -14,8 +14,10 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.repository.UsersConnectionRepository;
+import tz.co.fasthub.ona.service.TalentService;
 import tz.co.fasthub.ona.service.TwitterTalentService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,15 +38,13 @@ public class TwitterMvcController {
     private static final String TOKEN_NAME = "twitterToken";
 
     private static final Logger log = LoggerFactory.getLogger(TwitterMvcController.class);
-
-    private Twitter twitter;
-
     @Autowired
     TwitterTalentService twitterTalentService;
 
+    @Autowired
+    TalentService talentService;
     UsersConnectionRepository usersConnectionRepository;
-
-
+    private Twitter twitter;
     private TwitterTemplate twitterTemplate;
 
     public TwitterMvcController(Twitter twitter) {
@@ -53,21 +53,39 @@ public class TwitterMvcController {
 
     }
 
+
+    public static String getApiKey() {
+        return API_KEY;
+    }
+
+    public static String getApiSecret() {
+        return API_SECRET;
+    }
+
+    public static String getCallbackUrl() {
+        return CALLBACK_URL;
+    }
+
     @RequestMapping("/tw")
     public String tw(Model model, HttpServletRequest request) {
         OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
-        if(token == null) {
+        if (token == null) {
             return "redirect:/tw/login";
         }
 
-//        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
-//        twitterTalentAccount.getAccessToken(token.getValue());
+        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
+        Connection<Twitter> connection = connectionFactory.createConnection(token);
+        Twitter twitter = connection.getApi();
+        if (!twitter.isAuthorized()) {
+            return "redirect:/tw/login";
+        }
 
-    //    twitterTalentService.save(twitterTalentAccount);
+        populateTwitterParams(token, connection);
 
-       // log.info("user's access token is: "+TwitterManualController.accessToken);
+        TwitterManualController.accessToken = token.getValue();
+        log.info("user's access token is: " + TwitterManualController.accessToken);
 
-        model.addAttribute(TOKEN_NAME,token.getValue());
+        model.addAttribute(TOKEN_NAME, token.getValue());
 
         return "connect/twitterConnected";
     }
@@ -80,7 +98,7 @@ public class TwitterMvcController {
 
         OAuthToken requestToken = oauthOperations.fetchRequestToken(CALLBACK_URL, null);
         request.getSession().setAttribute(REQUEST_TOKEN_NAME, requestToken);
-        log.info("...-..."+requestToken);
+        log.info("...-..." + requestToken);
         String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);
 
         response.sendRedirect(authorizeUrl);
@@ -96,68 +114,33 @@ public class TwitterMvcController {
         OAuthToken accessToken = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
         request.getSession().setAttribute(TOKEN_NAME, accessToken);
 
-        String accToken = accessToken.getValue();
-        String accTokenSecret = accessToken.getSecret();
-
-             twitter = new TwitterTemplate( API_KEY, API_SECRET, accToken, accTokenSecret );
-
-        Connection<Twitter> connection = connectionFactory.createConnection(accessToken);
-             twitter = connection.getApi();
-
-             log.info("users's profile url: "+connection.getProfileUrl());
-             String profileUrl = connection.getProfileUrl();
-             log.info("user's image url: " +connection.getImageUrl());
-             String imageUrl = connection.getImageUrl();
-             log.info("user's display name_display name: " +connection.getDisplayName());
-             String displayName = connection.getDisplayName();
-
-        if( ! twitter.isAuthorized()) {
-            return "redirect:/tw/login";
-        }
-
-        TwitterManualController.accessToken=accessToken.getValue();
-            log.info("twitteManualController.accesstoken: "+TwitterManualController.accessToken);
-
-        //providerUSerId==connection.getKey();
-        String providerUserId = connection.getKey().getProviderUserId();
-            log.info("App's Access Token providerUserId: "+providerUserId);
-
-        TwitterTalentAccount twitterTalentAccount=twitterTalentService.getTalentByDisplayName(displayName);
-
-
-        if (twitterTalentAccount!=null) {
-            twitterTalentAccount.setImageUrl(imageUrl);
-            twitterTalentAccount.setDisplayName(displayName);
-            twitterTalentAccount.setProfileUrl(profileUrl);
-            twitterTalentAccount.setAccessToken(TwitterManualController.accessToken);
-            twitterTalentAccount.setAppsAccessToken(providerUserId);
-            twitterTalentAccount.setAppsAccessTokenSecret(accTokenSecret);
-            twitterTalentAccount.setRequestTokenSecret(requestToken.getSecret());
-            twitterTalentAccount.setRequestTokenValue(requestToken.getValue());
-
-            twitterTalentService.save(twitterTalentAccount);
-        }
-
-
-//        usersConnectionRepository.createConnectionRepository(providerUserId);
-/*
-        TwitterTalentAccount userDetails = new TwitterTalentAccount(talent);
-        userAuth = new SocialAuthenticationToken(connection, userDetails,
-                null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(userAuth);
-*/
-
-        log.info("IDK what this is: "+accessToken);
-
-        log.info("App's Access Token Secret is: "+accTokenSecret);
-
-        log.info("requestToken Secret: "+requestToken.getSecret());
-
-        log.info("requestToken Value: "+requestToken.getValue());
-
         return "redirect:/tw";
     }
 
+
+    private void populateTwitterParams(OAuthToken token, Connection<Twitter> connection) {
+
+        Talent talent=talentService.findByTwitterScreenName(connection.getDisplayName());
+        if (talent!=null) {
+            TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(connection.getDisplayName());
+
+
+            if (twitterTalentAccount != null) {
+                twitterTalentAccount.setImageUrl(connection.getImageUrl());
+                twitterTalentAccount.setDisplayName(connection.getDisplayName());
+                twitterTalentAccount.setProfileUrl(connection.getProfileUrl());
+                twitterTalentAccount.setAccessToken(token.getValue());
+                twitterTalentAccount.setAppsAccessToken(connection.getKey().getProviderId());
+                twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
+                twitterTalentAccount.setRequestTokenSecret(token.getSecret());
+                twitterTalentAccount.setTalent(talent);
+
+                twitterTalentService.save(twitterTalentAccount);
+            }
+        }
+
+
+    }
 
 
 }
