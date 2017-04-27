@@ -63,7 +63,7 @@ public class HomeController {
 
 
 
-    @RequestMapping("/talent/viewTweets")
+    @RequestMapping("/twitter/viewTweets")
     public String viewTweets() {
         return "talent/viewTweets";
     }

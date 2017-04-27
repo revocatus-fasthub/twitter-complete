@@ -1,6 +1,5 @@
 package tz.co.fasthub.ona.controller.twitter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.social.twitter.api.Twitter;
@@ -19,13 +18,10 @@ import javax.inject.Inject;
 @Controller
 public class TwitterUtilities {
 
-
     public TwitterUtilities() {
     }
 
-
     private  TwitterTalentService twitterTalentService;
-
 
     @Inject
     public TwitterUtilities(TwitterTalentService twitterTalentService) {
