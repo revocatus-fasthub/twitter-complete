@@ -54,7 +54,6 @@ public class Talent{
     private String twitterScreenName;
     private String facebookScreenName;
     private String instagramScreenName;
-    private String snapchatScreenName;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payload_id")
@@ -142,14 +141,6 @@ public class Talent{
 
     public void setInstagramScreenName(String instagramScreenName) {
         this.instagramScreenName = instagramScreenName;
-    }
-
-    public String getSnapchatScreenName() {
-        return snapchatScreenName;
-    }
-
-    public void setSnapchatScreenName(String snapchatScreenName) {
-        this.snapchatScreenName = snapchatScreenName;
     }
 
     public TwitterTalentAccount getTwitterTalentAccount() {

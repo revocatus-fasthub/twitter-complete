@@ -16,6 +16,9 @@
                 <th>Id</th>
                 <th>First Name</th>
                 <th>Last Name</th>
+                <th>Twitter Screen Name</th>
+                <th>Facebook Screen Name</th>
+                <th>Instagram Screen Name</th>
                 <th>Email</th>
                 <th>View</th>
                 <th>Edit</th>
@@ -25,6 +28,10 @@
                 <td th:text="${talent.id}"><a href="/talent/${talent.id}">Id</a></td>
                 <td th:text="${talent.fname}">First Name</td>
                 <td th:text="${talent.lname}">Last Name</td>
+                <td th:text="${talent.twitterScreenName}">Twitter Screen Name</td>
+                <td th:text="${talent.facebookScreenName}">Facebook Screen Name</td>
+                <td th:text="${talent.instagramScreenName}">Instagram Screen Name</td>
+
                 <td th:text="${talent.email}">Email</td>
 
                 <td><a th:href="${ '/talent/' + talent.id}">View</a></td>
