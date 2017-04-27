@@ -15,6 +15,7 @@
 <center>
     <h3>POST IMAGE TO TWITTER:</h3>
     <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
+       <p> ScreenName: <input type="text" id="twitterDisplayName" name="twitterDisplayName"/></p>
         <p>Message:</p>
             <p> <textarea rows="6" cols="45" name="message" ></textarea></p>
         <p>choose your file:   <input type="file" name="file" /></p>

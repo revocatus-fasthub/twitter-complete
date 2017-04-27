@@ -69,6 +69,8 @@ public class TwitterMvcController {
     @RequestMapping("/tw")
     public String tw(Model model, HttpServletRequest request) {
         OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+        String oauth_verifier = (String) request.getSession().getAttribute("oauth_verifier");
+
         if (token == null) {
             return "redirect:/tw/login";
         }
@@ -80,7 +82,7 @@ public class TwitterMvcController {
             return "redirect:/tw/login";
         }
 
-        populateTwitterParams(token, connection);
+        populateTwitterParams(token, connection, oauth_verifier);
 
         TwitterManualController.accessToken = token.getValue();
         log.info("user's access token is: " + TwitterManualController.accessToken);
@@ -113,17 +115,17 @@ public class TwitterMvcController {
         OAuth1Operations oAuthOperations = connectionFactory.getOAuthOperations();
         OAuthToken accessToken = oAuthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauth_verifier), null);
         request.getSession().setAttribute(TOKEN_NAME, accessToken);
+        request.getSession().setAttribute("oauth_verifier", oauth_verifier);
 
         return "redirect:/tw";
     }
 
 
-    private void populateTwitterParams(OAuthToken token, Connection<Twitter> connection) {
+    private void populateTwitterParams(OAuthToken token, Connection<Twitter> connection, String oauth_verifier) {
 
         Talent talent=talentService.findByTwitterScreenName(connection.getDisplayName());
         if (talent!=null) {
             TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(connection.getDisplayName());
-
 
             if (twitterTalentAccount != null) {
                 twitterTalentAccount.setImageUrl(connection.getImageUrl());
@@ -134,6 +136,7 @@ public class TwitterMvcController {
                 twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
                 twitterTalentAccount.setRequestTokenSecret(token.getSecret());
                 twitterTalentAccount.setTalent(talent);
+                twitterTalentAccount.setOauth_verifier(oauth_verifier);
 
                 twitterTalentService.save(twitterTalentAccount);
             }
