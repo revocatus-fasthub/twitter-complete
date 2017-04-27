@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
@@ -126,25 +127,9 @@ public class TwitterController {
             return "redirect:/connect/twitter";
         }
 
-   /*     OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
-        TwitterManualController.accessToken=token.getValue();
-        log.info("user's access token is: "+TwitterManualController.accessToken);
-        twitterTalentAccount.getAccessToken(token.getValue());
-        twitterTalentAccount.getUsername(twitter.userOperations().getScreenName());
-        twitterTalentService.save(twitterTalentAccount);
 
-        model.addAttribute(TOKEN_NAME,token.getValue());*/
         return "connect/twitterConnected";
     }
-/*
-
-    public void setConnectionValues(Twitter twitter, ConnectionValues values, TwitterTalentAccount twitterTalentAccount) {
-        TwitterProfile profile = twitter.userOperations().getUserProfile();
-        values.setProviderUserId(Long.toString(profile.getId()));
-        values.setDisplayName("@" + profile.getScreenName());
-        values.setProfileUrl(profile.getProfileUrl());
-        values.setImageUrl(profile.getProfileImageUrl());
-    }*/
 
 
     @GetMapping("/viewTweets")
@@ -189,6 +174,7 @@ public class TwitterController {
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
     public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+
             log.error("no connection to twitter");
             return "redirect:/twitter/renderPostTweet/form";
         }else if (file.isEmpty()) {
@@ -214,6 +200,7 @@ public class TwitterController {
                 }else  if (file!=null && file.getContentType().equals("video/mp4")){
                     TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
                 }*/
+
 
 
                 Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
@@ -305,20 +292,5 @@ public class TwitterController {
         return "redirect:/twitter/images";
     }
 
-
-/*
-
-    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
-    public String deleteVideo(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
-        try {
-            videoService.deleteVideo(filename);
-            redirectAttributes.addFlashAttribute("flash.message", "Video Successfully deleted " + filename + "from the server");
-        } catch (IOException|RuntimeException e) {
-            redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Video" + filename + " => " + e.getMessage());
-        }
-        return "redirect:/twitter/videos";
-    }
-
- */
 
 }

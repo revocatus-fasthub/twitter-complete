@@ -100,6 +100,7 @@ public class HomeController {
         return "/facebook/feeds";
     }
 
+
     @RequestMapping("/facebook/viewFriends")
     public String fbfriends(){
         return "/facebook/viewFriends";
