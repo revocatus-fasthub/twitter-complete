@@ -19,6 +19,8 @@ public class TwitterTalentAccount {
     private String appsAccessTokenSecret;
     private String requestTokenSecret;
     private String requestTokenValue;
+    private String oauth_verifier;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "talent_id")
     private Talent talent;
@@ -138,5 +140,13 @@ public class TwitterTalentAccount {
 
     public void setTalent(Talent talent) {
         this.talent = talent;
+    }
+
+    public String getOauth_verifier() {
+        return oauth_verifier;
+    }
+
+    public void setOauth_verifier(String oauth_verifier) {
+        this.oauth_verifier = oauth_verifier;
     }
 }

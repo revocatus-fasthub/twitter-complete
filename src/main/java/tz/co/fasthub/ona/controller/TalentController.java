@@ -63,8 +63,6 @@ public class TalentController {
     @RequestMapping(value = "/talents", method = RequestMethod.GET)
     public String list(Model model) {
 
-        new TwitterUtilities().connector("@d_buchafwe");
-
 
         model.addAttribute("talents", talentService.listAllTalent());
         return "talent/talents";
@@ -77,6 +75,8 @@ public class TalentController {
         model.addAttribute("talent", talentService.getTalentById(id));
         return "talent/talentshow";
     }
+
+    //Edit/Update by its id
 
     @RequestMapping("talent/edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
@@ -111,8 +111,6 @@ public class TalentController {
         }else if (talent.getFacebookScreenName()!=null){
 
         }
-
-
 
 
         try {

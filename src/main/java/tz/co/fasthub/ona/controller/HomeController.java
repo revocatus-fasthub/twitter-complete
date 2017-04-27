@@ -26,7 +26,8 @@ public class HomeController {
     public String successManual() {
         return "success";
     }
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+
+     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
         return "login";
     }
@@ -62,15 +63,9 @@ public class HomeController {
     }
 
 
-
-    @RequestMapping("/twitter/viewTweets")
+    @RequestMapping("/talent/viewTweets")
     public String viewTweets() {
         return "talent/viewTweets";
-    }
-
-    @RequestMapping("/twitter/success")
-    public String success() {
-        return "twitter/success";
     }
 
     @RequestMapping(value = "/messages")
