@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.connect.ConnectionValues;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
 import tz.co.fasthub.ona.domain.Image;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
@@ -158,6 +156,7 @@ public class TwitterController {
         model.addAttribute("friends", friends);
         return "twitter/viewFriendList";
     }
+
 
     @RequestMapping(value = "/followers", method = RequestMethod.GET)
     public String followers(Model model) {

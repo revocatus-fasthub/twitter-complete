@@ -21,7 +21,6 @@ import javax.inject.Inject;
 /**
  * Created by daniel on 4/26/17.
  */
-
 @Controller
 public class TwitterUtilities {
 
@@ -33,8 +32,7 @@ public class TwitterUtilities {
     @Autowired
     TwitterService twitterService;
 
-    public TwitterUtilities() {
-    }
+    public TwitterUtilities() {}
 
     private  TwitterTalentService twitterTalentService;
 
@@ -49,7 +47,7 @@ public class TwitterUtilities {
     public Twitter connectTwitter(String twitterDisplayName){
 
         try {
-            TwitterTalentAccount twitterTalentAccount=twitterTalentService.getTalentByDisplayName(twitterDisplayName);
+            TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterDisplayName);
 
             if (twitterTalentAccount!=null) {
                 TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(TwitterMvcController.getApiKey(), TwitterMvcController.getApiSecret());
@@ -64,11 +62,11 @@ public class TwitterUtilities {
                 log.info("logging: "+twitter);
 
                 if (!twitter.isAuthorized()) {
+                    //handle errors here
 
                 }else {
-                    twitter.timelineOperations().updateStatus("Nimebisha haifanyi kazi");
+                    twitter.timelineOperations().updateStatus("Hi Thursday");
                 }
-
                 return twitter;
             }
         } catch (Exception e) {
@@ -85,6 +83,18 @@ public class TwitterUtilities {
 
         return "/success";
     }
+
+
+  /*  @RequestMapping(value = "/twitter/followers", method = RequestMethod.GET)
+    public String followers(Model model) {
+       connectTwitter("@nemmycarolla");
+
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
+        model.addAttribute("followers", followers);
+        return "twitter/followersList";
+    }*/
+
 
 
 }

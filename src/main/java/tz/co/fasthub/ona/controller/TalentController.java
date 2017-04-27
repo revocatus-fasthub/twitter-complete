@@ -103,6 +103,7 @@ public class TalentController {
         }
 
         talent.setPassword(passwordEncoder.encode(talent.getPassword()));
+        talent.setCpassword(passwordEncoder.encode(talent.getCpassword()));
         
         Talent talent1=talentService.saveTalent(talent);
 
@@ -111,7 +112,6 @@ public class TalentController {
         }else if (talent.getFacebookScreenName()!=null){
 
         }
-
 
         try {
             sendMail(talent.getEmail(), "WELCOME TO ONA PLATFORM", "Hello " + talent.getFname() + " " + talent.getLname() + ",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");

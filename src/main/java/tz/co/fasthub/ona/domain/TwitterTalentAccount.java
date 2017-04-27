@@ -15,12 +15,9 @@ public class TwitterTalentAccount {
     private String displayName;
     private String accessToken;//from twitterManualController
     private String imageUrl;
-    private String appsAccessToken;
     private String appsAccessTokenSecret;
     private String requestTokenSecret;
     private String requestTokenValue;
-    private String requestExchangeTokenSecret;
-    private String requestExchangeTokenValue;
     private String oauth_verifier;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -36,13 +33,12 @@ public class TwitterTalentAccount {
     }
 
     public TwitterTalentAccount(String profileUrl, String displayName, String accessToken, String imageUrl,
-                                String appsAccessToken, String appsAccessTokenSecret, String requestTokenSecret,
+                                String appsAccessTokenSecret, String requestTokenSecret,
                                 String requestTokenValue) {
         this.profileUrl = profileUrl;
         this.displayName = displayName;
         this.accessToken = accessToken;
         this.imageUrl = imageUrl;
-        this.appsAccessToken = appsAccessToken;
         this.appsAccessTokenSecret = appsAccessTokenSecret;
         this.requestTokenSecret = requestTokenSecret;
         this.requestTokenValue = requestTokenValue;
@@ -57,7 +53,6 @@ public class TwitterTalentAccount {
                 ", displayName='" + displayName + '\'' +
                 ", accessToken='" + accessToken + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", appsAccessToken='" + appsAccessToken + '\'' +
                 ", appsAccessTokenSecret='" + appsAccessTokenSecret + '\'' +
                 ", requestTokenSecret='" + requestTokenSecret + '\'' +
                 ", requestTokenValue='" + requestTokenValue + '\'' +
@@ -104,14 +99,6 @@ public class TwitterTalentAccount {
         this.imageUrl = imageUrl;
     }
 
-    public String getAppsAccessToken() {
-        return appsAccessToken;
-    }
-
-    public void setAppsAccessToken(String appsAccessToken) {
-        this.appsAccessToken = appsAccessToken;
-    }
-
     public String getAppsAccessTokenSecret() {
         return appsAccessTokenSecret;
     }
@@ -152,19 +139,4 @@ public class TwitterTalentAccount {
         this.oauth_verifier = oauth_verifier;
     }
 
-    public String getRequestExchangeTokenSecret() {
-        return requestExchangeTokenSecret;
-    }
-
-    public void setRequestExchangeTokenSecret(String requestExchangeTokenSecret) {
-        this.requestExchangeTokenSecret = requestExchangeTokenSecret;
-    }
-
-    public String getRequestExchangeTokenValue() {
-        return requestExchangeTokenValue;
-    }
-
-    public void setRequestExchangeTokenValue(String requestExchangeTokenValue) {
-        this.requestExchangeTokenValue = requestExchangeTokenValue;
-    }
 }
