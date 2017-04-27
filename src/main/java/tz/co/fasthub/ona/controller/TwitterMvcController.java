@@ -53,7 +53,6 @@ public class TwitterMvcController {
 
     }
 
-
     public static String getApiKey() {
         return API_KEY;
     }
@@ -131,12 +130,9 @@ public class TwitterMvcController {
                 twitterTalentAccount.setDisplayName(connection.getDisplayName());
                 twitterTalentAccount.setProfileUrl(connection.getProfileUrl());
                 twitterTalentAccount.setAccessToken(token.getValue());
-                twitterTalentAccount.setAppsAccessToken(connection.getKey().getProviderId());
-                twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
+               twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
                 twitterTalentAccount.setRequestTokenValue(token.getValue());
                 twitterTalentAccount.setRequestTokenSecret(token.getSecret());
-                twitterTalentAccount.setRequestExchangeTokenValue(token.getValue());
-                twitterTalentAccount.setRequestExchangeTokenSecret(token.getSecret());
                 twitterTalentAccount.setTalent(talent);
                 twitterTalentAccount.setOauth_verifier(oauth_verifier);
 
