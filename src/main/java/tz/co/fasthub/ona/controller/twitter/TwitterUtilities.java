@@ -26,12 +26,6 @@ public class TwitterUtilities {
 
     private Twitter twitter;
 
-    @Autowired
-    ImageService imageService;
-
-    @Autowired
-    TwitterService twitterService;
-
     public TwitterUtilities() {}
 
     private  TwitterTalentService twitterTalentService;
@@ -62,7 +56,6 @@ public class TwitterUtilities {
                 log.info("logging: "+twitter);
 
                 if (!twitter.isAuthorized()) {
-                    //handle errors here
 
                 }else {
                     twitter.timelineOperations().updateStatus("Hi Thursday");
@@ -83,18 +76,5 @@ public class TwitterUtilities {
 
         return "/success";
     }
-
-
-  /*  @RequestMapping(value = "/twitter/followers", method = RequestMethod.GET)
-    public String followers(Model model) {
-       connectTwitter("@nemmycarolla");
-
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
-        model.addAttribute("followers", followers);
-        return "twitter/followersList";
-    }*/
-
-
 
 }
