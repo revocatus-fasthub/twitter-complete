@@ -19,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.repository.UsersConnectionRepository;
@@ -145,8 +144,6 @@ public class TwitterMvcController {
                 twitterTalentService.save(twitterTalentAccount);
             }
         }
-
-
     }
 
     @GetMapping("/tw/viewTweets")
@@ -216,5 +213,6 @@ public class TwitterMvcController {
     public String disconnectTwitter(){
         return "/connect/twitterConnect";
     }
+
 
 }

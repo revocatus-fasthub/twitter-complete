@@ -7,24 +7,16 @@
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
-<br/><br/>
+<br/>
 <div class="container">
     <!--/*/ <th:block th:include="fragments/headertw :: header"></th:block> /*/-->
 
 
 <center>
     <h3>POST IMAGE TO TWITTER:</h3>
-    <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
+    <form modelAttribute="tweet" action="/twitter/postTweetImage"  th:field="*{talent}" enctype="multipart/form-data" method="post">
 
-        <p>
-            <select class="form-control" th:object="${talent}" title="talentScreenName">
-                <option value="">Select Profile Account</option>
-                <option th:each="talent:${talentList}"
-                        th:value="${talent.id}"
-                        th:text="${talent.twitterScreenName}"></option>
-            </select>
-        </p>
-        <p>Message:</p>
+            <p>Message:</p>
             <p> <textarea rows="6" cols="45" name="message" ></textarea></p>
         <p>choose your file: </p>
         <p><input type="file" name="file" /></p>
