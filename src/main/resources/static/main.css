@@ -16,3 +16,25 @@ div.logout {
     background-color: lightgreen;
     padding: 2em;
 }
+.input-euro {
+    position: relative;
+}
+.input-euro.left input {
+    padding-left:18px;
+}
+.input-euro.right input {
+    padding-right:18px;
+    text-align:end;
+}
+
+.input-euro:before {
+    position: absolute;
+    top: 0;
+    content:"@";
+}
+.input-euro.left:before {
+    left: 5px;
+}
+.input-euro.right:before {
+    right: 5px;
+}

@@ -96,7 +96,6 @@ public class TwitterMvcController {
 
         OAuthToken requestToken = oauthOperations.fetchRequestToken(CALLBACK_URL, null);
 
-
         request.getSession().setAttribute(REQUEST_TOKEN_NAME, requestToken);
         log.info("...-..." + requestToken);
         String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue(), OAuth1Parameters.NONE);

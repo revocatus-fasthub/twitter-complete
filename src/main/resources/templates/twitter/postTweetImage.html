@@ -15,15 +15,15 @@
 <center>
     <h3>POST IMAGE TO TWITTER:</h3>
     <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
-       <p> Talent ScreenName: <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Profile Account
-            <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-            <li><a href="#">HTML</a></li>
-            <li><a href="#">CSS</a></li>
-            <li><a href="#">JavaScript</a></li>
-        </ul>
-    </div></p>
+
+        <p>
+            <select class="form-control" th:object="${talent}" title="talentScreenName">
+                <option value="">Select Profile Account</option>
+                <option th:each="talent:${talentList}"
+                        th:value="${talent.id}"
+                        th:text="${talent.twitterScreenName}"></option>
+            </select>
+        </p>
         <p>Message:</p>
             <p> <textarea rows="6" cols="45" name="message" ></textarea></p>
         <p>choose your file: </p>

@@ -5,22 +5,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import tz.co.fasthub.ona.domain.Image;
-import tz.co.fasthub.ona.domain.Payload;
-import tz.co.fasthub.ona.domain.TwitterTalentAccount;
-import tz.co.fasthub.ona.domain.Video;
+import tz.co.fasthub.ona.domain.*;
 import tz.co.fasthub.ona.service.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -28,6 +29,8 @@ import java.util.List;
 public class TwitterController {
 
     private Twitter twitter;
+
+    private ConnectionKey connectionKey;
 
     private ConnectionRepository connectionRepository;
 
@@ -66,6 +69,7 @@ public class TwitterController {
     public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
         this.twitter = twitter;
         this.connectionRepository = connectionRepository;
+
     }
 
     @RequestMapping(value = "/messages")
@@ -108,17 +112,11 @@ public class TwitterController {
         return "twitter/listVideos";
     }
 
-    @RequestMapping(value = "/disconnectUrl", method = RequestMethod.POST)
-    public String disconnectTwitter(){
-        return "/connect/twitterConnect";
-    }
-
     @RequestMapping(method=RequestMethod.GET)
     public String twitterConnection(Model model, TwitterTalentAccount twitterTalentAccount,HttpServletRequest request){
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
             return "redirect:/connect/twitter";
         }
-
 
         return "connect/twitterConnected";
     }
@@ -165,16 +163,26 @@ public class TwitterController {
 
     //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
-    public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
+    public String uploadAndTweetImage(@RequestParam("file") @ModelAttribute(value = "talent") String twitterScreenName, BindingResult bindingResult, MultipartFile file, Model model, Payload payload, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-
             log.error("no connection to twitter");
+
             return "redirect:/twitter/renderPostTweet/form";
+
         }else if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("flash.message", "Please select a file!");
             return "redirect:/twitter/renderPostTweet/form";
-        }else{
+        }else if(bindingResult.hasErrors()){
+            return "redirect:/twitter/renderPostTweet/form";
+        } else
             try {
+
+                List<Talent> talent1 = new ArrayList<>();
+                model.addAttribute("talent", talent1);
+
+               List<Talent> talentList = (List<Talent>) talentService.listAllTalent();
+                model.addAttribute("talentList", talentList);
+
                 Image image = imageService.createImage(file);
 
 
@@ -195,7 +203,6 @@ public class TwitterController {
                 }*/
 
 
-
                 Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
 
                 log.info("tweet image sent");
@@ -205,7 +212,7 @@ public class TwitterController {
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("flash.message", "Failed to upload image" + file.getOriginalFilename() + ": " + e);
             }
-        }
+
         return "redirect:/twitter/images";
     }
 
@@ -285,5 +292,14 @@ public class TwitterController {
         return "redirect:/twitter/images";
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/connect/twitter")
+    public String disconnectTwitter(){
+        if (!(connectionRepository.findPrimaryConnection(Twitter.class) == null)){
+          String providerUserId = connectionKey.getProviderUserId();
+            connectionRepository.removeConnections(providerUserId);
+            return "redirect:/connect/twitter";
+        }
+        return "connect/twitterConnected";
+    }
 
 }

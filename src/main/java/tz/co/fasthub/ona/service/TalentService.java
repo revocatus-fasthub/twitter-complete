@@ -14,4 +14,5 @@ public interface TalentService {
 
     void deleteTalent(Integer id);
 
+
 }
