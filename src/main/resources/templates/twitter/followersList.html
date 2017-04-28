@@ -9,7 +9,7 @@
 <body>
 <br/><br/>
 <div class="container">
-    <!--/*/ <th:block th:include="fragments/headerlogin :: header"></th:block> /*/-->
+    <!--/*/ <th:block th:include="fragments/headertw :: header"></th:block> /*/-->
 <h3>Hello, <span th:text="${twitterProfile.name}">Some User</span>!</h3>
 
 <h4>These are your Followers:</h4>
@@ -17,8 +17,10 @@
 <ol>
     <li th:each="follower:${followers}" th:text="${follower.name}">Follower</li>
 </ol>
-<p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Menu</a>
-</p>
+    <p><a href="/connect/twitterConnected" th:href="@{/tw/viewTweets}">View Tweets</a></p>
+    <p><a href="/connect/twitterConnected" th:href="@{/tw/friends}">View Friends</a></p>
+    <p><a href="/tw/followers" th:href="@{/tw}">Back to Options</a></p><br/>
+    <p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">back to Connection</a></p>
 
 </div>
 </body>

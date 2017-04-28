@@ -1,9 +1,16 @@
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-	<title>Hello Twitter</title>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+	<title>Twitter Followers</title>
+
+	<!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
-<h3>Connect to Twitter</h3>
+<br/><br/>
+<div class="container">
+	<!--/*/ <th:block th:include="fragments/headertw :: header"></th:block> /*/-->
+	<h3>Connect to Twitter</h3>
 	<span th:if="${social_provider_error}">Provider error (maybe you need to configure the app id and secret?)</span>
 
 	<form action="/tw/login" method="POST">
@@ -12,6 +19,10 @@
 		</div>
 		<p><button type="submit">Connect to Twitter</button></p>
 	</form>
+
+	<p><a href="/connect/twitterConnect" th:href="@{/talents}">Back</a></p>
+</div>
+
 
 </body>
 </html>
