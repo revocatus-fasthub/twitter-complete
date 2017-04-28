@@ -133,17 +133,14 @@ public class TwitterController {
                 TweetData tweetData = new TweetData(createdPayload.getMessage());
                 tweetData.withMedia(imageService.findOneImage(image.getName()));
 
-               /* if (file!=null&&file.getContentType().equals("image/jpeg")){
+                if (file!=null){
                     tweetData.withMedia(imageService.findOneImage(image.getName()));
-                }else  if (file!=null && file.getContentType().equals("video/mp4")){
-                    TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
-                }*/
+                }
+                
 
+                twitter.timelineOperations().updateStatus(tweetData);
 
-
-                Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
-
-                log.info("tweet image sent");
+                log.info("Twitter  image  was assumed sent image content type is : "+ file.getContentType());
 
                 redirectAttributes.addFlashAttribute("flash.message", "Image Successfully uploaded");
 
