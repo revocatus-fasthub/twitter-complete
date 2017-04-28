@@ -8,12 +8,18 @@ import org.springframework.social.oauth1.AuthorizedRequestToken;
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1Parameters;
 import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.social.twitter.api.CursoredList;
+import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.repository.UsersConnectionRepository;
@@ -23,6 +29,7 @@ import tz.co.fasthub.ona.service.TwitterTalentService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by daniel on 3/26/17.
@@ -130,7 +137,7 @@ public class TwitterMvcController {
                 twitterTalentAccount.setDisplayName(connection.getDisplayName());
                 twitterTalentAccount.setProfileUrl(connection.getProfileUrl());
                 twitterTalentAccount.setAccessToken(token.getValue());
-               twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
+                twitterTalentAccount.setAppsAccessTokenSecret(token.getValue());
                 twitterTalentAccount.setRequestTokenValue(token.getValue());
                 twitterTalentAccount.setRequestTokenSecret(token.getSecret());
                 twitterTalentAccount.setTalent(talent);
@@ -143,5 +150,72 @@ public class TwitterMvcController {
 
     }
 
+    @GetMapping("/tw/viewTweets")
+    public String viewTweets(HttpServletRequest request, Model model) {
+        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+        if(token == null) {
+            return "redirect:/tw/login";
+        }
+
+        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
+        Connection<Twitter> connection = connectionFactory.createConnection(token);
+        Twitter twitter = connection.getApi();
+        if( ! twitter.isAuthorized()) {
+            return "redirect:/tw/login";
+        }
+
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
+        model.addAttribute("tweets",tweets);
+
+        return "twitter/viewTweets";
+    }
+
+
+    @GetMapping("/tw/friends")
+    public String friendList(HttpServletRequest request, Model model) {
+        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+        if(token == null) {
+            return "redirect:/tw/login";
+        }
+
+        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
+        Connection<Twitter> connection = connectionFactory.createConnection(token);
+        Twitter twitter = connection.getApi();
+        if( ! twitter.isAuthorized()) {
+            return "redirect:/tw/login";
+        }
+
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
+        model.addAttribute("friends", friends);
+        return "twitter/viewFriendList";
+    }
+
+
+    @GetMapping("/tw/followers")
+    public String followers(HttpServletRequest request, Model model) {
+        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+        if(token == null) {
+            return "redirect:/tw/login";
+        }
+
+        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
+        Connection<Twitter> connection = connectionFactory.createConnection(token);
+        Twitter twitter = connection.getApi();
+        if( ! twitter.isAuthorized()) {
+            return "redirect:/tw/login";
+        }
+
+        model.addAttribute(twitter.userOperations().getUserProfile());
+        CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
+        model.addAttribute("followers", followers);
+        return "twitter/followersList";
+    }
+
+    @PostMapping("/disconnectUrl")
+    public String disconnectTwitter(){
+        return "/connect/twitterConnect";
+    }
 
 }

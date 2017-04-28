@@ -108,61 +108,6 @@ public class TwitterController {
         return "twitter/listVideos";
     }
 
-    @RequestMapping(value = "/disconnectUrl", method = RequestMethod.POST)
-    public String disconnectTwitter(){
-        return "/connect/twitterConnect";
-    }
-
-    @RequestMapping(method=RequestMethod.GET)
-    public String twitterConnection(Model model, TwitterTalentAccount twitterTalentAccount,HttpServletRequest request){
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/connect/twitter";
-        }
-
-
-        return "connect/twitterConnected";
-    }
-
-
-    @GetMapping("/viewTweets")
-    public String viewTweets(Model model){
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/viewTweets";
-        }
-
-        //    log.debug("token is: "+accessGrant.getAccessToken());
-
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
-        model.addAttribute("tweets",tweets);
-
-        return "twitter/viewTweets";
-
-    }
-
-    @RequestMapping(value = "/friends", method = RequestMethod.GET)
-    public String friendList(Model model) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/viewFriendList";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
-        model.addAttribute("friends", friends);
-        return "twitter/viewFriendList";
-    }
-
-
-    @RequestMapping(value = "/followers", method = RequestMethod.GET)
-    public String followers(Model model) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/followersList";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
-        model.addAttribute("followers", followers);
-        return "twitter/followersList";
-    }
-
     //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
     public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
