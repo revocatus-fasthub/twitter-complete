@@ -10,4 +10,6 @@ public interface TwitterTalentRepository extends JpaRepository<TwitterTalentAcco
 
    TwitterTalentAccount findByDisplayName(String displayName);
 
+   TwitterTalentAccount findById(Integer id);
+
 }
