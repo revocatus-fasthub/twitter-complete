@@ -5,35 +5,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import tz.co.fasthub.ona.domain.*;
+import tz.co.fasthub.ona.domain.Image;
+import tz.co.fasthub.ona.domain.Payload;
+import tz.co.fasthub.ona.domain.TwitterTalentAccount;
+import tz.co.fasthub.ona.domain.Video;
 import tz.co.fasthub.ona.service.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/twitter")
 public class TwitterController {
 
     private Twitter twitter;
-
-    private ConnectionKey connectionKey;
 
     private ConnectionRepository connectionRepository;
 
@@ -72,7 +66,6 @@ public class TwitterController {
     public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
         this.twitter = twitter;
         this.connectionRepository = connectionRepository;
-
     }
 
     @RequestMapping(value = "/messages")
@@ -115,98 +108,20 @@ public class TwitterController {
         return "twitter/listVideos";
     }
 
-    @RequestMapping(method=RequestMethod.GET)
-    public String twitterConnection(Model model, TwitterTalentAccount twitterTalentAccount,HttpServletRequest request){
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/connect/twitter";
-        }
-
-        return "connect/twitterConnected";
-    }
-
-
-    @GetMapping("/viewTweets")
-    public String viewTweets(Model model){
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/viewTweets";
-        }
-
-        //    log.debug("token is: "+accessGrant.getAccessToken());
-
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        List<Tweet> tweets = twitter.timelineOperations().getUserTimeline();
-        model.addAttribute("tweets",tweets);
-
-        return "twitter/viewTweets";
-
-    }
-
-    @RequestMapping(value = "/friends", method = RequestMethod.GET)
-    public String friendList(Model model) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/viewFriendList";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
-        model.addAttribute("friends", friends);
-        return "twitter/viewFriendList";
-    }
-
-
-    @RequestMapping(value = "/followers", method = RequestMethod.GET)
-    public String followers(Model model) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/followersList";
-        }
-        model.addAttribute(twitter.userOperations().getUserProfile());
-        CursoredList<TwitterProfile> followers = twitter.friendOperations().getFollowers();
-        model.addAttribute("followers", followers);
-        return "twitter/followersList";
-    }
-
-    @ModelAttribute("allTalents")
-    public List<Talent> allTalents() {
-     //   List<Talent> talent = new ArrayList<>();
-       // model.addAttribute("talent", talent);
-        List<Talent> talentList = (List<Talent>) talentService.listAllTalent();
-    //    model.addAttribute("talentList", talentList);
-        return talentList;
-    }
-
-    @RequestMapping("/twitter/dropDown")
-    public String showMessage(Model model) {
-    //    ModelAndView model = null;
-        try {
-            Map<String, String> sampleDropdownMap = new HashMap<String, String>();
-            sampleDropdownMap.put("Java", "java");
-            sampleDropdownMap.put("PHP", "php");
-            model.addAttribute("hello", sampleDropdownMap);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-      // return model;
-         return "dropDown";
-    }
-
     //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
-    public String uploadAndTweetImage(@RequestParam("file") @ModelAttribute(value = "talent") String twitterScreenName, BindingResult bindingResult, MultipartFile file, Model model, Payload payload, RedirectAttributes redirectAttributes) {
+    public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+
             log.error("no connection to twitter");
-
             return "redirect:/twitter/renderPostTweet/form";
-
         }else if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("flash.message", "Please select a file!");
             return "redirect:/twitter/renderPostTweet/form";
-        }else if(bindingResult.hasErrors()){
-            return "redirect:/twitter/renderPostTweet/form";
-        } else
+        }else{
             try {
-
-//                allTalents();
-
                 Image image = imageService.createImage(file);
+
 
                 //saving the tweet to DB
                 Payload createdPayload =twitterService.savePayload(payload);
@@ -218,23 +133,21 @@ public class TwitterController {
                 TweetData tweetData = new TweetData(createdPayload.getMessage());
                 tweetData.withMedia(imageService.findOneImage(image.getName()));
 
-               /* if (file!=null&&file.getContentType().equals("image/jpeg")){
+                if (file!=null){
                     tweetData.withMedia(imageService.findOneImage(image.getName()));
-                }else  if (file!=null && file.getContentType().equals("video/mp4")){
-                    TwitterVideoHandler.processVideo(twitter,payload, imageService.findOneImage(image.getName()),file.getContentType());
-                }*/
+                }
 
 
-                Tweet tweet = twitter.timelineOperations().updateStatus(tweetData);
+                twitter.timelineOperations().updateStatus(tweetData);
 
-                log.info("tweet image sent");
+                log.info("Twitter  image  was assumed sent image content type is : "+ file.getContentType());
 
                 redirectAttributes.addFlashAttribute("flash.message", "Image Successfully uploaded");
 
             } catch (IOException e) {
                 redirectAttributes.addFlashAttribute("flash.message", "Failed to upload image" + file.getOriginalFilename() + ": " + e);
             }
-
+        }
         return "redirect:/twitter/images";
     }
 
@@ -313,7 +226,6 @@ public class TwitterController {
         }
         return "redirect:/twitter/images";
     }
-
 
 
 }
