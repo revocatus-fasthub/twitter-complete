@@ -14,15 +14,14 @@
 
     <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
 
-       <div class="form-group"> Talent ScreenName:
+       <div class="form-group">
            <select id="dropTalent" name="screenName">
-                <option value="0" th:text="${'select talent'}"/>
+                <option value="0" th:text="${'-- Choose Screen Name --'}"/>
                 <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}" />
            </select>
        </div>
-         Message:
             <div class="form-group">
-                    <textarea rows="6" cols="45" name="message" ></textarea>
+                    <textarea rows="6" cols="45" placeholder="Type your caption here ..." name="message" ></textarea>
             </div>
         <p>
             <div class="form-group">
