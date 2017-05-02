@@ -47,7 +47,7 @@ public class TwitterUtilities {
                     TweetData tweetData = new TweetData(payload.getMessage());
 
                     if (payload.getImage() != null) {
-                     //   tweetData.withMedia(resource);
+                        tweetData.withMedia(resource);
                     }
 
 

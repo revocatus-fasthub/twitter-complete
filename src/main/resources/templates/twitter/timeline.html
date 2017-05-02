@@ -7,12 +7,10 @@
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
-<div id="header">
-    <br/><br/>
-    <!--/*/ <th:block th:include="fragments/headerlogin :: header"></th:block> /*/-->
-</div>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
-<div id="content" layout:fragment="content">
+    <div id="content" layout:fragment="content">
     <h3>Your Twitter <span th:text="${timelineName}">timelineName</span> Timeline</h3>
 
     <h4>Post a tweet</h4>
@@ -28,10 +26,10 @@
     </form>
 
     <ul class="choices">
-        <li><a th:href="@{/twitter/timeline} + '/Home'">Home Timeline</a></li>
-        <li><a th:href="@{/twitter/timeline} + '/User'">User Timeline</a></li>
-        <li><a th:href="@{/twitter/timeline} + '/Mentions'">Mentions</a></li>
-        <li><a th:href="@{/twitter/timeline} + '/Favorites'">Favorites</a></li>
+        <li><a th:href="@{/tw/timeline} + '/Home'">Home Timeline</a></li>
+        <li><a th:href="@{/tw/timeline} + '/User'">User Timeline</a></li>
+        <li><a th:href="@{/tw/timeline} + '/Mentions'">Mentions</a></li>
+        <li><a th:href="@{/tw/timeline} + '/Favorites'">Favorites</a></li>
     </ul>
 
     <div class="feed">
@@ -48,6 +46,7 @@
             </li>
         </ul>
     </div>
+</div>
 </div>
 </body>
 </html>

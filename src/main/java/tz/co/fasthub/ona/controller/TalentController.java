@@ -112,7 +112,6 @@ public class TalentController {
         }else if (talent.getFacebookScreenName()!=null){
 
         }
-
         try {
             sendMail(talent.getEmail(), "WELCOME TO ONA PLATFORM", "Hello " + talent.getFname() + " " + talent.getLname() + ",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");
         } catch (MailException me)
@@ -121,8 +120,8 @@ public class TalentController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("flash.message", "Uncaught Exception: " + e.getMessage());
         }
-
-        return "redirect:/talent/" + talent.getId();
+        redirectAttributes.addFlashAttribute("flash.message", "Talent Successfully Registered!");
+        return "connections";
 
     }
 

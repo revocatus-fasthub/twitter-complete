@@ -16,9 +16,7 @@ import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.repository.UsersConnectionRepository;
@@ -209,10 +207,52 @@ public class TwitterMvcController {
         return "twitter/followersList";
     }
 
+    //timeline
+    @RequestMapping(value="/twitter/search", method= RequestMethod.GET)
+    public String searchOperations(@RequestParam("query") String query, Model model) {
+        model.addAttribute("timeline", twitter.searchOperations().search(query).getTweets());
+        return "twitter/timeline";
+    }
+
+    @RequestMapping(value="/tw/timeline", method=RequestMethod.GET)
+    public String showTimeline(Model model) {
+     //   showTimeline("Home", model);
+        return "twitter/timeline";
+    }
+
+    @RequestMapping(value="/tw/timeline/{timelineType}", method=RequestMethod.GET)
+    public String showTimeline(@PathVariable("timelineType") String timelineType, HttpServletRequest request, Model model) {
+        OAuthToken token = (OAuthToken) request.getSession().getAttribute(TOKEN_NAME);
+        if(token == null) {
+            return "redirect:/tw/login";
+        }
+
+        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(API_KEY, API_SECRET);
+        Connection<Twitter> connection = connectionFactory.createConnection(token);
+        Twitter twitter = connection.getApi();
+        if( ! twitter.isAuthorized()) {
+            return "redirect:/tw/login";
+        }
+        if(timelineType.equals("Home")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getHomeTimeline());
+        } else if(timelineType.equals("User")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getUserTimeline());
+        } else if(timelineType.equals("Mentions")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getMentions());
+        } else if(timelineType.equals("Favorites")) {
+            model.addAttribute("timeline", twitter.timelineOperations().getFavorites());
+        }
+        model.addAttribute("timelineName", timelineType);
+        return "twitter/timeline";
+    }
+
+
+
     @PostMapping("/disconnectUrl")
     public String disconnectTwitter(){
         return "/connect/twitterConnect";
     }
+
 
 
 }

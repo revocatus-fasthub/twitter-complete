@@ -22,6 +22,12 @@ public class HomeController {
     public String index() {
         return "index";
     }
+
+   @RequestMapping("/connect/connections")
+    public String connections() {
+        return "connections";
+   }
+
     @RequestMapping("/success")
     public String successManual() {
         return "success";

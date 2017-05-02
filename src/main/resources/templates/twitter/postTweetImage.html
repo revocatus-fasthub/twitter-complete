@@ -7,30 +7,36 @@
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
-<br/><br/>
 <div class="container">
-    <!--/*/ <th:block th:include="fragments/headertw :: header"></th:block> /*/-->
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+    <center>
+    <h3>POST IMAGE TO TWITTER:</h3><br/>
 
-
-<center>
-    <h3>POST IMAGE TO TWITTER:</h3>
     <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
-       <p> Talent ScreenName: </p>
 
-        <select class="form-control" id="dropTalent" name="screenName">
-            <option value="0" th:text="${'select talent'}"/>
-            <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}" />
-        </select>
-
-        <p>Message:</p>
-            <p> <textarea rows="6" cols="45" name="message" ></textarea></p>
-        <p>choose your file: </p>
-        <p><input type="file" name="file" /></p>
-        <p><input type="submit" id="postTweet" value="Post" /></p>
-
+       <div class="form-group"> Talent ScreenName:
+           <select id="dropTalent" name="screenName">
+                <option value="0" th:text="${'select talent'}"/>
+                <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}" />
+           </select>
+       </div>
+         Message:
+            <div class="form-group">
+                    <textarea rows="6" cols="45" name="message" ></textarea>
+            </div>
         <p>
-            <a href="/connect/twitterConnected" th:href="@{/tw}">Cancel</a>
+            <div class="form-group">
+                    <input type="file" name="file" />
+            </div>
         </p>
+        <br/>
+        <div class="form-group">
+            <div class="col-sm-15">
+                <input type="submit" id="postTweet" value="Post" />
+                <a href="/connect/twitterConnected" th:href="@{/tw}">Cancel</a>
+            </div>
+        </div>
+
     </form>
 </center>
 </div>
