@@ -112,7 +112,6 @@ public class TwitterController {
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
     public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-
             log.error("no connection to twitter");
             return "redirect:/twitter/renderPostTweet/form";
         }else if (file.isEmpty()) {
