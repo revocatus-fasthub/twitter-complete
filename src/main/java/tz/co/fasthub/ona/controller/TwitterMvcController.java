@@ -209,7 +209,7 @@ public class TwitterMvcController {
     }
 
     @RequestMapping(value="/tw/timeline/{twitterScreenName}/{timelineType}", method=RequestMethod.GET)
-    public String showTimeline(@PathVariable String timelineType, @PathVariable String twitterScreenName, Model model) {
+    public String showTimeline(@PathVariable String twitterScreenName, @PathVariable String timelineType, Model model) {
 
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 

@@ -42,9 +42,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/**/talent/new").access("hasRole('ADMIN')")
+                .antMatchers("/**/connect/connections").access("hasRole('ADMIN')")
+                .antMatchers("/**/twitter/renderPostTweet/form").access("hasRole('ADMIN')")
                 .antMatchers("/**/talents/**").access("hasRole('USER')");
 
         httpSecurity.csrf().disable();
+
+
+
     }
 
     @Bean
