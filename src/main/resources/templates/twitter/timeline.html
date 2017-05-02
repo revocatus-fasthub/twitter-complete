@@ -3,7 +3,7 @@
       xmlns:social="http://spring.io/springsocial"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title>Spring Social Showcase</title>
+    <title>Twitter Timeline</title>
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -11,23 +11,11 @@
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
     <div id="content" layout:fragment="content">
-     <section>
-         <div class="pull-right" style="padding-right:5px">
-             <form th:action="@{/twitter/search}" method="get">
-                 <p><input type="text" name="query" th:value="${param.query}" /> <input type="submit" value="Search"/></p>
-             </form>
-         </div>
-     </section>
-        <p>
-            View <a th:href="@{'/tw/viewTweets/' +${twitterScreenName}}"> Tweets</a>.
-        </p>
-        <p>
-            View Twitter <a th:href="@{'/tw/friends/'+ ${twitterScreenName}}"> Friends</a>.
-        </p>
-        <p>
-            View Twitter <a th:href="@{'/tw/followers/'+ ${twitterScreenName}}"> Followers</a>.
-        </p>
 
+        <p>View <a th:href="@{'/tw/viewTweets/' +${twitterScreenName}}"> Tweets</a>.</p>
+        <p>View Twitter <a th:href="@{'/tw/friends/'+ ${twitterScreenName}}"> Friends</a>.</p>
+        <p>View Twitter <a th:href="@{'/tw/followers/'+ ${twitterScreenName}}"> Followers</a>.</p>
+        <br/>
 
         <p>View <span th:text="${twitterScreenName}">timelineName</span> Timeline:</p>
     <ul class="choices">

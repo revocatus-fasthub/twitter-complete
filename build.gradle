@@ -53,8 +53,6 @@ dependencies {
 	compile 'com.sun.jersey:jersey-client:1.19'
 	compile 'com.sun.jersey.contribs:jersey-multipart:1.19'
     compile group: 'org.json', name: 'json', version: '20090211'
-    // https://mvnrepository.com/artifact/org.springframework/org.springframework.web.portlet
-    compile group: 'org.springframework', name: 'org.springframework.web.portlet', version: '3.2.1.RELEASE'
 
     compile('org.springframework.boot:spring-boot-starter-integration')
 	compile('org.hibernate:hibernate-core')
