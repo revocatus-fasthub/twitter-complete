@@ -30,14 +30,7 @@ public class TwitterUtilities {
         try {
 
             if (twitterTalentAccount != null) {
-                TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(TwitterMvcController.getApiKey(), TwitterMvcController.getApiSecret());
-
-                OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
-
-                OAuthToken requestToken = new OAuthToken(twitterTalentAccount.getRequestTokenValue(), twitterTalentAccount.getRequestTokenSecret());
-
-                Connection<Twitter> connection = connectionFactory.createConnection(requestToken);
-                Twitter twitter = connection.getApi();
+                Twitter twitter = getTwitter(twitterTalentAccount);
 
                 log.info("logging: " + twitter);
 
@@ -61,6 +54,17 @@ public class TwitterUtilities {
 
         return null;
 
+    }
+
+    public static Twitter getTwitter(TwitterTalentAccount twitterTalentAccount) {
+        TwitterConnectionFactory connectionFactory = new TwitterConnectionFactory(TwitterMvcController.getApiKey(), TwitterMvcController.getApiSecret());
+
+        OAuth1Operations oauthOperations = connectionFactory.getOAuthOperations();
+
+        OAuthToken requestToken = new OAuthToken(twitterTalentAccount.getAccessToken(), twitterTalentAccount.getRequestTokenSecret());
+
+        Connection<Twitter> connection = connectionFactory.createConnection(requestToken);
+        return connection.getApi();
     }
 
 }

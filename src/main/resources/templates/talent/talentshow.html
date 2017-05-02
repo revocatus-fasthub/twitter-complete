@@ -54,17 +54,19 @@
     </div>
 
     <p>
-        Click <a href="/tw/viewTweets">here</a> to see your tweets.
+        Click <a th:href="${'/tw/viewTweets/'+ talent.twitterScreenName}">here</a> to see your tweets.
     </p>
     <p>
-        Click <a href="/tw/friends">here</a> to see your Twitter friends.
+        Click <a th:href="${'/tw/friends/'+ talent.twitterScreenName}">here</a> to see your Twitter friends.
     </p>
     <p>
-        Click <a href="/tw/followers">here</a> to see your Twitter Followers.
+        Click <a th:href="${'/tw/followers/'+ talent.twitterScreenName}">here</a> to see your Twitter Followers.
     </p>
     <p>
-        Click <a href="/tw/timeline">here</a> to navigate to timeline.
+        Click <a th:href="${'/tw/timelineShow/'+ talent.twitterScreenName}">here</a> to navigate to timeline.
     </p>
+
+
 </div>
 
 </body>

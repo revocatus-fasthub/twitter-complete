@@ -12,21 +12,22 @@
 
     <div id="content" layout:fragment="content">
     <h3>Your Twitter <span th:text="${timelineName}">timelineName</span> Timeline</h3>
-
-    <h4>Post a tweet</h4>
+        <hr/>
+    <h4>Post a tweet:</h4>
     <form th:action="@{/twitter/postTweetImage}" enctype="multipart/form-data" method="post">
         <input type="hidden" name="_csrf"  /><!--th:value="${_csrf.token}" -->
-        <textarea name="message" rows="2" cols="80"></textarea><br/>
-        <p>choose your file:   <input type="file" name="file" /></p>
+        <textarea name="message" placeholder="Type your caption here" rows="4" cols="80"></textarea><br/>
+        <p> <input type="file" name="file" /></p>
         <input type="submit" value="Post Tweet"/>
     </form>
-
+    <hr/>
     <form th:action="@{/twitter/search}" method="get">
         <p><input type="text" name="query" th:value="${param.query}" /> <input type="submit" value="Search"/></p>
     </form>
 
     <ul class="choices">
-        <li><a th:href="@{/tw/timeline} + '/Home'">Home Timeline</a></li>
+
+        <li><a th:href="@{'/tw/timeline/'+talent.twitterScreenName+'/Home'}">Home Timeline</a></li>
         <li><a th:href="@{/tw/timeline} + '/User'">User Timeline</a></li>
         <li><a th:href="@{/tw/timeline} + '/Mentions'">Mentions</a></li>
         <li><a th:href="@{/tw/timeline} + '/Favorites'">Favorites</a></li>

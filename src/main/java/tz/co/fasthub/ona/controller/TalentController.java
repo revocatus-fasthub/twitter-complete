@@ -136,8 +136,9 @@ public class TalentController {
     // Delete talent by its id
 
     @RequestMapping("talent/delete/{id}")
-    public String delete(@PathVariable Integer id) {
+    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         talentService.deleteTalent(id);
+        redirectAttributes.addFlashAttribute("flash.message", "Talent Successfully Deleted!");
         return "redirect:/talents";
     }
 

@@ -15,9 +15,7 @@ public class TwitterTalentAccount {
     private String displayName;
     private String accessToken;//from twitterManualController
     private String imageUrl;
-    private String appsAccessTokenSecret;
     private String requestTokenSecret;
-    private String requestTokenValue;
     private String oauth_verifier;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -39,9 +37,7 @@ public class TwitterTalentAccount {
         this.displayName = displayName;
         this.accessToken = accessToken;
         this.imageUrl = imageUrl;
-        this.appsAccessTokenSecret = appsAccessTokenSecret;
         this.requestTokenSecret = requestTokenSecret;
-        this.requestTokenValue = requestTokenValue;
     }
 
     @Override
@@ -53,9 +49,7 @@ public class TwitterTalentAccount {
                 ", displayName='" + displayName + '\'' +
                 ", accessToken='" + accessToken + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", appsAccessTokenSecret='" + appsAccessTokenSecret + '\'' +
                 ", requestTokenSecret='" + requestTokenSecret + '\'' +
-                ", requestTokenValue='" + requestTokenValue + '\'' +
                 '}';
     }
 
@@ -99,28 +93,12 @@ public class TwitterTalentAccount {
         this.imageUrl = imageUrl;
     }
 
-    public String getAppsAccessTokenSecret() {
-        return appsAccessTokenSecret;
-    }
-
-    public void setAppsAccessTokenSecret(String appsAccessTokenSecret) {
-        this.appsAccessTokenSecret = appsAccessTokenSecret;
-    }
-
     public String getRequestTokenSecret() {
         return requestTokenSecret;
     }
 
     public void setRequestTokenSecret(String requestTokenSecret) {
         this.requestTokenSecret = requestTokenSecret;
-    }
-
-    public String getRequestTokenValue() {
-        return requestTokenValue;
-    }
-
-    public void setRequestTokenValue(String requestTokenValue) {
-        this.requestTokenValue = requestTokenValue;
     }
 
     public Talent getTalent() {

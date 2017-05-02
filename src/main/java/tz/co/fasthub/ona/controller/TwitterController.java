@@ -111,7 +111,6 @@ public class TwitterController {
             try {
                 Image image = imageService.createImage(file);
 
-
                 //saving the tweet to DB
                 Payload createdPayload =twitterService.savePayload(payload);
 
