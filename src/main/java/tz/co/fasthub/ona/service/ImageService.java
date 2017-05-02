@@ -19,5 +19,5 @@ public interface ImageService {
 
     Image createImage(MultipartFile file) throws IOException;
 
-    void deleteImage(String filename) throws IOException;
+    void deleteImage(String filename, Long id) throws IOException;
 }

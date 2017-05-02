@@ -26,7 +26,7 @@ Image
         <td th:text="${image.name}"></td>
         <td><a th:href="@{'/var/ona_fasthub/imageUpload-dir/' + ${image.name} + '/raw'}"><img th:src="@{'/var/ona_fasthub/imageUpload-dir/' + ${image.name} + '/raw'}" class="thumbnail" /></a></td>
         <td>
-            <form th:method="delete" th:action="@{'/twitter/images/' + ${image.name}}">
+            <form th:method="delete" th:action="@{'/twitter/images/' + ${image.name} + '/' +${image.id}}">
                 <input type="submit" value="Delete" />
             </form>
         </td>
@@ -38,6 +38,6 @@ Image
     <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize},page=${prev.pageNumber})}">Previous</a></li>
     <li th:if="${next}"><a th:href="@{/(size=${next.pageSize},page=${next.pageNumber})}">Next</a></li>
 </ul>
-<p><a href="/connect/twitterConnecte" th:href="@{/connect/twitter}">Back</a></p>
+<p><a href="/index" th:href="@{/index}">Back</a></p>
 </body>
 </html>

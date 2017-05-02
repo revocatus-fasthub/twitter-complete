@@ -11,19 +11,21 @@
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
     <div id="content" layout:fragment="content">
-
-        <form th:action="@{/twitter/search}" method="get">
-            <p><input type="text" name="query" th:value="${param.query}" /> <input type="submit" value="Search"/></p>
-        </form>
-
+     <section>
+         <div class="pull-right" style="padding-right:5px">
+             <form th:action="@{/twitter/search}" method="get">
+                 <p><input type="text" name="query" th:value="${param.query}" /> <input type="submit" value="Search"/></p>
+             </form>
+         </div>
+     </section>
         <p>
-            Click <a th:href="@{'/tw/viewTweets/' +${twitterScreenName}}">here</a> to see your tweets.
+            View <a th:href="@{'/tw/viewTweets/' +${twitterScreenName}}"> Tweets</a>.
         </p>
         <p>
-            Click <a th:href="@{'/tw/friends/'+ ${twitterScreenName}}">here</a> to see your Twitter friends.
+            View Twitter <a th:href="@{'/tw/friends/'+ ${twitterScreenName}}"> Friends</a>.
         </p>
         <p>
-            Click <a th:href="@{'/tw/followers/'+ ${twitterScreenName}}">here</a> to see your Twitter Followers.
+            View Twitter <a th:href="@{'/tw/followers/'+ ${twitterScreenName}}"> Followers</a>.
         </p>
 
 

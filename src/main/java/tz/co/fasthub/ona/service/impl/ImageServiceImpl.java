@@ -55,9 +55,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public void deleteImage(String filename) throws IOException {
+    public void deleteImage(String filename, Long id) throws IOException {
         final Image byName = imageRepository.findByName(filename);
         imageRepository.delete(byName);
             Files.deleteIfExists(Paths.get(IMAGE_UPLOAD_ROOT, filename));
+        final Image byId = imageRepository.findOne(id);
+            imageRepository.delete(byId);
         }
 }

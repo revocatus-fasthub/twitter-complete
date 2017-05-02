@@ -49,8 +49,6 @@ public class TwitterController {
 
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
 
-    //String URL ="https://api.twitter.com";
-
     @Autowired
     public TwitterController(Twitter twitter, TwitterService twitterService, TwitterTalentService twitterTalentService, ImageService imageService, VideoService videoService, TalentService talentService) {
         this.twitter = twitter;
@@ -86,7 +84,6 @@ public class TwitterController {
         }
         return "twitter/listImage";
     }
-
 
     @RequestMapping(value = "/videos")
     public String listVideos(Model model, Pageable pageable){
@@ -169,39 +166,11 @@ public class TwitterController {
         return "redirect:twitter/videos";
     }
 
-  /*  @RequestMapping(value="/twitter/search", method=RequestMethod.GET)
-    public String searchOperations(@RequestParam("query") String query, Model model) {
-        model.addAttribute("timeline", twitter.searchOperations().search(query).getTweets());
-        return "twitter/timeline";
-    }
-
-    @RequestMapping(value="/timeline", method=RequestMethod.GET)
-    public String showTimeline(Model model) {
-        showTimeline("Home", model);
-        return "twitter/timeline";
-    }
-
-    @RequestMapping(value="/timeline/{timelineType}", method=RequestMethod.GET)
-    public String showTimeline(@PathVariable("timelineType") String timelineType, Model model) {
-        if(timelineType.equals("Home")) {
-            model.addAttribute("timeline", twitter.timelineOperations().getHomeTimeline());
-        } else if(timelineType.equals("User")) {
-            model.addAttribute("timeline", twitter.timelineOperations().getUserTimeline());
-        } else if(timelineType.equals("Mentions")) {
-            model.addAttribute("timeline", twitter.timelineOperations().getMentions());
-        } else if(timelineType.equals("Favorites")) {
-            model.addAttribute("timeline", twitter.timelineOperations().getFavorites());
-        }
-        model.addAttribute("timelineName", timelineType);
-        return "twitter/timeline";
-    }
-*/
-
-    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME)
-    public String deleteImage(@PathVariable String filename, RedirectAttributes redirectAttributes) throws IOException {
+    @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME + "/{id}")
+    public String deleteImage(@PathVariable String filename, @PathVariable Long id, RedirectAttributes redirectAttributes) throws IOException {
         try {
-            imageService.deleteImage(filename);
-            redirectAttributes.addFlashAttribute("flash.message", "Image Successfully deleted " + filename + " from the server");
+            imageService.deleteImage(filename,id);
+            redirectAttributes.addFlashAttribute("flash.message", "Image Successfully deleted " + filename );
         } catch (IOException|RuntimeException e) {
             redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image " + filename + " => " + e.getMessage());
         }

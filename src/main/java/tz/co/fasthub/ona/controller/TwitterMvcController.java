@@ -12,21 +12,19 @@ import org.springframework.social.twitter.api.CursoredList;
 import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.TwitterProfile;
-import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
-import tz.co.fasthub.ona.repository.UsersConnectionRepository;
 import tz.co.fasthub.ona.service.TalentService;
 import tz.co.fasthub.ona.service.TwitterTalentService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Path;
 import java.io.IOException;
 import java.util.List;
 
@@ -49,9 +47,8 @@ public class TwitterMvcController {
 
     @Autowired
     TalentService talentService;
-    UsersConnectionRepository usersConnectionRepository;
+
     private Twitter twitter;
-    private TwitterTemplate twitterTemplate;
 
     public TwitterMvcController(Twitter twitter) {
 
@@ -145,7 +142,7 @@ public class TwitterMvcController {
     }
 
     @GetMapping("/tw/viewTweets/{twitterScreenName}")
-    public String viewTweets(@PathVariable String twitterScreenName, Model model) {
+    public String viewTweets(@PathVariable String twitterScreenName, Model model, RedirectAttributes redirectAttributes) {
 
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
@@ -155,7 +152,8 @@ public class TwitterMvcController {
             List<Tweet> tweets = twitter1.timelineOperations().getUserTimeline();
             model.addAttribute("tweets",tweets);
         }else {
-            //handling errors
+            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
+            return "/connect/connections";
         }
 
         return "twitter/viewTweets";
@@ -163,7 +161,7 @@ public class TwitterMvcController {
 
 
     @GetMapping("/tw/friends/{twitterScreenName}")
-    public String friendList(@PathVariable String twitterScreenName, Model model) {
+    public String friendList(@PathVariable String twitterScreenName, Model model, RedirectAttributes redirectAttributes) {
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
         if(twitterTalentAccount!=null){
@@ -172,7 +170,8 @@ public class TwitterMvcController {
             CursoredList<TwitterProfile> friends = twitter1.friendOperations().getFriends();
             model.addAttribute("friends", friends);
         }else {
-            //handling errors
+            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
+            return "/connect/connections";
         }
 
         return "twitter/viewFriendList";
@@ -180,7 +179,7 @@ public class TwitterMvcController {
 
 
     @GetMapping("/tw/followers/{twitterScreenName}")
-    public String followers(@PathVariable String twitterScreenName, Model model) {
+    public String followers(@PathVariable String twitterScreenName, Model model, RedirectAttributes redirectAttributes) {
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
         if(twitterTalentAccount!=null) {
@@ -189,7 +188,8 @@ public class TwitterMvcController {
             CursoredList<TwitterProfile> followers = twitter1.friendOperations().getFollowers();
             model.addAttribute("followers", followers);
         }else {
-            //handling errors
+            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
+            return "/connect/connections";
         }
         return "twitter/followersList";
     }
@@ -209,7 +209,7 @@ public class TwitterMvcController {
     }
 
     @RequestMapping(value="/tw/timeline/{twitterScreenName}/{timelineType}", method=RequestMethod.GET)
-    public String showTimeline(@PathVariable String twitterScreenName, @PathVariable String timelineType, Model model) {
+    public String showTimeline(@PathVariable String twitterScreenName, @PathVariable String timelineType, Model model, RedirectAttributes redirectAttributes) {
 
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
@@ -227,19 +227,16 @@ public class TwitterMvcController {
             }
             model.addAttribute("timelineName", timelineType);
         }else {
-            //handling
+            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
+            return "/connect/connections";
         }
 
         return "twitter/timeline";
     }
 
-
-
     @PostMapping("/disconnectUrl")
     public String disconnectTwitter(){
         return "/connect/twitterConnect";
     }
-
-
 
 }
