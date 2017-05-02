@@ -172,7 +172,7 @@ public class TwitterMvcController {
             CursoredList<TwitterProfile> friends = twitter1.friendOperations().getFriends();
             model.addAttribute("friends", friends);
         }else {
-            //handling
+            //handling errors
         }
 
         return "twitter/viewFriendList";
@@ -189,7 +189,7 @@ public class TwitterMvcController {
             CursoredList<TwitterProfile> followers = twitter1.friendOperations().getFollowers();
             model.addAttribute("followers", followers);
         }else {
-            //handling
+            //handling errors
         }
         return "twitter/followersList";
     }
