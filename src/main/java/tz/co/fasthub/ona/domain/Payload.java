@@ -14,6 +14,8 @@ public class Payload {
 
     private String message;
 
+    private String screenName;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private Image image;
@@ -28,8 +30,9 @@ public class Payload {
 
     private Payload(){}
 
-    public Payload(String message) {
+    public Payload(String message,String screenName) {
         this.message = message;
+        this.screenName = screenName;
     }
 
     @Override
@@ -78,5 +81,13 @@ public class Payload {
 
     public void setTwitterTalentAccount(TwitterTalentAccount twitterTalentAccount) {
         this.twitterTalentAccount = twitterTalentAccount;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
     }
 }

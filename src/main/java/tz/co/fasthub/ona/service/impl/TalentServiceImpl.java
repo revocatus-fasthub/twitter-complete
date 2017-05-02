@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import tz.co.fasthub.ona.repository.TalentRepository;
 import tz.co.fasthub.ona.service.TalentService;
 
+import java.util.List;
+
 /**
  * Talent service implement.
  */
@@ -42,5 +44,10 @@ public class TalentServiceImpl implements TalentService {
     @Override
     public void deleteTalent(Integer id) {
         talentRepository.delete(id);
+    }
+
+    @Override
+    public List<Talent> findAll() {
+        return talentRepository.findAll();
     }
 }

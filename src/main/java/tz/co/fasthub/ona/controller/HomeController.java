@@ -73,11 +73,6 @@ public class HomeController {
         return "/twitter/success";
     }
 
-    @RequestMapping("/twitter/renderPostTweet/form")
-    public String tweet(){
-        return "twitter/postTweetImage";
-    }
-
 
     @RequestMapping("/twitter/postvideo/form")
     public String tweetVideo(){

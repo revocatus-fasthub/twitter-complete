@@ -7,23 +7,29 @@
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
-<br/>
+<br/><br/>
 <div class="container">
     <!--/*/ <th:block th:include="fragments/headertw :: header"></th:block> /*/-->
 
 
 <center>
     <h3>POST IMAGE TO TWITTER:</h3>
-    <form modelAttribute="tweet" action="/twitter/postTweetImage"  th:field="*{talent}" enctype="multipart/form-data" method="post">
+    <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
+       <p> Talent ScreenName: </p>
 
-            <p>Message:</p>
+        <select class="form-control" id="dropTalent" name="screenName">
+            <option value="0" th:text="${'select talent'}"/>
+            <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}" />
+        </select>
+
+        <p>Message:</p>
             <p> <textarea rows="6" cols="45" name="message" ></textarea></p>
         <p>choose your file: </p>
         <p><input type="file" name="file" /></p>
         <p><input type="submit" id="postTweet" value="Post" /></p>
 
         <p>
-            <a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Cancel</a>
+            <a href="/connect/twitterConnected" th:href="@{/tw}">Cancel</a>
         </p>
     </form>
 </center>

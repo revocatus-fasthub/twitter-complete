@@ -12,14 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import tz.co.fasthub.ona.domain.Image;
-import tz.co.fasthub.ona.domain.Payload;
-import tz.co.fasthub.ona.domain.TwitterTalentAccount;
-import tz.co.fasthub.ona.domain.Video;
+import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
+import tz.co.fasthub.ona.domain.*;
 import tz.co.fasthub.ona.service.*;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,25 +23,18 @@ import java.util.List;
 @RequestMapping("/twitter")
 public class TwitterController {
 
-    private Twitter twitter;
+    private final Twitter twitter;
 
-    private ConnectionRepository connectionRepository;
 
-    @Autowired
-    TwitterService twitterService;
+    private  final TwitterService twitterService;
 
-    @Autowired
-    TwitterTalentService twitterTalentService;
+    private final TwitterTalentService twitterTalentService;
 
-    @Autowired
-    TalentService talentService;
+    private final ImageService imageService;
 
-    @Autowired
-    ImageService imageService;
+    private final VideoService videoService;
 
-    @Autowired
-    VideoService videoService;
-
+    private final TalentService talentService;
 
     final static String DOMAIN = "https://upload.twitter.com";
     final static String RESOURCE = "/1.1/media/upload.json";
@@ -62,10 +51,14 @@ public class TwitterController {
 
     //String URL ="https://api.twitter.com";
 
-    @Inject
-    public TwitterController(Twitter twitter, ConnectionRepository connectionRepository) {
+    @Autowired
+    public TwitterController(Twitter twitter, TwitterService twitterService, TwitterTalentService twitterTalentService, ImageService imageService, VideoService videoService, TalentService talentService) {
         this.twitter = twitter;
-        this.connectionRepository = connectionRepository;
+        this.twitterService = twitterService;
+        this.twitterTalentService = twitterTalentService;
+        this.imageService = imageService;
+        this.videoService = videoService;
+        this.talentService = talentService;
     }
 
     @RequestMapping(value = "/messages")
@@ -111,10 +104,7 @@ public class TwitterController {
     //POSTING TWEET AND AN IMAGE FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetImage",method = RequestMethod.POST)
     public String uploadAndTweetImage(@RequestParam("file") MultipartFile file, Payload payload, RedirectAttributes redirectAttributes) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            log.error("no connection to twitter");
-            return "redirect:/twitter/renderPostTweet/form";
-        }else if (file.isEmpty()) {
+        if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("flash.message", "Please select a file!");
             return "redirect:/twitter/renderPostTweet/form";
         }else{
@@ -125,19 +115,15 @@ public class TwitterController {
                 //saving the tweet to DB
                 Payload createdPayload =twitterService.savePayload(payload);
 
+                Talent talent = talentService.getTalentById(Integer.parseInt(createdPayload.getScreenName()));
+
                 createdPayload.setImage(image);
 
                 twitterService.savePayload(createdPayload);
 
-                TweetData tweetData = new TweetData(createdPayload.getMessage());
-                tweetData.withMedia(imageService.findOneImage(image.getName()));
+                TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(talent.getTwitterScreenName());
 
-                if (file!=null){
-                    tweetData.withMedia(imageService.findOneImage(image.getName()));
-                }
-
-
-                twitter.timelineOperations().updateStatus(tweetData);
+                TwitterUtilities.connectTwitter(payload, twitterTalentAccount, imageService.findOneImage(payload.getImage().getName()));
 
                 log.info("Twitter  image  was assumed sent image content type is : "+ file.getContentType());
 
@@ -153,10 +139,7 @@ public class TwitterController {
     //POSTING TWEET AND AN VIDEO FILE TO USER ACCOUNT
     @RequestMapping(value = "/postTweetVideo",method = RequestMethod.POST)
     public String uploadAndTweetVideo(@RequestParam("videofile") MultipartFile videofile, Payload payload, RedirectAttributes redirectAttributes) {
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            log.error("no connection to twitter");
-            return "redirect:/twitter/postvideo/form";
-        }else if (videofile.isEmpty()) {
+        if (videofile.isEmpty()) {
             redirectAttributes.addFlashAttribute("flash.message", "Please select a video file to post!");
             return "redirect:/twitter/postvideo/form";
         }else{
@@ -225,6 +208,15 @@ public class TwitterController {
         }
         return "redirect:/twitter/images";
     }
+
+
+    @RequestMapping("/renderPostTweet/form")
+    public String tweet(Model model){
+        List<Talent> talents = talentService.findAll();
+        model.addAttribute("talents", talents);
+        return "twitter/postTweetImage";
+    }
+
 
 
 }

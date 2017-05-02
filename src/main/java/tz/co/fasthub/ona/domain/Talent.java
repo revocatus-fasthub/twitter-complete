@@ -23,7 +23,7 @@ public class Talent{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "talent_id")
+    @Column(name = "id")
     private Integer id;
 
     @Version
@@ -44,16 +44,15 @@ public class Talent{
 
     @Column(name = "password")
     @Length(min = 5, message = "*Your password must have at least 5 characters")
-    //@Transient
     private String password;
 
     @Length(min = 5, message = "*Your password must have at least 5 characters")
-    //@Transient
-    // @Constraint(validatedBy = TalentValidator.class)
     private String Cpassword;
 
     private String twitterScreenName;
+
     private String facebookScreenName;
+
     private String instagramScreenName;
 
     @OneToOne(cascade = CascadeType.ALL)
