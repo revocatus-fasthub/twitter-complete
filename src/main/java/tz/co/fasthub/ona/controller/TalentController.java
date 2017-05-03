@@ -136,13 +136,23 @@ public class TalentController {
 
     // Delete talent by its id
 
-    @RequestMapping("talent/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) throws NotFoundException {
-       // talentService.deleteTalent(id);
-        twitterTalentAccountService.deleteTalentById(id);
+    @RequestMapping("talent/delete/{id}")//, @PathVariable Integer id
+    public String deleteTalent(@PathVariable Integer id, RedirectAttributes redirectAttributes) throws NotFoundException {
+         if(id!=null){
+             talentService.deleteTalent(id);
+         }else {
+             deleteTwitterTalentAccount(Long.valueOf(id),redirectAttributes);
+         }
+        //twitterTalentAccountService.deleteTalentById(id);
         redirectAttributes.addFlashAttribute("flash.message", "Talent Successfully Deleted!");
         return "redirect:/talents";
     }
 
+    @RequestMapping("talent/deleteTwitterTalent/{id}")//
+    public String deleteTwitterTalentAccount(@PathVariable Long id, RedirectAttributes redirectAttributes) throws NotFoundException {
+        twitterTalentAccountService.deleteTalentById(id);
+        //redirectAttributes.addFlashAttribute("flash.message", "Talent Successfully Deleted!");
+        return "redirect:/talents";
+    }
 }
 
