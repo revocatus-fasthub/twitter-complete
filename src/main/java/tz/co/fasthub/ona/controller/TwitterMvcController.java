@@ -189,7 +189,7 @@ public class TwitterMvcController {
             model.addAttribute("followers", followers);
         }else {
             redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
-            return "/connect/connections";
+            return "connect/connections";
         }
         return "twitter/followersList";
     }

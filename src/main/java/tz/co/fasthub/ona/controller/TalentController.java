@@ -1,5 +1,6 @@
 package tz.co.fasthub.ona.controller;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -136,8 +137,9 @@ public class TalentController {
     // Delete talent by its id
 
     @RequestMapping("talent/delete/{id}")
-    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        talentService.deleteTalent(id);
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) throws NotFoundException {
+       // talentService.deleteTalent(id);
+        twitterTalentAccountService.deleteTalentById(id);
         redirectAttributes.addFlashAttribute("flash.message", "Talent Successfully Deleted!");
         return "redirect:/talents";
     }
