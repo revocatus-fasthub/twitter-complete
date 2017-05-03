@@ -1,6 +1,5 @@
 package tz.co.fasthub.ona.controller;
 
-import com.sun.jersey.multipart.FormDataMultiPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.twitter.TwitterPayload;
@@ -25,7 +27,7 @@ import tz.co.fasthub.ona.service.VideoService;
 
 
 import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by root on 3/28/17.
@@ -65,6 +67,7 @@ public class TwitterManualController {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
+
             payload = twitter.restOperations().postForObject(DOMAIN + RESOURCE, entity, TwitterResponse.class);
             log.info("init: " + payload.toString());
 
@@ -87,7 +90,7 @@ public class TwitterManualController {
 
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
-                parts.add("media", multipartToFile(multipartFile));
+                parts.add("media", multipartFile);
                 parts.add("segment_index", i);
 
                 HttpHeaders headers = new HttpHeaders();
@@ -95,7 +98,17 @@ public class TwitterManualController {
 
                 HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
-                Object responseData = twitter.restOperations().postForObject(DOMAIN , entity, Object.class);
+                RestTemplate restTemplate = (RestTemplate) twitter.restOperations();
+                restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
+
+
+                MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+                mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.MULTIPART_FORM_DATA));
+
+
+                restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
+
+                Object responseData = restTemplate.postForObject(DOMAIN , entity, Object.class);
 
                 log.info("Append Command response: " + responseData.toString());
 
@@ -107,14 +120,6 @@ public class TwitterManualController {
         } catch (Exception e) {
             log.error("Exception: ", e);
         }
-    }
-
-
-    public static File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException
-    {
-        File convFile = new File( multipart.getOriginalFilename());
-        multipart.transferTo(convFile);
-        return convFile;
     }
 
     public static TwitterResponse postFINALIZECommandToTwitter(Twitter twitter, TwitterResponse twitterResponse) {
