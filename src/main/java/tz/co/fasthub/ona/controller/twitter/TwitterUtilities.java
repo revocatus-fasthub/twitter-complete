@@ -9,6 +9,7 @@ import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
+import org.springframework.web.multipart.MultipartFile;
 import tz.co.fasthub.ona.controller.TwitterMvcController;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
@@ -25,7 +26,7 @@ public class TwitterUtilities {
 
 
 
-    public static Twitter connectTwitter(Payload payload,  TwitterTalentAccount twitterTalentAccount, Resource resource) {
+    public static Twitter connectTwitter(Payload payload, TwitterTalentAccount twitterTalentAccount, Resource resource, MultipartFile formFile) {
 
         try {
 
@@ -39,10 +40,12 @@ public class TwitterUtilities {
                 } else {
                     TweetData tweetData = new TweetData(payload.getMessage());
 
-                    if (payload.getImage() != null) {
+                    if (payload.getImage() != null && formFile.getContentType().equals("image/jpeg")) {
                         tweetData.withMedia(resource);
                     }
                     twitter.timelineOperations().updateStatus(tweetData);
+
+
                 }
                 return twitter;
             }
