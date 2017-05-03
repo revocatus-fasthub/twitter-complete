@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
@@ -14,17 +15,15 @@ import java.io.File;
 /**
  * Created by daniel on 3/31/17.
  */
+
 @Controller
 public class TwitterHandler {
 
-    @Autowired
-    TwitterTalentService twitterTalentService;
+    public static void processVideo(Twitter twitter, Payload payload, MultipartFile file ){
 
-    public static void processVideo(Twitter twitter, Payload payload, Resource file , String mediaType){
+        TwitterResponse twitterResponse=TwitterManualController.postINITCommandToTwitter(twitter, file);
 
-        TwitterResponse twitterResponse=TwitterManualController.postINITCommandToTwitter(twitter, file, mediaType);
-
-        TwitterManualController.postAPPENDCommandToTwitter(twitter,payload,twitterResponse);
+        TwitterManualController.postAPPENDCommandToTwitter(twitter,payload,file,twitterResponse);
 
         TwitterManualController.postFINALIZECommandToTwitter(twitter,twitterResponse);
 

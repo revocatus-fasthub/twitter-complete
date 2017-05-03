@@ -15,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.multipart.MultipartFile;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.twitter.TwitterPayload;
 import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
@@ -50,13 +51,13 @@ public class TwitterManualController {
         return "/success";
     }
 
-    public static TwitterResponse postINITCommandToTwitter(Twitter twitter, Resource file, String mediaType) {
+    public static TwitterResponse postINITCommandToTwitter(Twitter twitter, MultipartFile file) {
         TwitterResponse payload = null;
         try {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("command", "INIT");
-            parts.add("total_bytes", Integer.toString((int) file.contentLength()));
-            parts.add("media_type", mediaType);
+            parts.add("total_bytes", Integer.toString((int) file.getSize()));
+            parts.add("media_type", file.getContentType());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -74,7 +75,7 @@ public class TwitterManualController {
         return payload;
     }
 
-    public static void postAPPENDCommandToTwitter(Twitter twitter, Payload payload, TwitterResponse twitterResponse) {
+    public static void postAPPENDCommandToTwitter(Twitter twitter, Payload payload, MultipartFile multipartFile, TwitterResponse twitterResponse) {
         try {
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
@@ -84,7 +85,7 @@ public class TwitterManualController {
 
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
-                parts.add("media", imageService.findOneImage(payload.getImage().getName()).getInputStream());
+                parts.add("media", multipartFile);
                 parts.add("segment_index", i);
 
                 HttpHeaders headers = new HttpHeaders();
