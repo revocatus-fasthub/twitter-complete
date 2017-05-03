@@ -41,7 +41,7 @@
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="text" th:field="*{twitterScreenName}" placeholder="Twitter Screen Name" class="form-control" />
+                        <input type="text" th:field="*{twitterScreenName}" placeholder="Twitter Screen Name (eg: @twitterUsername)" class="form-control" />
                         <label th:if="${#fields.hasErrors('twitterScreenName')}" th:errors="*{twitterScreenName}" class="validation-message"></label>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="text" th:field="*{instagramScreenName}" placeholder="Instagram Screen Name" class="form-control" />
+                        <input type="text" th:field="*{instagramScreenName}" placeholder="Instagram Screen Name (eg: @instagramUsername)" class="form-control" />
                     </div>
                 </div>
 
