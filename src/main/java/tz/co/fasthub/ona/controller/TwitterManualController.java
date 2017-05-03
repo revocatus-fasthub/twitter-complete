@@ -99,7 +99,6 @@ public class TwitterManualController {
 
             }
 
-
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
         } catch (Exception e) {
