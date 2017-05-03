@@ -32,6 +32,8 @@ public class TwitterController {
 
     private final ImageService imageService;
 
+    private final PayloadService payloadService;
+
     private final VideoService videoService;
 
     private final TalentService talentService;
@@ -50,11 +52,12 @@ public class TwitterController {
     private static final Logger log = LoggerFactory.getLogger(TwitterController.class);
 
     @Autowired
-    public TwitterController(Twitter twitter, TwitterService twitterService, TwitterTalentService twitterTalentService, ImageService imageService, VideoService videoService, TalentService talentService) {
+    public TwitterController(Twitter twitter, TwitterService twitterService, TwitterTalentService twitterTalentService, ImageService imageService, PayloadService payloadService, VideoService videoService, TalentService talentService) {
         this.twitter = twitter;
         this.twitterService = twitterService;
         this.twitterTalentService = twitterTalentService;
         this.imageService = imageService;
+        this.payloadService = payloadService;
         this.videoService = videoService;
         this.talentService = talentService;
     }
@@ -169,7 +172,8 @@ public class TwitterController {
     @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME + "/{id}")
     public String deleteImage(@PathVariable String filename, @PathVariable Long id, RedirectAttributes redirectAttributes) throws IOException {
         try {
-            imageService.deleteImage(filename,id);
+            imageService.deleteImage(filename);
+            payloadService.deletePayload(id);
             redirectAttributes.addFlashAttribute("flash.message", "Image Successfully deleted " + filename );
         } catch (IOException|RuntimeException e) {
             redirectAttributes.addFlashAttribute("flash.message", "Failed to delete Image " + filename + " => " + e.getMessage());
