@@ -17,10 +17,11 @@
 <ol>
     <li th:each="tweet:${tweets}" th:text="${tweet.getText()}">Tweet</li>
 </ol>
-    <p><a href="/connect/twitterConnected" th:href="@{/tw/friends}">View Friends</a></p>
-    <p><a href="/connect/twitterConnected" th:href="@{/tw/followers}">View Followers</a></p>
-    <p><a href="/tw/viewTweets" th:href="@{/tw}">Back to Options</a></p><br/>
-    <p><a href="/connect/twitterConnected" th:href="@{/connect/twitter}">Back to Connection</a></p>
+
+    <p><a href="/connect/twitterConnected" th:href="@{'/tw/friends/'+${twitterScreenName}}">View Friends</a></p>
+    <p><a href="/connect/twitterConnected" th:href="@{'/tw/followers/'+${twitterScreenName}}">View Followers</a></p>
+    <p><a href="/connect/twitterConnected" th:href="@{'/tw/timeline/'+${twitterScreenName}+'/Home'}">View Timeline</a></p>
+    <p><a href="/tw/viewTweets" th:href="@{'/tw/timelineShow/'+${twitterScreenName}}">Back to Options</a></p><br/>
 
 <!--  <li th:each="tweet : ${tweets}" th:text="${tweet}">Some tweet</li>
    -->

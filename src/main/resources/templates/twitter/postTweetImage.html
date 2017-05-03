@@ -10,13 +10,13 @@
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
     <center>
-    <h3>POST IMAGE TO TWITTER:</h3><br/>
+    <h3>Post Image to Twitter:</h3><br/>
 
     <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
 
        <div class="form-group">
            <select id="dropTalent" name="screenName">
-                <option value="0" th:text="${'-- Choose Screen Name --'}"/>
+                <option value="0" th:text="${'-- Please Choose Talent Screen Name --'}"/>
                 <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}" />
            </select>
        </div>
@@ -31,8 +31,8 @@
         <br/>
         <div class="form-group">
             <div class="col-sm-15">
-                <input type="submit" id="postTweet" value="Post" />
-                <a href="/connect/twitterConnected" th:href="@{/tw}">Cancel</a>
+                <input type="submit" id="postTweet" value="Post Tweet" />
+              <!--  <a href="/connect/twitterConnected" th:href="@{/tw}">Cancel</a>-->
             </div>
         </div>
 
