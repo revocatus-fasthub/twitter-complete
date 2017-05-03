@@ -1,5 +1,6 @@
 package tz.co.fasthub.ona.controller;
 
+import com.sun.jersey.multipart.FormDataMultiPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.twitter.TwitterPayload;
@@ -93,7 +97,14 @@ public class TwitterManualController {
 
                 HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
-                Object responseData = twitter.restOperations().postForObject(DOMAIN , entity, Object.class);
+
+                RestTemplate restTemplate = (RestTemplate) twitter.restOperations();
+
+
+                restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+                Object responseData = restTemplate.postForObject(DOMAIN , entity, Object.class);
 
                 log.info("Append Command response: " + responseData.toString());
 
