@@ -42,8 +42,6 @@ public class TwitterUtilities {
                     if (payload.getImage() != null) {
                         tweetData.withMedia(resource);
                     }
-
-
                     twitter.timelineOperations().updateStatus(tweetData);
                 }
                 return twitter;
@@ -53,7 +51,6 @@ public class TwitterUtilities {
         }
 
         return null;
-
     }
 
     public static Twitter getTwitter(TwitterTalentAccount twitterTalentAccount) {

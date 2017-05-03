@@ -22,7 +22,6 @@ public class TalentValidator implements Validator {
         String password = talent.getPassword();
         String cpassword = talent.getCpassword();
 
-
         if (!password.equals(cpassword)) {
             errors.rejectValue("password", "Diff.userForm.cpassword");
             errors.rejectValue("cpassword", "Diff.userForm.cpassword");

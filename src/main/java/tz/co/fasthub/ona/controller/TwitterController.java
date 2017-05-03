@@ -177,7 +177,6 @@ public class TwitterController {
         return "redirect:/twitter/images";
     }
 
-
     @RequestMapping("/renderPostTweet/form")
     public String tweet(Model model){
         List<Talent> talents = talentService.findAll();
