@@ -230,7 +230,7 @@ public class TwitterMvcController {
             model.addAttribute("timelineName", timelineType);
         }else {
             redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
-            return "/connect/connections";
+            return "connections";
         }
 
         return "twitter/timeline";
