@@ -122,7 +122,7 @@ public class TwitterController {
 
                 TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(talent.getTwitterScreenName());
 
-                TwitterUtilities.connectTwitter(payload, twitterTalentAccount, imageService.findOneImage(payload.getImage().getName()));
+                TwitterUtilities.connectTwitter(payload, twitterTalentAccount, imageService.findOneImage(payload.getImage().getName()), file);
 
                 log.info("Twitter  image  was assumed sent image content type is : "+ file.getContentType());
 
