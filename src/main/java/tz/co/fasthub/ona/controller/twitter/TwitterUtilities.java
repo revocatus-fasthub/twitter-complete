@@ -10,6 +10,7 @@ import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.web.multipart.MultipartFile;
+import tz.co.fasthub.ona.controller.TwitterHandler;
 import tz.co.fasthub.ona.controller.TwitterMvcController;
 import tz.co.fasthub.ona.domain.Payload;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
@@ -42,6 +43,9 @@ public class TwitterUtilities {
 
                     if (payload.getImage() != null && formFile.getContentType().equals("image/jpeg")) {
                         tweetData.withMedia(resource);
+                    }else if (payload.getImage() != null && formFile.getContentType().equals("video/mp4")){
+                        TwitterHandler.processVideo(twitter,payload,formFile,formFile.getContentType());
+
                     }
                     twitter.timelineOperations().updateStatus(tweetData);
 

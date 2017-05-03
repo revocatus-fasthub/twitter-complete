@@ -124,7 +124,7 @@ public class TwitterController {
 
                 TwitterUtilities.connectTwitter(payload, twitterTalentAccount, imageService.findOneImage(payload.getImage().getName()), file);
 
-                log.info("Twitter  image  was assumed sent image content type is : "+ file.getContentType());
+                log.info("Twitter  File  was assumed sent image content type is : "+ file.getContentType());
 
                 redirectAttributes.addFlashAttribute("flash.message", "Image Successfully uploaded");
 
