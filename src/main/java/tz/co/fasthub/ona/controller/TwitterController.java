@@ -172,7 +172,7 @@ public class TwitterController {
     @RequestMapping(method=RequestMethod.DELETE, value = BASE_PATH + "/" + FILENAME + "/{id}")
     public String deleteImage(@PathVariable String filename, @PathVariable Long id, RedirectAttributes redirectAttributes) throws IOException {
         try {
-            imageService.deleteImage(filename);
+            imageService.deleteImage(filename,id);
             payloadService.deletePayload(id);
             redirectAttributes.addFlashAttribute("flash.message", "Image Successfully deleted " + filename );
         } catch (IOException|RuntimeException e) {
