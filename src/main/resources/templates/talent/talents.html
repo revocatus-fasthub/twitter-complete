@@ -9,7 +9,10 @@
 <body>
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
-    <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
+
+        <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="alert alert-success"></h3>
+
+    <h3 th:if="${#vars['flash.messagess']}" th:text="${#vars['flash.messagess']}" class="alert alert-danger"></h3>
 
     <div th:if="${not #lists.isEmpty(talents)}">
         <h2>Talent List</h2>
@@ -30,7 +33,7 @@
                 <td th:text="${talent.id}"><a href="/talent/${talent.id}">Id</a></td>
                 <td th:text="${talent.fname}">First Name</td>
                 <td th:text="${talent.lname}">Last Name</td>
-                <td th:text="${talent.twitterScreenName}">Twitter Screen Name</td>
+                <td><span th:text="*{talent.twitterScreenName==null} ? '(not connected)' : *{talent.twitterScreenName} ">Twitter Screen Name</span></td>
                 <td th:text="${talent.facebookScreenName}">Facebook Screen Name</td>
                 <td th:text="${talent.instagramScreenName}">Instagram Screen Name</td>
 

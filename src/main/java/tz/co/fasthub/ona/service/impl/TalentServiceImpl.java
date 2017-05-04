@@ -32,6 +32,11 @@ public class TalentServiceImpl implements TalentService {
     }
 
     @Override
+    public Talent findByfname(String fname) {
+        return talentRepository.findByfname(fname);
+    }
+
+    @Override
     public Talent findByTwitterScreenName(String twitterScreenName) {
         return talentRepository.findByTwitterScreenName(twitterScreenName);
     }

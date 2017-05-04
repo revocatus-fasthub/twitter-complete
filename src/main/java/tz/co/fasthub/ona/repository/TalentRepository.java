@@ -11,4 +11,6 @@ public interface TalentRepository extends JpaRepository<Talent, Integer> {
 
     List<Talent> findAll();
 
+    Talent findByfname(String fname);
+
 }
