@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.component.TalentValidator;
-import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.service.TalentService;
@@ -105,14 +104,16 @@ public class TalentController {
 
         talent.setPassword(passwordEncoder.encode(talent.getPassword()));
         talent.setCpassword(passwordEncoder.encode(talent.getCpassword()));
-        
+
         Talent talent1=talentService.saveTalent(talent);
 
         if (talent.getTwitterScreenName()!=null){
             twitterTalentAccountService.save(new TwitterTalentAccount(talent.getTwitterScreenName()));
-        }else if (talent.getFacebookScreenName()!=null){
-
-        }
+        }/*else if (talent.getFacebookScreenName()!=null){
+            twitterTalentAccountService.save(new TwitterTalentAccount(talent.getFacebookScreenName()));
+        }else if (talent.getInstagramScreenName()!=null){
+            twitterTalentAccountService.save(new TwitterTalentAccount(talent.getInstagramScreenName()));
+        }*/
         try {
             sendMail(talent.getEmail(), "WELCOME TO ONA PLATFORM", "Hello " + talent.getFname() + " " + talent.getLname() + ",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");
         } catch (MailException me)
