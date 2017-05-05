@@ -25,7 +25,7 @@
         <li><a th:href="@{'/tw/timeline/'+ ${twitterScreenName}+'/Favorites'}">Favorites</a></li>
     </ul>
 
-    <div class="feed">
+        <div class="feed">
         <ul class="imagedList">
             <li class="imagedItem" th:each="tweet : ${timeline}">
                 <div class="image" th:if="${!#strings.isEmpty(tweet.profileImageUrl)}">

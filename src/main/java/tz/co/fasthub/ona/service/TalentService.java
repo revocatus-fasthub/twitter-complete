@@ -10,6 +10,8 @@ public interface TalentService {
 
     Talent getTalentById(Integer id);
 
+    Talent findByfname(String fname);
+
     Talent findByTwitterScreenName(String twitterScreenName);
 
     Talent saveTalent(Talent talent);

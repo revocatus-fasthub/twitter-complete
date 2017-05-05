@@ -147,13 +147,15 @@ public class TwitterMvcController {
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
         if(twitterTalentAccount!=null){
-            Twitter twitter1 = TwitterUtilities.getTwitter(twitterTalentAccount);
-            model.addAttribute(twitter1.userOperations().getUserProfile());
-            List<Tweet> tweets = twitter1.timelineOperations().getUserTimeline();
-            model.addAttribute("tweets",tweets);
-        }else {
-            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
-            return "/connect/connections";
+            try {
+                Twitter twitter1 = TwitterUtilities.getTwitter(twitterTalentAccount);
+                model.addAttribute(twitter1.userOperations().getUserProfile());
+                List<Tweet> tweets = twitter1.timelineOperations().getUserTimeline();
+                model.addAttribute("tweets",tweets);
+            }catch (Exception e){
+                redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+                return "redirect:/talents";
+            }
         }
 
         return "twitter/viewTweets";
@@ -165,13 +167,15 @@ public class TwitterMvcController {
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
         if(twitterTalentAccount!=null){
-            Twitter twitter1 = TwitterUtilities.getTwitter(twitterTalentAccount);
-            model.addAttribute(twitter1.userOperations().getUserProfile());
-            CursoredList<TwitterProfile> friends = twitter1.friendOperations().getFriends();
-            model.addAttribute("friends", friends);
-        }else {
-            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
-            return "/connect/connections";
+          try{
+              Twitter twitter1 = TwitterUtilities.getTwitter(twitterTalentAccount);
+              model.addAttribute(twitter1.userOperations().getUserProfile());
+              CursoredList<TwitterProfile> friends = twitter1.friendOperations().getFriends();
+              model.addAttribute("friends", friends);
+          }catch (Exception e){
+              redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+              return "redirect:/talents";
+          }
         }
 
         return "twitter/viewFriendList";
@@ -183,13 +187,15 @@ public class TwitterMvcController {
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
         if(twitterTalentAccount!=null) {
-            Twitter twitter1 = TwitterUtilities.getTwitter(twitterTalentAccount);
-            model.addAttribute(twitter1.userOperations().getUserProfile());
-            CursoredList<TwitterProfile> followers = twitter1.friendOperations().getFollowers();
-            model.addAttribute("followers", followers);
-        }else {
-            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
-            return "connect/connections";
+            try {
+                Twitter twitter1 = TwitterUtilities.getTwitter(twitterTalentAccount);
+                model.addAttribute(twitter1.userOperations().getUserProfile());
+                CursoredList<TwitterProfile> followers = twitter1.friendOperations().getFollowers();
+                model.addAttribute("followers", followers);
+            }catch (Exception e){
+                redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+                return "redirect:/talents";
+            }
         }
         return "twitter/followersList";
     }
@@ -203,36 +209,56 @@ public class TwitterMvcController {
     }
     */
 
+    @RequestMapping(value="/tw/timelineShow", method=RequestMethod.GET)
+    public String verifyTwitterScreenName(String twitterScreenName,String talent, String fname, Model model, RedirectAttributes redirectAttributes) {
+        TwitterTalentAccount verifyTwitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
+        Talent talentname = talentService.findByfname(fname);
+       // Talent fname1 = talent
+        if(verifyTwitterTalentAccount!=null){
+            showTimeline(twitterScreenName,model,redirectAttributes);
+       //     return "forward:'/tw/timelineShow/'+talent.twitterScreenName";
+        }
+
+        log.info("talent's first name: "+talentname);
+        //log.info("talent: "+ talent.getFname());
+
+        redirectAttributes.addFlashAttribute("flash.messagess", "Please check if "+talentname
+                +"'s account is connected to Twitter");
+        return "redirect:/talents";
+    }
+
     @RequestMapping(value="/tw/timelineShow/{twitterScreenName}", method=RequestMethod.GET)
-    public String showTimeline(@PathVariable String twitterScreenName, Model model) {
+    public String showTimeline(@PathVariable String twitterScreenName, Model model, RedirectAttributes redirectAttributes) {
      //   showTimeline("Home", model);
-        model.addAttribute("talent", talentService.findByTwitterScreenName(twitterScreenName));
-        return "twitter/timeline";
+        TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
+            model.addAttribute("talent", twitterTalentAccount);
+            return "twitter/timeline";
+
     }
 
     @RequestMapping(value="/tw/timeline/{twitterScreenName}/{timelineType}", method=RequestMethod.GET)
-    public String showTimeline(@PathVariable String twitterScreenName, @PathVariable String timelineType, Model model, RedirectAttributes redirectAttributes) {
+    public String showTimelineTypes(@PathVariable String twitterScreenName, @PathVariable String timelineType, Model model, RedirectAttributes redirectAttributes) {
 
         TwitterTalentAccount twitterTalentAccount = twitterTalentService.getTalentByDisplayName(twitterScreenName);
 
         if(twitterTalentAccount!=null) {
             Twitter twitter1 = TwitterUtilities.getTwitter(twitterTalentAccount);
-
-            if(timelineType.equals("Home")) {
-                model.addAttribute("timeline", twitter1.timelineOperations().getHomeTimeline());
-            } else if(timelineType.equals("User")) {
-                model.addAttribute("timeline", twitter1.timelineOperations().getUserTimeline());
-            } else if(timelineType.equals("Mentions")) {
-                model.addAttribute("timeline", twitter1.timelineOperations().getMentions());
-            } else if(timelineType.equals("Favorites")) {
-                model.addAttribute("timeline", twitter1.timelineOperations().getFavorites());
+            try {
+                if(timelineType.equals("Home")) {
+                    model.addAttribute("timeline", twitter1.timelineOperations().getHomeTimeline());
+                } else if(timelineType.equals("User")) {
+                    model.addAttribute("timeline", twitter1.timelineOperations().getUserTimeline());
+                } else if(timelineType.equals("Mentions")) {
+                    model.addAttribute("timeline", twitter1.timelineOperations().getMentions());
+                } else if(timelineType.equals("Favorites")) {
+                    model.addAttribute("timeline", twitter1.timelineOperations().getFavorites());
+                }
+                model.addAttribute("timelineName", timelineType);
+            }catch (Exception e){
+                redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+                return "redirect:/talents";
             }
-            model.addAttribute("timelineName", timelineType);
-        }else {
-            redirectAttributes.addFlashAttribute("flash.message", "Please Check if this account is connected to Twitter");
-            return "/connect/connections";
         }
-
         return "twitter/timeline";
     }
 

@@ -7,12 +7,15 @@
     <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
+<h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
 <div class="container">
     <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
 
+<div class="form-group">
+    <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
+</div>
+    <hr/>
     <center>
-        <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}" class="flash"></h3>
-
         <section>
             <p><a href="/connect/twitter" th:href="@{/connect/twitter}" >Connect to twitter</a></p>
             <p><a href="/connect/facebook" th:href="@{/connect/facebook}" >Connect to Facebook</a></p>

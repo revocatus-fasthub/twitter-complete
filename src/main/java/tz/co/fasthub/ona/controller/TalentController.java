@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.component.TalentValidator;
+import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
 import tz.co.fasthub.ona.domain.Talent;
 import tz.co.fasthub.ona.domain.TwitterTalentAccount;
 import tz.co.fasthub.ona.service.TalentService;
@@ -63,7 +64,6 @@ public class TalentController {
     @RequestMapping(value = "/talents", method = RequestMethod.GET)
     public String list(Model model) {
 
-
         model.addAttribute("talents", talentService.listAllTalent());
         return "talent/talents";
     }
@@ -95,7 +95,7 @@ public class TalentController {
     // Save talent to database
 
     @RequestMapping(value = "talent", method = RequestMethod.POST)
-    public String saveTalent(@Valid Talent talent, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+    public String saveTalent(@Valid Talent talent, TwitterTalentAccount twitterTalentAccount,BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("Talent", talent);
         talentValidator.validate(talent,result);
         if(result.hasErrors()){
@@ -104,16 +104,15 @@ public class TalentController {
 
         talent.setPassword(passwordEncoder.encode(talent.getPassword()));
         talent.setCpassword(passwordEncoder.encode(talent.getCpassword()));
-
+        
         Talent talent1=talentService.saveTalent(talent);
 
         if (talent.getTwitterScreenName()!=null){
             twitterTalentAccountService.save(new TwitterTalentAccount(talent.getTwitterScreenName()));
-        }/*else if (talent.getFacebookScreenName()!=null){
-            twitterTalentAccountService.save(new TwitterTalentAccount(talent.getFacebookScreenName()));
-        }else if (talent.getInstagramScreenName()!=null){
-            twitterTalentAccountService.save(new TwitterTalentAccount(talent.getInstagramScreenName()));
-        }*/
+        }
+        else if (talent.getFacebookScreenName()!=null){
+
+        }
         try {
             sendMail(talent.getEmail(), "WELCOME TO ONA PLATFORM", "Hello " + talent.getFname() + " " + talent.getLname() + ",\n\nThank you for being a part of Binary by Agrrey & Clifford. Looking forward to working with you. \n\n\n Best Regards, \n\n The Binary Team");
         } catch (MailException me)
@@ -141,7 +140,6 @@ public class TalentController {
     public String deleteTalent(@PathVariable Integer id, RedirectAttributes redirectAttributes) throws NotFoundException {
          if(id!=null){
              talentService.deleteTalent(id);
-         }else {
              deleteTwitterTalentAccount(Long.valueOf(id),redirectAttributes);
          }
         //twitterTalentAccountService.deleteTalentById(id);
@@ -152,7 +150,11 @@ public class TalentController {
     @RequestMapping("talent/deleteTwitterTalent/{id}")//
     public String deleteTwitterTalentAccount(@PathVariable Long id, RedirectAttributes redirectAttributes) throws NotFoundException {
         twitterTalentAccountService.deleteTalentById(id);
-        //redirectAttributes.addFlashAttribute("flash.message", "Talent Successfully Deleted!");
+        if(id!=null){
+            redirectAttributes.addFlashAttribute("flash.message", "Talent Successfully Deleted!");
+            return "redirect:/talents";
+        }
+        redirectAttributes.addFlashAttribute("flash.message", "This Twitter Talent Account with id "+twitterTalentAccountService.getTalentById(id)+" doesn't exist");
         return "redirect:/talents";
     }
 }

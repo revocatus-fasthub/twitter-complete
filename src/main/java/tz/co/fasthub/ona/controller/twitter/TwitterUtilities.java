@@ -10,6 +10,7 @@ import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.controller.TwitterHandler;
 import tz.co.fasthub.ona.controller.TwitterMvcController;
 import tz.co.fasthub.ona.domain.Payload;
