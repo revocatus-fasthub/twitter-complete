@@ -127,6 +127,8 @@ public class TwitterManualController {
     }
 
     public static TwitterResponse postFINALIZECommandToTwitter(Twitter twitter, TwitterResponse twitterResponse) {
+
+        TwitterResponse finalizeTwitterResponse=null;
         try {
             MultiValueMap<String, Object> finalize = new LinkedMultiValueMap<String, Object>();
             finalize.add("command", "FINALIZE");
@@ -138,15 +140,41 @@ public class TwitterManualController {
 
             HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
 
-            Object payload1 = twitter.restOperations().postForObject(DOMAIN+RESOURCE, entity, Object.class);
-            log.info("finalize: " + payload1.toString());
+            finalizeTwitterResponse = twitter.restOperations().postForObject(DOMAIN+RESOURCE, entity, TwitterResponse.class);
+            log.info("finalize response: " + twitterResponse);
 
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
         } catch (Exception e) {
             log.error("Exception: ", e);
         }
-        return null;
+        return finalizeTwitterResponse;
+    }
+
+
+    public static TwitterResponse postSTATUSCommandToTwitter(Twitter twitter, TwitterResponse twitterResponse) {
+
+        TwitterResponse statusTwitterResponse=null;
+        try {
+            MultiValueMap<String, Object> finalize = new LinkedMultiValueMap<String, Object>();
+            finalize.add("command", "STATUS");
+            finalize.add("media_id",twitterResponse.getMedia_id());
+
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
+
+            statusTwitterResponse = twitter.restOperations().getForObject(DOMAIN+RESOURCE, TwitterResponse.class,entity);
+            log.info("Status response from Twitter: " + twitterResponse);
+
+        } catch (RestClientException e) {
+            log.error("RestClientException: ", e);
+        } catch (Exception e) {
+            log.error("Exception: ", e);
+        }
+        return statusTwitterResponse;
     }
 
 

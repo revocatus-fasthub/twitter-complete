@@ -20,7 +20,20 @@ public class TwitterHandler {
 
         TwitterManualController.postAPPENDCommandToTwitter(twitter,payload,resource,twitterResponse);
 
-        TwitterManualController.postFINALIZECommandToTwitter(twitter,twitterResponse);
+        TwitterResponse twitterResponse1=TwitterManualController.postFINALIZECommandToTwitter(twitter,twitterResponse);
+
+        if (twitterResponse1!=null&& twitterResponse1.getProcessing_info()!=null){
+            while (twitterResponse1.getProcessing_info().getState().equals("pending")||twitterResponse1.getProcessing_info().getState().equals("in_progress")){
+                try {
+                    Thread.sleep(10000);
+                    TwitterManualController.postSTATUSCommandToTwitter(twitter,twitterResponse1);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
 
     }
 
