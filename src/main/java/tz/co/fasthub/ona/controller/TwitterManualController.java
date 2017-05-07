@@ -157,7 +157,7 @@ public class TwitterManualController {
 
         TwitterResponse statusTwitterResponse=null;
         try {
-            String URL = DOMAIN+RESOURCE+"?"+"command=STATUS&media_id"+twitterResponse.getMedia_id();
+            String URL = DOMAIN+RESOURCE+"?"+"command=STATUS&media_id="+twitterResponse.getMedia_id();
             statusTwitterResponse = twitter.restOperations().getForObject(URL, TwitterResponse.class);
 
             log.info("Status response from Twitter: " + twitterResponse);
