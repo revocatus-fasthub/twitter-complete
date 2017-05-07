@@ -65,6 +65,8 @@ public class TwitterManualController {
 
             parts.add("total_bytes", totalBytes);
             parts.add("media_type", file.getContentType());
+            parts.add("media_category", "amplify_video");
+
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
