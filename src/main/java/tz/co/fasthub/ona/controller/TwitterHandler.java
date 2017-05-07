@@ -18,7 +18,7 @@ public class TwitterHandler {
 
         TwitterResponse twitterResponse=TwitterManualController.postINITCommandToTwitter(twitter, file , resource);
 
-        TwitterManualController.postAPPENDCommandToTwitter(twitter,payload,file,twitterResponse);
+        TwitterManualController.postAPPENDCommandToTwitter(twitter,payload,resource,twitterResponse);
 
         TwitterManualController.postFINALIZECommandToTwitter(twitter,twitterResponse);
 

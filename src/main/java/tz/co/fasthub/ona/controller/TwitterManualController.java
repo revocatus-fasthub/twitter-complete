@@ -80,7 +80,7 @@ public class TwitterManualController {
         return payload;
     }
 
-    public static void postAPPENDCommandToTwitter(Twitter twitter, Payload payload, MultipartFile multipartFile, TwitterResponse twitterResponse) {
+    public static void postAPPENDCommandToTwitter(Twitter twitter, Payload payload, Resource resource, TwitterResponse twitterResponse) {
         try {
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
@@ -91,7 +91,7 @@ public class TwitterManualController {
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
                 parts.add("segment_index", i+"");
-                parts.add("media", multipartFile);
+                parts.add("media", resource);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
