@@ -45,7 +45,7 @@ public class TwitterUtilities {
                     if (payload.getImage() != null && formFile.getContentType().equals("image/jpeg")) {
                         tweetData.withMedia(resource);
                     }else if (payload.getImage() != null && formFile.getContentType().equals("video/mp4")){
-                        TwitterHandler.processVideo(twitter,payload,formFile);
+                        TwitterHandler.processVideo(twitter,payload,formFile, resource);
 
                     }
                     twitter.timelineOperations().updateStatus(tweetData);

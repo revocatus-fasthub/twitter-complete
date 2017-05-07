@@ -55,12 +55,12 @@ public class TwitterManualController {
         return "/success";
     }
 
-    public static TwitterResponse postINITCommandToTwitter(Twitter twitter, MultipartFile file) {
+    public static TwitterResponse postINITCommandToTwitter(Twitter twitter, MultipartFile file, Resource resource) {
         TwitterResponse payload = null;
         try {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("command", "INIT");
-            parts.add("total_bytes", Integer.toString((int) file.getSize()));
+            parts.add("total_bytes", Integer.toString((int) resource.getFile().length()));
             parts.add("media_type", file.getContentType());
 
             HttpHeaders headers = new HttpHeaders();

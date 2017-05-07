@@ -1,5 +1,6 @@
 package tz.co.fasthub.ona.controller;
 
+import org.springframework.core.io.Resource;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,9 +14,9 @@ import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
 @Controller
 public class TwitterHandler {
 
-    public static void processVideo(Twitter twitter, Payload payload, MultipartFile file ){
+    public static void processVideo(Twitter twitter, Payload payload, MultipartFile file, Resource resource){
 
-        TwitterResponse twitterResponse=TwitterManualController.postINITCommandToTwitter(twitter, file);
+        TwitterResponse twitterResponse=TwitterManualController.postINITCommandToTwitter(twitter, file , resource);
 
         TwitterManualController.postAPPENDCommandToTwitter(twitter,payload,file,twitterResponse);
 
