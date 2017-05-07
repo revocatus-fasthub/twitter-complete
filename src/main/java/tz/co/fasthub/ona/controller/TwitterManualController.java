@@ -108,7 +108,7 @@ public class TwitterManualController {
 
                 restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
 
-                Object responseData = restTemplate.postForObject(DOMAIN , entity, Object.class);
+                Object responseData = restTemplate.postForObject(DOMAIN+RESOURCE , entity, Object.class);
 
                 log.info("Append Command response: " + responseData);
 
@@ -133,7 +133,7 @@ public class TwitterManualController {
 
             HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
 
-            Object payload1 = twitter.restOperations().postForObject(DOMAIN+DOMAIN, entity, Object.class);
+            Object payload1 = twitter.restOperations().postForObject(DOMAIN+RESOURCE, entity, Object.class);
             log.info("finalize: " + payload1.toString());
 
         } catch (RestClientException e) {
