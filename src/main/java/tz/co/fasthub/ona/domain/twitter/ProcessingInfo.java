@@ -11,6 +11,15 @@ public class ProcessingInfo {
     public ProcessingInfo() {
     }
 
+
+    @Override
+    public String toString() {
+        return "ProcessingInfo{" +
+                "state='" + state + '\'' +
+                ", check_after_secs='" + check_after_secs + '\'' +
+                '}';
+    }
+
     public String getState() {
         return state;
     }
