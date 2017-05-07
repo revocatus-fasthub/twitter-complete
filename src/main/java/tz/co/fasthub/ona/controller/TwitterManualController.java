@@ -90,8 +90,8 @@ public class TwitterManualController {
 
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
-                parts.add("media", multipartFile);
                 parts.add("segment_index", i);
+                parts.add("media", multipartFile);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -110,7 +110,7 @@ public class TwitterManualController {
 
                 Object responseData = restTemplate.postForObject(DOMAIN , entity, Object.class);
 
-                log.info("Append Command response: " + responseData.toString());
+                log.info("Append Command response: " + responseData);
 
             }
 
@@ -133,7 +133,7 @@ public class TwitterManualController {
 
             HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
 
-            TwitterResponse payload1 = twitter.restOperations().postForObject(DOMAIN, entity, TwitterResponse.class);
+            Object payload1 = twitter.restOperations().postForObject(DOMAIN+DOMAIN, entity, Object.class);
             log.info("finalize: " + payload1.toString());
 
         } catch (RestClientException e) {
