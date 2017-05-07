@@ -26,6 +26,7 @@ public class TwitterHandler {
         if (twitterResponse1!=null&& twitterResponse1.getProcessing_info()!=null){
             if (twitterResponse1.getProcessing_info().getState().equals("pending")||twitterResponse1.getProcessing_info().getState().equals("in_progress")){
                 try {
+                    Thread.sleep(5000);
                     statusCommandTwitterResponse= TwitterManualController.postSTATUSCommandToTwitter(twitter,twitterResponse);
                     while (statusCommandTwitterResponse!=null&&statusCommandTwitterResponse.getProcessing_info()!=null&&(statusCommandTwitterResponse.getProcessing_info().getState().equals("pending")||statusCommandTwitterResponse.getProcessing_info().getState().equals("in_progress"))){
                         statusCommandTwitterResponse= TwitterManualController.postSTATUSCommandToTwitter(twitter,twitterResponse);
