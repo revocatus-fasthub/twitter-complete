@@ -60,7 +60,7 @@ public class TwitterManualController {
         try {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("command", "INIT");
-            parts.add("total_bytes", Integer.toString((int) resource.getFile().length()));
+            parts.add("total_bytes", Long.toString(resource.contentLength()));
             parts.add("media_type", file.getContentType());
 
             HttpHeaders headers = new HttpHeaders();
@@ -69,7 +69,7 @@ public class TwitterManualController {
 
 
             payload = twitter.restOperations().postForObject(DOMAIN + RESOURCE, entity, TwitterResponse.class);
-            log.info("init: " + payload.toString());
+            log.info("init command response from Twitter: " + payload.toString());
 
             log.info("media_id featched from Twitter API: "+ payload.getMedia_id());
         } catch (RestClientException e) {
