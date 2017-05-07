@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -175,6 +176,11 @@ public class TwitterManualController {
             log.error("Exception: ", e);
         }
         return statusTwitterResponse;
+    }
+
+
+    public static void postTweetWithMidiaId(Twitter twitter, TwitterResponse twitterResponse){
+
     }
 
 

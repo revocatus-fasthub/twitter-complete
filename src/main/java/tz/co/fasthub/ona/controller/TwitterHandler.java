@@ -15,6 +15,7 @@ import tz.co.fasthub.ona.domain.twitter.TwitterResponse;
 public class TwitterHandler {
 
     public static void processVideo(Twitter twitter, Payload payload, MultipartFile file, Resource resource){
+        TwitterResponse statusCommandTwitterResponse;
 
         TwitterResponse twitterResponse=TwitterManualController.postINITCommandToTwitter(twitter, file , resource);
 
@@ -23,10 +24,13 @@ public class TwitterHandler {
         TwitterResponse twitterResponse1=TwitterManualController.postFINALIZECommandToTwitter(twitter,twitterResponse);
 
         if (twitterResponse1!=null&& twitterResponse1.getProcessing_info()!=null){
-            while (twitterResponse1.getProcessing_info().getState().equals("pending")||twitterResponse1.getProcessing_info().getState().equals("in_progress")){
+            if (twitterResponse1.getProcessing_info().getState().equals("pending")||twitterResponse1.getProcessing_info().getState().equals("in_progress")){
                 try {
-                    Thread.sleep(10000);
-                    TwitterManualController.postSTATUSCommandToTwitter(twitter,twitterResponse1);
+                    statusCommandTwitterResponse= TwitterManualController.postSTATUSCommandToTwitter(twitter,twitterResponse);
+                    while (statusCommandTwitterResponse!=null&&statusCommandTwitterResponse.getProcessing_info()!=null&&(statusCommandTwitterResponse.getProcessing_info().getState().equals("pending")||statusCommandTwitterResponse.getProcessing_info().getState().equals("in_progress"))){
+                        statusCommandTwitterResponse= TwitterManualController.postSTATUSCommandToTwitter(twitter,twitterResponse);
+                        Thread.sleep(10000);
+                    }
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
