@@ -90,7 +90,7 @@ public class TwitterManualController {
 
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
-                parts.add("segment_index", i);
+                parts.add("segment_index", i+"");
                 parts.add("media", multipartFile);
 
                 HttpHeaders headers = new HttpHeaders();
