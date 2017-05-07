@@ -9,19 +9,20 @@ public class TwitterResponse {
     private String expires_after_secs;
     private String size;
     private ProcessingInfo processing_info;
+    private Video video;
 
     public TwitterResponse() {
     }
 
 
-    public TwitterResponse(String media_id, String media_id_string, String expires_after_secs, String size, ProcessingInfo processing_info) {
+    public TwitterResponse(String media_id, String media_id_string, String expires_after_secs, String size, ProcessingInfo processing_info, Video video) {
         this.media_id = media_id;
         this.media_id_string = media_id_string;
         this.expires_after_secs = expires_after_secs;
         this.size = size;
         this.processing_info = processing_info;
+        this.video = video;
     }
-
 
     @Override
     public String toString() {
@@ -31,6 +32,7 @@ public class TwitterResponse {
                 ", expires_after_secs='" + expires_after_secs + '\'' +
                 ", size='" + size + '\'' +
                 ", processing_info=" + processing_info +
+                ", video=" + video +
                 '}';
     }
 
@@ -72,5 +74,13 @@ public class TwitterResponse {
 
     public void setProcessing_info(ProcessingInfo processing_info) {
         this.processing_info = processing_info;
+    }
+
+    public Video getVideo() {
+        return video;
+    }
+
+    public void setVideo(Video video) {
+        this.video = video;
     }
 }
