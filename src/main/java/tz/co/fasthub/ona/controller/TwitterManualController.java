@@ -142,7 +142,7 @@ public class TwitterManualController {
             HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
 
             finalizeTwitterResponse = twitter.restOperations().postForObject(DOMAIN+RESOURCE, entity, TwitterResponse.class);
-            log.info("finalize response: " + twitterResponse);
+            log.info("finalize response: " + finalizeTwitterResponse);
 
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
