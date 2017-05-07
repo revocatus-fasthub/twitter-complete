@@ -1,6 +1,7 @@
 package tz.co.fasthub.ona.controller;
 
 import org.springframework.core.io.Resource;
+import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,10 @@ public class TwitterHandler {
                 }
 
             }
+        }else  if (twitterResponse1!=null&& twitterResponse1.getProcessing_info()==null){
+            TwitterManualController.updateStatus(twitter,twitterResponse1,payload);
         }
+
 
     }
 

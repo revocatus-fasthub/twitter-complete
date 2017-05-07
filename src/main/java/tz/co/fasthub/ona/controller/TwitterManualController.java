@@ -40,6 +40,7 @@ public class TwitterManualController {
     //   private static String url = "https://upload.twitter.com/1.1/media/upload.json";
     final static String DOMAIN = "https://upload.twitter.com";
     final static String RESOURCE = "/1.1/media/upload.json";
+    final static String UPDATE_STATUS_URL="https://api.twitter.com/1.1/statuses/update.json";
     @Autowired
     private  static ImageService imageService;
 
@@ -171,8 +172,28 @@ public class TwitterManualController {
     }
 
 
-    public static void postTweetWithMidiaId(Twitter twitter, TwitterResponse twitterResponse){
 
+
+    public static void updateStatus(Twitter twitter, TwitterResponse twitterResponse, Payload payload) {
+        try {
+            MultiValueMap<String, Object> finalize = new LinkedMultiValueMap<String, Object>();
+            finalize.add("status", payload.getMessage());
+            finalize.add("media_ids",twitterResponse.getMedia_id());
+
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
+
+            Object response = twitter.restOperations().postForObject(UPDATE_STATUS_URL, entity, Object.class);
+            log.info("Updating Status Response: " + response);
+
+        } catch (RestClientException e) {
+            log.error("RestClientException: ", e);
+        } catch (Exception e) {
+            log.error("Exception: ", e);
+        }
     }
 
 
