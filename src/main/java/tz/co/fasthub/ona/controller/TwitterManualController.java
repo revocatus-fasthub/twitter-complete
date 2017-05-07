@@ -157,15 +157,15 @@ public class TwitterManualController {
 
         TwitterResponse statusTwitterResponse=null;
         try {
-            MultiValueMap<String, Object> finalize = new LinkedMultiValueMap<String, Object>();
-            finalize.add("command", "STATUS");
-            finalize.add("media_id",twitterResponse.getMedia_id());
+            MultiValueMap<String, Object> statusParams = new LinkedMultiValueMap<String, Object>();
+            statusParams.add("command", "STATUS");
+            statusParams.add("media_id",twitterResponse.getMedia_id());
 
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
+            HttpEntity<?> entity = new HttpEntity<Object>(statusParams, headers);
 
             statusTwitterResponse = twitter.restOperations().getForObject(DOMAIN+RESOURCE, TwitterResponse.class,entity);
             log.info("Status response from Twitter: " + twitterResponse);
