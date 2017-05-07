@@ -75,7 +75,7 @@ public class TwitterManualController {
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
         } catch (Exception e) {
-            log.error("Exception: ", e);
+            log.error("Exception:  ", e);
         }
         return payload;
     }
