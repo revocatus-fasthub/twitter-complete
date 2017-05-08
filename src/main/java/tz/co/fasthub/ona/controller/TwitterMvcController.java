@@ -222,8 +222,7 @@ public class TwitterMvcController {
         log.info("talent's first name: "+talentname);
         //log.info("talent: "+ talent.getFname());
 
-        redirectAttributes.addFlashAttribute("flash.messagess", "Please check if "+talentname
-                +"'s account is connected to Twitter");
+        redirectAttributes.addFlashAttribute("flash.messagess", "Please check if "+talentname+"'s account is connected to Twitter");
         return "redirect:/talents";
     }
 

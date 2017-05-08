@@ -60,13 +60,14 @@ public class TwitterManualController {
         try {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("command", "INIT");
-            parts.add("total_bytes", Integer.toString((int) file.getSize()));
+            parts.add("total_bytes", file.getBytes());//Integer.toString((int) file.getSize())
             parts.add("media_type", file.getContentType());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
+            log.info("totalBytes: "+ Arrays.toString(file.getBytes()));
 
             payload = twitter.restOperations().postForObject(DOMAIN + RESOURCE, entity, TwitterResponse.class);
             log.info("init: " + payload.toString());
