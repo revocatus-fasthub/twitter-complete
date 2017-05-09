@@ -17,7 +17,7 @@
        <div class="form-group">
            <select id="dropTalent" name="screenName">
                 <option value="0" th:text="${'-- Please Choose Talent Screen Name --'}"/>
-                <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}" />
+                <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}"/>
            </select>
        </div>
             <div class="form-group">

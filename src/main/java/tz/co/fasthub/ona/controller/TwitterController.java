@@ -5,17 +5,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.twitter.api.*;
+import org.springframework.social.twitter.api.Tweet;
+import org.springframework.social.twitter.api.TweetData;
+import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tz.co.fasthub.ona.controller.twitter.TwitterUtilities;
 import tz.co.fasthub.ona.domain.*;
 import tz.co.fasthub.ona.service.*;
-
 import java.io.IOException;
 import java.util.List;
 

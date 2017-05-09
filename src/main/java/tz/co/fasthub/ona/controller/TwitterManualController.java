@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +40,7 @@ public class TwitterManualController {
     //   private static String url = "https://upload.twitter.com/1.1/media/upload.json";
     final static String DOMAIN = "https://upload.twitter.com";
     final static String RESOURCE = "/1.1/media/upload.json";
+    final static String UPDATE_STATUS_URL="https://api.twitter.com/1.1/statuses/update.json";
     @Autowired
     private  static ImageService imageService;
 
@@ -55,33 +57,37 @@ public class TwitterManualController {
         return "/success";
     }
 
-    public static TwitterResponse postINITCommandToTwitter(Twitter twitter, MultipartFile file) {
+    public static TwitterResponse postINITCommandToTwitter(Twitter twitter, MultipartFile file, Resource resource) {
         TwitterResponse payload = null;
         try {
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("command", "INIT");
-            parts.add("total_bytes", file.getBytes());//Integer.toString((int) file.getSize())
+
+            String totalBytes=Integer.toString((int)resource.contentLength());
+
+            parts.add("total_bytes", totalBytes);
             parts.add("media_type", file.getContentType());
+//            parts.add("media_category", "amplify_video");
+
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             HttpEntity<?> entity = new HttpEntity<Object>(parts, headers);
 
-            log.info("totalBytes: "+ Arrays.toString(file.getBytes()));
 
             payload = twitter.restOperations().postForObject(DOMAIN + RESOURCE, entity, TwitterResponse.class);
-            log.info("init: " + payload.toString());
+            log.info("init command response from Twitter: " + payload.toString()+" We sent total bytes: "+totalBytes);
 
             log.info("media_id featched from Twitter API: "+ payload.getMedia_id());
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
         } catch (Exception e) {
-            log.error("Exception: ", e);
+            log.error("Exception Found:  ", e);
         }
         return payload;
     }
 
-    public static void postAPPENDCommandToTwitter(Twitter twitter, Payload payload, MultipartFile multipartFile, TwitterResponse twitterResponse) {
+    public static void postAPPENDCommandToTwitter(Twitter twitter, Payload payload, Resource resource, TwitterResponse twitterResponse) {
         try {
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
@@ -91,8 +97,8 @@ public class TwitterManualController {
 
                 parts.add("command", "APPEND");
                 parts.add("media_id",twitterResponse.getMedia_id());
-                parts.add("media", multipartFile);
-                parts.add("segment_index", i);
+                parts.add("segment_index", i+"");
+                parts.add("media", resource);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -109,9 +115,9 @@ public class TwitterManualController {
 
                 restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
 
-                Object responseData = restTemplate.postForObject(DOMAIN , entity, Object.class);
+                Object responseData = restTemplate.postForObject(DOMAIN+RESOURCE , entity, Object.class);
 
-                log.info("Append Command response: " + responseData.toString());
+                log.info("Append Command response: " + responseData);
 
             }
 
@@ -123,6 +129,8 @@ public class TwitterManualController {
     }
 
     public static TwitterResponse postFINALIZECommandToTwitter(Twitter twitter, TwitterResponse twitterResponse) {
+
+        TwitterResponse finalizeTwitterResponse=null;
         try {
             MultiValueMap<String, Object> finalize = new LinkedMultiValueMap<String, Object>();
             finalize.add("command", "FINALIZE");
@@ -134,15 +142,58 @@ public class TwitterManualController {
 
             HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
 
-            TwitterResponse payload1 = twitter.restOperations().postForObject(DOMAIN, entity, TwitterResponse.class);
-            log.info("finalize: " + payload1.toString());
+            finalizeTwitterResponse = twitter.restOperations().postForObject(DOMAIN+RESOURCE, entity, TwitterResponse.class);
+            log.info("finalize response: " + finalizeTwitterResponse);
 
         } catch (RestClientException e) {
             log.error("RestClientException: ", e);
         } catch (Exception e) {
             log.error("Exception: ", e);
         }
-        return null;
+        return finalizeTwitterResponse;
+    }
+
+
+    public static TwitterResponse postSTATUSCommandToTwitter(Twitter twitter, TwitterResponse twitterResponse) {
+
+        TwitterResponse statusTwitterResponse=null;
+        try {
+            String URL = DOMAIN+RESOURCE+"?"+"command=STATUS&media_id="+twitterResponse.getMedia_id();
+            statusTwitterResponse = twitter.restOperations().getForObject(URL, TwitterResponse.class);
+
+            log.info("Status response from Twitter: " + twitterResponse);
+
+        } catch (RestClientException e) {
+            log.error("RestClientException: ", e);
+        } catch (Exception e) {
+            log.error("Exception: ", e);
+        }
+        return statusTwitterResponse;
+    }
+
+
+
+
+    public static void updateStatus(Twitter twitter, TwitterResponse twitterResponse, Payload payload) {
+        try {
+            MultiValueMap<String, Object> finalize = new LinkedMultiValueMap<String, Object>();
+            finalize.add("status", payload.getMessage());
+            finalize.add("media_ids",twitterResponse.getMedia_id());
+
+
+            HttpHeaders headers = new HttpHeaders();
+ //           headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<?> entity = new HttpEntity<Object>(finalize, headers);
+
+            Object response = twitter.restOperations().postForObject(UPDATE_STATUS_URL, entity, Object.class);
+            log.info("Updating Status Response: " + response);
+
+        } catch (RestClientException e) {
+            log.error("RestClientException: ", e);
+        } catch (Exception e) {
+            log.error("Exception: ", e);
+        }
     }
 
 
