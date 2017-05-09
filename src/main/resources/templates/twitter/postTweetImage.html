@@ -15,7 +15,7 @@
     <form modelAttribute="tweet" action="/twitter/postTweetImage" enctype="multipart/form-data" method="post">
 
        <div class="form-group">
-           <select id="dropTalent" name="screenName">
+           <select id="dropTalent" name="screenName">z
                 <option value="0" th:text="${'-- Please Choose Talent Screen Name --'}"/>
                 <option th:each="talent : ${talents}" th:value="${talent.id}" th:text=" ${talent.twitterScreenName}" />
            </select>

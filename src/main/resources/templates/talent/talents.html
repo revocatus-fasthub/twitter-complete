@@ -33,9 +33,7 @@
                 <td th:text="${talent.id}"><a href="/talent/${talent.id}">Id</a></td>
                 <td th:text="${talent.fname}">First Name</td>
                 <td th:text="${talent.lname}">Last Name</td>
-
-                <td th:text="${talent.twitterScreenName==null} ? '(not connected)' : ${talent.twitterScreenName} ">Twitter Screen Name</td>
-
+                <td><span th:text="*{talent.twitterScreenName==null} ? '(not connected)' : *{talent.twitterScreenName} ">Twitter Screen Name</span></td>
                 <td th:text="${talent.facebookScreenName}">Facebook Screen Name</td>
                 <td th:text="${talent.instagramScreenName}">Instagram Screen Name</td>
 

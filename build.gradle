@@ -59,6 +59,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	// https://mvnrepository.com/artifact/com.sachinhandiekar/jInstagram
+	compile group: 'com.sachinhandiekar', name: 'jInstagram', version: '1.2.1'
 }
 
 dependencyManagement {
