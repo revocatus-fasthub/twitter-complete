@@ -1,5 +1,6 @@
 package tz.co.fasthub.ona.controller;
 
+import org.jinstagram.Instagram;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import tz.co.fasthub.ona.domain.Talent;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 public class HomeController {
+
     //HOME
     @RequestMapping("/index")
     public String index() {
@@ -99,6 +102,18 @@ public class HomeController {
     @RequestMapping("/facebook/viewFriends")
     public String fbfriends(){
         return "/facebook/viewFriends";
+    }
+
+
+    //instagram
+    @RequestMapping("/connect/instagram")
+    public String instaConnect(){
+        return "/connect/instagramConnect";
+    }
+
+    @RequestMapping("/connect/instagramConnected")
+    public String instaConnected(){
+        return "/connect/instagramConnected";
     }
 
 }

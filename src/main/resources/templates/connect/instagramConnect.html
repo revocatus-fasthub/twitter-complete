@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+	<title>Connect Instagra</title>
+
+	<!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+	<!--/*/ <th:block th:include="fragments/headertw :: header"></th:block> /*/-->
+	<h3>Connect to Instagram</h3>
+	<span th:if="${social_provider_error}">Provider error (maybe you need to configure the app id and secret?)</span>
+
+	<form action="/instagram/authorizationUrl" method="POST">
+		<div class="formInfo">
+			<p></p>
+				<p>You <strong>aren't</strong> connected to INSTAGRAM yet. Click the button to connect this application with your INSTAGRAM account.</p>
+		</div>
+		<p><button type="submit"><img src="/images/Instagram_normal.png"/></button></p>
+	</form>
+
+</div>
+
+
+</body>
+</html>

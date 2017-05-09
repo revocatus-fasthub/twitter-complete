@@ -1,7 +1,7 @@
-<jsp:include page="common/header.jsp" />
+<jsp:include page="/templates/common/header.jsp" />
 
 <%@ page import="org.jinstagram.auth.oauth.InstagramService" %>
-<%@ page import="com.sachinhandiekar.examples.Constants" %>
+<%@ page import="tz.co.fasthub.ona.instagram.Constants" %>
 
 
 <%
@@ -27,4 +27,4 @@
     </div>
 
 
-<jsp:include page="common/footer.jsp" />
+<jsp:include page="/templates/common/footer.jsp" />
