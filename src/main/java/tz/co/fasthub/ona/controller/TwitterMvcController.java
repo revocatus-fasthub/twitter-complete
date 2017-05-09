@@ -155,7 +155,7 @@ public class TwitterMvcController {
                 List<Tweet> tweets = twitter1.timelineOperations().getUserTimeline();
                 model.addAttribute("tweets",tweets);
             }catch (Exception e){
-                redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+                redirectAttributes.addFlashAttribute("flash.messagess", "This account is not connected to Twitter: "+e.getMessage());
                 return "redirect:/talents";
             }
         }
@@ -175,7 +175,7 @@ public class TwitterMvcController {
               CursoredList<TwitterProfile> friends = twitter1.friendOperations().getFriends();
               model.addAttribute("friends", friends);
           }catch (Exception e){
-              redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+              redirectAttributes.addFlashAttribute("flash.messagess", "This account is not connected to Twitter: "+e.getMessage());
               return "redirect:/talents";
           }
         }
@@ -195,7 +195,7 @@ public class TwitterMvcController {
                 CursoredList<TwitterProfile> followers = twitter1.friendOperations().getFollowers();
                 model.addAttribute("followers", followers);
             }catch (Exception e){
-                redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+                redirectAttributes.addFlashAttribute("flash.messagess", "This account is not connected to Twitter: "+e.getMessage());
                 return "redirect:/talents";
             }
         }
@@ -256,7 +256,7 @@ public class TwitterMvcController {
                 }
                 model.addAttribute("timelineName", timelineType);
             }catch (Exception e){
-                redirectAttributes.addFlashAttribute("flash.messagess", "Please Check if this account is connected to Twitter: "+e.getMessage());
+                redirectAttributes.addFlashAttribute("flash.messagess", "This account is not connected to Twitter: "+e.getMessage());
                 return "redirect:/talents";
             }
         }
