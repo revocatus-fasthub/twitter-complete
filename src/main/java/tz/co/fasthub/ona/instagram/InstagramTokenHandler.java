@@ -1,16 +1,22 @@
 package tz.co.fasthub.ona.instagram;
 
 import org.jinstagram.Instagram;
+import org.jinstagram.auth.InstagramApi;
+import org.jinstagram.auth.exceptions.OAuthException;
+import org.jinstagram.auth.model.OAuthConfig;
+import org.jinstagram.auth.model.OAuthRequest;
 import org.jinstagram.auth.model.Token;
 import org.jinstagram.auth.model.Verifier;
 import org.jinstagram.auth.oauth.InstagramService;
+import org.jinstagram.entity.users.basicinfo.UserInfo;
+import org.jinstagram.http.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.oauth1.OAuthToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +29,20 @@ import java.io.IOException;
 @RequestMapping("/instagram")
 public class InstagramTokenHandler extends HttpServlet {
 
-    private ConnectionRepository connectionRepository=null;
+    private static final String AUTHORIZATION_CODE = "authorization_code";
+
+    private static final Token EMPTY_TOKEN = null;
+
+    private static InstagramApi api;
+
+    private final OAuthConfig config;
+
+
+    public InstagramTokenHandler(InstagramApi api,OAuthConfig config){
+     InstagramTokenHandler.api =api;
+     this.config=config;
+    }
+
 
     private static final Logger log = LoggerFactory.getLogger(InstagramTokenHandler.class);
 
@@ -39,26 +58,16 @@ public class InstagramTokenHandler extends HttpServlet {
 
         InstagramService service = (InstagramService) request.getServletContext().getAttribute(Constants.INSTAGRAM_SERVICE);
 
-
-     //   String oauth_verifier = (String) request.getSession().getAttribute(String.valueOf(verifier));
-       // log.info("oauth_verifier: "+oauth_verifier);
+        Verifier verifier = null;
+        log.info("code: "+code);
 
         //authorize here
+      //  getAccessToken(verifier);
 
-        Token reqToken = service.getRequestToken();
-        log.info("reqToken: "+reqToken);
-
-        service.getAuthorizationUrl();
-        request.getParameter("oauth_token");
-        request.getParameter("oauth_verifier");
-
-        Verifier verifier = new Verifier(request.getParameter("oauth_verifier"));
-      //  log.info("code: "+code);
-        Token gAccToken = service.getAccessToken(verifier);
-
-//////////////////
-        Token accessToken = service.getAccessToken(verifier);
+        Token accessToken = service.getAccessToken(new Verifier(code));
         log.info("accessToken: "+accessToken);
+
+        getAccessToken(verifier);
 
         Instagram instagram = new Instagram(accessToken);
         log.info("instagram: "+instagram);
@@ -68,6 +77,9 @@ public class InstagramTokenHandler extends HttpServlet {
         session.setAttribute(Constants.INSTAGRAM_OBJECT, instagram);
 
         System.out.println(request.getContextPath());
+        //Get user info
+        UserInfo userInfo = instagram.getCurrentUserInfo();
+
         // Redirect to User Profile page.
         response.sendRedirect(request.getContextPath() + "/profile.jsp");
 
@@ -97,5 +109,34 @@ public class InstagramTokenHandler extends HttpServlet {
     }
 
 
+    private Token getAccessToken(Verifier verifier) {
+        OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint());
+        request.addBodyParameter(Constants.CLIENT_ID, config.getApiKey());
+        request.addBodyParameter(Constants.CLIENT_SECRET, config.getApiSecret());
+        request.addBodyParameter(Constants.GRANT_TYPE, AUTHORIZATION_CODE);
+        request.addBodyParameter(Constants.CODE, verifier.getValue());
+        request.addBodyParameter(Constants.REDIRECT_URI, config.getCallback());
 
+        if (config.hasScope()) {
+            request.addBodyParameter(Constants.SCOPE, config.getScope());
+        }
+
+        if (config.getDisplay() != null) {
+            request.addBodyParameter(Constants.DISPLAY, config.getDisplay());
+        }
+
+        if (config.getRequestProxy() != null) {
+            request.setProxy(config.getRequestProxy() );
+        }
+
+        Response response;
+        try {
+            response = request.send();
+        } catch (IOException e) {
+            throw new OAuthException("Could not get access token", e);
+        }
+
+        return api.getAccessTokenExtractor().extract(response.getBody());
+
+    }
 }
