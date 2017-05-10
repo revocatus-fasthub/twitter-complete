@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-
 @Controller
 @RequestMapping("/instagram")
 public class InstagramTokenHandler extends HttpServlet {
