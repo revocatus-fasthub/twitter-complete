@@ -29,7 +29,7 @@ public class TwitterController {
     private final Twitter twitter;
 
 
-    private  final TwitterService twitterService;
+    private final TwitterService twitterService;
 
     private final TwitterTalentService twitterTalentService;
 

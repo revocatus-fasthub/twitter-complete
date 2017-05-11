@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,16 +31,15 @@ public class InstagramTokenHandler extends HttpServlet {
 
     private static final Token EMPTY_TOKEN = null;
 
-    private static InstagramApi api;
+    private final InstagramApi api;
 
     private final OAuthConfig config;
 
-
-    public InstagramTokenHandler(InstagramApi api,OAuthConfig config){
-     InstagramTokenHandler.api =api;
-     this.config=config;
+    @Autowired
+    public InstagramTokenHandler(InstagramApi api, OAuthConfig config) {
+        this.api = api;
+        this.config = config;
     }
-
 
     private static final Logger log = LoggerFactory.getLogger(InstagramTokenHandler.class);
 
