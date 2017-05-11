@@ -1,18 +1,12 @@
 package tz.co.fasthub.ona.instagram;
 
 import org.jinstagram.Instagram;
-import org.jinstagram.auth.InstagramApi;
-import org.jinstagram.auth.exceptions.OAuthException;
-import org.jinstagram.auth.model.OAuthConfig;
-import org.jinstagram.auth.model.OAuthRequest;
 import org.jinstagram.auth.model.Token;
 import org.jinstagram.auth.model.Verifier;
 import org.jinstagram.auth.oauth.InstagramService;
 import org.jinstagram.entity.users.basicinfo.UserInfo;
-import org.jinstagram.http.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,16 +24,6 @@ public class InstagramTokenHandler extends HttpServlet {
     private static final String AUTHORIZATION_CODE = "authorization_code";
 
     private static final Token EMPTY_TOKEN = null;
-
-    private final InstagramApi api;
-
-    private final OAuthConfig config;
-
-    @Autowired
-    public InstagramTokenHandler(InstagramApi api, OAuthConfig config) {
-        this.api = api;
-        this.config = config;
-    }
 
     private static final Logger log = LoggerFactory.getLogger(InstagramTokenHandler.class);
 
@@ -64,7 +48,7 @@ public class InstagramTokenHandler extends HttpServlet {
         Token accessToken = service.getAccessToken(new Verifier(code));
         log.info("accessToken: "+accessToken);
 
-        getAccessToken(verifier);
+        service.getAccessToken(verifier);
 
         Instagram instagram = new Instagram(accessToken);
         log.info("instagram: "+instagram);
@@ -106,34 +90,4 @@ public class InstagramTokenHandler extends HttpServlet {
     }
 
 
-    private Token getAccessToken(Verifier verifier) {
-        OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint());
-        request.addBodyParameter(Constants.CLIENT_ID, config.getApiKey());
-        request.addBodyParameter(Constants.CLIENT_SECRET, config.getApiSecret());
-        request.addBodyParameter(Constants.GRANT_TYPE, AUTHORIZATION_CODE);
-        request.addBodyParameter(Constants.CODE, verifier.getValue());
-        request.addBodyParameter(Constants.REDIRECT_URI, config.getCallback());
-
-        if (config.hasScope()) {
-            request.addBodyParameter(Constants.SCOPE, config.getScope());
-        }
-
-        if (config.getDisplay() != null) {
-            request.addBodyParameter(Constants.DISPLAY, config.getDisplay());
-        }
-
-        if (config.getRequestProxy() != null) {
-            request.setProxy(config.getRequestProxy() );
-        }
-
-        Response response;
-        try {
-            response = request.send();
-        } catch (IOException e) {
-            throw new OAuthException("Could not get access token", e);
-        }
-
-        return api.getAccessTokenExtractor().extract(response.getBody());
-
-    }
 }
